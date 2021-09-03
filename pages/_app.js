@@ -5,8 +5,8 @@ function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
     Reviews: [0, 100],
     Price: [0, 50],
-    'Release Date': [1990, 2021],
-    'Steam Rating': [0, 100],
+    Release: [1990, 2021],
+    Rating: [0, 100],
   })
 
   const state = { inputs }

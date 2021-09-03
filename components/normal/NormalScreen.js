@@ -15,7 +15,7 @@ export default function NormalScreen({ state, setState }) {
     grid: {
       large: {
         gridTemplateColumns: 'repeat(10,1fr)',
-        gridTemplateRows: ' 200px repeat(10,1fr)',
+        gridTemplateRows: ' 170px repeat(10,1fr)',
       },
     },
   }
@@ -71,7 +71,7 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Release Date"
+                  name="Release"
                   label=""
                   min={1990}
                   max={2021}
@@ -81,37 +81,26 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Steam Rating"
+                  name="Rating"
                   label="%"
                   min={0}
                   max={100}
                 />
               </Grid>
             </Grid>
-            <Grid container justifyContent="center">
-              <Button variant="contained">STORES</Button>
-            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid className={styles.main_content_container}>
-        <Grid item xs={12}>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item>
-              <Typography>{`Reviews Min:${inputs['Reviews'][0]} Max:${inputs['Reviews'][1]}`}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>{`Price Min:${inputs['Price'][0]} Max:${inputs['Price'][1]}`}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>{`Release Date Min:${inputs['Release Date'][0]} Max:${inputs['Release Date'][1]}`}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>{`Steam Rating Min:${inputs['Steam Rating'][0]} Max:${inputs['Steam Rating'][1]}`}</Typography>
-            </Grid>
-          </Grid>
+        <Grid
+          container
+          justifyContent="center"
+          className={styles.stores_button_container}>
+          <Button variant="contained">STORES</Button>
         </Grid>
       </Grid>
+      <Grid
+        container
+        className={styles.main_content_container}
+        justifyContent="center"></Grid>
     </div>
   )
 }

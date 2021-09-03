@@ -10,12 +10,28 @@
   grid-area: 1/1/2/11;
   background: #46ad7c;
   filter: drop-shadow(10px 10px 5px grey);
+  /* width: 400px; */
 }
 
 .main_content_container {
   grid-area: 2/1/12/11;
+  position: relative;
 }
 
 .input_container {
-  width: 400px;
+  min-width: 400px;
+}
+
+.info_container {
+  position: absolute;
+  top: -15px;
+}
+
+.info_paper {
+  padding: 5px 20px;
+}
+
+.stores_button_container {
+  position: absolute;
+  bottom: -10px;
 }
