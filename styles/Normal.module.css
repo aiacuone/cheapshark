@@ -1,0 +1,21 @@
+.grid_container {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+}
+
+.header_container {
+  grid-area: 1/1/2/11;
+  background: #46ad7c;
+  filter: drop-shadow(10px 10px 5px grey);
+}
+
+.main_content_container {
+  grid-area: 2/1/12/11;
+}
+
+.input_container {
+  width: 400px;
+}
