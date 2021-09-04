@@ -6,6 +6,7 @@ import logo from '../../public/images/logo.svg'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
+import headerBackground from '../../public/images/headerBackground.svg'
 
 export default function NormalScreen({ state, setState }) {
   const { inputs } = state
@@ -27,6 +28,9 @@ export default function NormalScreen({ state, setState }) {
         container
         alignItems="center"
         justifyContent="center">
+        <Grid item className={styles.background_container}>
+          <Image width={1920} layout="fixed" src={headerBackground} />
+        </Grid>
         <Grid item className={styles.logo_container}>
           <Grid container justifyContent="center">
             <Image

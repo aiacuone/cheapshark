@@ -1,6 +1,7 @@
 .grid_container {
   height: 100%;
   width: 100%;
+
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
@@ -10,7 +11,15 @@
   grid-area: 1/1/2/11;
   background: #46ad7c;
   filter: drop-shadow(10px 10px 5px grey);
-  /* width: 400px; */
+  /* width: 300px; */
+  /* min-width: 1920px; */
+  background-image: url('/public/images/header.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+.background_container {
+  position: absolute;
 }
 
 .main_content_container {
