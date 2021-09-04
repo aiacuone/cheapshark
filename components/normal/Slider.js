@@ -18,13 +18,22 @@ export default function Slider({ name, label, min, max, setState, state }) {
     return `${value}${label}`
   }
 
+  const showAfterNumber = label === '%' || label === 'K' ? true : false
+
+  const showBeforeNumber = label === '£' ? true : false
+
   return (
     <Grid container>
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={3}>
             <Paper>
-              <Typography align="center">{inputs[name][0]}</Typography>
+              <Typography align="center">
+                {' '}
+                {showBeforeNumber && label}
+                {inputs[name][0]}
+                {showAfterNumber && inputs[name][0] !== 0 && label}
+              </Typography>
             </Paper>
           </Grid>
           <Grid item xs={6}>
@@ -32,7 +41,11 @@ export default function Slider({ name, label, min, max, setState, state }) {
           </Grid>
           <Grid item xs={3}>
             <Paper>
-              <Typography align="center">{inputs[name][1]}</Typography>
+              <Typography align="center">
+                {showBeforeNumber && label}
+                {inputs[name][1]}
+                {showAfterNumber && label}
+              </Typography>
             </Paper>
           </Grid>
         </Grid>

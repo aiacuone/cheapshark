@@ -6,7 +6,6 @@ import logo from '../../public/images/logo.svg'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
-import { Typography } from '@material-ui/core'
 
 export default function NormalScreen({ state, setState }) {
   const { inputs } = state
@@ -27,8 +26,7 @@ export default function NormalScreen({ state, setState }) {
         className={styles.header_container}
         container
         alignItems="center"
-        justifyContent="center"
-        spacing={2}>
+        justifyContent="center">
         <Grid item className={styles.logo_container}>
           <Grid container justifyContent="center">
             <Image
