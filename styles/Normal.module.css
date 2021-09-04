@@ -9,13 +9,14 @@
 
 .header_container {
   grid-area: 1/1/2/11;
-  background: #46ad7c;
-  filter: drop-shadow(10px 10px 5px grey);
-  /* width: 300px; */
-  /* min-width: 1920px; */
-  background-image: url('/public/images/header.svg');
-  background-position: center;
-  background-size: cover;
+  /* background: #46ad7c; */
+  background: rgb(51, 119, 86);
+  background: linear-gradient(
+    0deg,
+    rgba(51, 119, 86, 1) 0%,
+    rgba(70, 173, 124, 1) 100%
+  );
+  /* filter: drop-shadow(10px 10px 5px grey); */
 }
 
 .background_container {
