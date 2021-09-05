@@ -10,6 +10,7 @@ import headerBackground from '../../public/images/headerBackground.svg'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
+import drawerBackground from '../../public/images/drawerBackground.svg'
 
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
@@ -139,7 +140,9 @@ export default function NormalScreen({ state, setState }) {
                   className={styles.drawer_container}
                   justifyContent="center"
                   alignItems="center">
-                  <Grid item> Drawer Content</Grid>
+                  <Grid item className={styles.background}>
+                    <Image src={drawerBackground} layout="fill" />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

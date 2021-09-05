@@ -56,11 +56,20 @@
 .drawer_container {
   width: 100%;
   height: 100%;
-  /* background: orange; */
 }
 
 .drawer {
-  width: 300px;
-  /* background: blue; */
+  width: 50vw;
   height: 100%;
+  background: rgb(24, 71, 116);
+  background: linear-gradient(
+    0deg,
+    rgba(24, 71, 116, 1) 47%,
+    rgba(19, 80, 138, 1) 66%,
+    rgba(0, 128, 255, 1) 100%
+  );
+}
+
+.drawer_background {
+  position: absolute;
 }
