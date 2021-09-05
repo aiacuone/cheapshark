@@ -7,9 +7,28 @@ import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
 import headerBackground from '../../public/images/headerBackground.svg'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/core/styles'
+import Drawer from '@material-ui/core/Drawer'
+
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import ListItem from '@material-ui/core/ListItem'
+
+import ListItemText from '@material-ui/core/ListItemText'
+
+const useStyles = makeStyles({
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
+})
 
 export default function NormalScreen({ state, setState }) {
-  const { inputs } = state
+  const { inputs, expanded } = state
+  const { setExpanded } = setState
 
   const style = {
     grid: {
@@ -20,14 +39,21 @@ export default function NormalScreen({ state, setState }) {
     },
   }
 
+  const classes = useStyles()
+
   return (
-    <div className={styles.grid_container} style={style.grid.large}>
+    <div className={styles.grid_container}>
       <Grid
         wrap="nowrap"
         className={styles.header_container}
         container
         alignItems="center"
         justifyContent="center">
+        <Grid item className={styles.stores_button_container}>
+          <Button variant="contained" onClick={() => setExpanded(true)}>
+            STORES
+          </Button>
+        </Grid>
         <Grid item className={styles.background_container}>
           <Image width={1920} layout="fixed" src={headerBackground} />
         </Grid>
@@ -92,17 +118,34 @@ export default function NormalScreen({ state, setState }) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          container
-          justifyContent="center"
-          className={styles.stores_button_container}>
-          <Button variant="contained">STORES</Button>
-        </Grid>
       </Grid>
       <Grid
         container
         className={styles.main_content_container}
-        justifyContent="center"></Grid>
+        justifyContent="center">
+        <Grid item>
+          <Drawer
+            anchor="right"
+            open={expanded}
+            onClose={() => setExpanded(false)}>
+            <Grid
+              container
+              className={styles.drawer_container}
+              justifyContent="center"
+              alignItems="center">
+              <Grid item className={styles.drawer}>
+                <Grid
+                  container
+                  className={styles.drawer_container}
+                  justifyContent="center"
+                  alignItems="center">
+                  <Grid item> Drawer Content</Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Drawer>
+        </Grid>
+      </Grid>
     </div>
   )
 }

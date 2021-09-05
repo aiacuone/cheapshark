@@ -8,9 +8,10 @@ function MyApp({ Component, pageProps }) {
     Release: [1990, 2021],
     Rating: [0, 100],
   })
+  const [expanded, setExpanded] = useState(false)
 
-  const state = { inputs }
-  const setState = { setInputs }
+  const state = { inputs, expanded }
+  const setState = { setInputs, setExpanded }
   return <Component {...pageProps} state={state} setState={setState} />
 }
 

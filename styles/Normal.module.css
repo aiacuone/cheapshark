@@ -1,22 +1,24 @@
 .grid_container {
-  height: 100%;
-  width: 100%;
-
+  /* height: 100%; */
+  /* width: 100%; */
+  height: 100vh;
+  width: 100vw;
+  /* background: #9ac6d7; */
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: 250px repeat(10, 1fr);
+  background: rgb(24, 71, 116);
+  background: linear-gradient(
+    0deg,
+    rgba(24, 71, 116, 1) 47%,
+    rgba(19, 80, 138, 1) 66%,
+    rgba(0, 128, 255, 1) 100%
+  );
 }
 
 .header_container {
   grid-area: 1/1/2/11;
-  /* background: #46ad7c; */
-  background: rgb(51, 119, 86);
-  background: linear-gradient(
-    0deg,
-    rgba(51, 119, 86, 1) 0%,
-    rgba(70, 173, 124, 1) 100%
-  );
-  /* filter: drop-shadow(10px 10px 5px grey); */
+  position: relative;
 }
 
 .background_container {
@@ -25,7 +27,7 @@
 
 .main_content_container {
   grid-area: 2/1/12/11;
-  position: relative;
+  /* position: relative; */
 }
 
 .input_container {
@@ -43,9 +45,22 @@
 
 .stores_button_container {
   position: absolute;
-  bottom: -10px;
+  bottom: 20px;
+  z-index: 1;
 }
 
 .logo_container {
   padding-right: 20px;
+}
+
+.drawer_container {
+  width: 100%;
+  height: 100%;
+  /* background: orange; */
+}
+
+.drawer {
+  width: 300px;
+  /* background: blue; */
+  height: 100%;
 }
