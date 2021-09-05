@@ -12,12 +12,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import drawerBackground from '../../public/images/drawerBackground.svg'
 
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
-import ListItem from '@material-ui/core/ListItem'
-
-import ListItemText from '@material-ui/core/ListItemText'
-
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -76,7 +70,7 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Reviews"
+                  name="reviews"
                   label="K"
                   min={0}
                   max={100}
@@ -86,7 +80,7 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Price"
+                  name="price"
                   label="£"
                   min={0}
                   max={50}
@@ -100,7 +94,7 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Release"
+                  name="release"
                   label=""
                   min={1990}
                   max={2021}
@@ -110,7 +104,7 @@ export default function NormalScreen({ state, setState }) {
                 <Slider
                   state={state}
                   setState={setState}
-                  name="Rating"
+                  name="rating"
                   label="%"
                   min={0}
                   max={100}

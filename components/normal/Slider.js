@@ -5,10 +5,11 @@ import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 
 export default function Slider({ name, label, min, max, setState, state }) {
-  const { setInputs } = setState
-  const { inputs } = state
+  const { setInputs, updateFetch } = setState
+  const { inputs, sortBy } = state
 
   function handleChange(e, value) {
+    updateFetch({ sortBy: sortBy && sortBy })
     const newInputs = { ...inputs }
     newInputs[name] = value
     setInputs(newInputs)
@@ -29,7 +30,6 @@ export default function Slider({ name, label, min, max, setState, state }) {
           <Grid item xs={3}>
             <Paper>
               <Typography align="center">
-                {' '}
                 {showBeforeNumber && label}
                 {inputs[name][0]}
                 {showAfterNumber && inputs[name][0] !== 0 && label}
