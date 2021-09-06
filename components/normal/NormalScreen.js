@@ -61,7 +61,7 @@ export default function NormalScreen({ state, setState }) {
           <Image
             layout="fixed"
             src={pictureURL}
-            width={isSmallLogo ? 30 : 100}
+            width={isSmallLogo ? 0 : 100}
             height={20}
           />
         </Grid>

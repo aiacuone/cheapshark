@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 // import Slider from './Slider'
 import Sliders from './Sliders'
+import Button from '@material-ui/core/Button'
 
 export default function PhoneScreen({ state, setState }) {
   const { isPhoneLandscape, isPhonePortrait } = state
@@ -147,13 +148,31 @@ export default function PhoneScreen({ state, setState }) {
             </div> */}
             <Grid
               container
+              spacing={3}
+              direction={isPhoneLandscape ? 'row' : 'column'}
               className={styles.drawer_container}
               justifyContent="center"
               alignItems="center">
               {/* <Grid item xs={12}>
                 {drawerContent === 'stores' ? <Stores /> : <Sliders />}
               </Grid> */}
-              <Sliders state={state} setState={setState} />
+              {isPhoneLandscape && (
+                <Grid item xs={3}>
+                  <Grid container justifyContent="flex-end">
+                    <Button variant="contained">OK</Button>
+                  </Grid>
+                </Grid>
+              )}
+              <Grid item xs={9}>
+                <Sliders state={state} setState={setState} />
+              </Grid>
+              {!isPhoneLandscape && (
+                <Grid item item xs={3}>
+                  <Grid container>
+                    <Button variant="contained">OK</Button>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </Grid>
         </Grid>

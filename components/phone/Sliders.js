@@ -10,7 +10,7 @@ export default function Sliders({ state, setState }) {
 
   const style = {
     slider: {
-      width: '300px',
+      //   width: '300px',
     },
     input_container: {
       width: '50%',
