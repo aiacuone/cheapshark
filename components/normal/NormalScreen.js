@@ -61,8 +61,8 @@ export default function NormalScreen({ state, setState }) {
           <Image
             layout="fixed"
             src={pictureURL}
-            width={isSmallLogo ? 50 : 130}
-            height={30}
+            width={isSmallLogo ? 30 : 100}
+            height={20}
           />
         </Grid>
         <Grid item style={{ textAlign: 'center' }}>
@@ -176,7 +176,7 @@ export default function NormalScreen({ state, setState }) {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          <Table state={state} setState={setState} />
+          {/* <Table state={state} setState={setState} /> */}
         </Grid>
         <Grid item>
           <Drawer
