@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
 import Image from 'next/image'
@@ -11,6 +11,8 @@ import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import drawerBackground from '../../public/images/drawerBackground.svg'
+import Table from './Table'
+import { useResizeDetector } from 'react-resize-detector'
 
 const useStyles = makeStyles({
   list: {
@@ -22,8 +24,8 @@ const useStyles = makeStyles({
 })
 
 export default function NormalScreen({ state, setState }) {
-  const { inputs, expanded } = state
-  const { setExpanded } = setState
+  const { inputs, expanded, tableHeight } = state
+  const { setExpanded, setTableHeight } = setState
 
   const style = {
     grid: {
@@ -35,6 +37,16 @@ export default function NormalScreen({ state, setState }) {
   }
 
   const classes = useStyles()
+
+  const onResize = useCallback(() => {
+    setTableHeight(height)
+  })
+
+  useEffect(() => {
+    setTableHeight(ref?.current?.clientHeight)
+  }, [])
+
+  const { height, ref } = useResizeDetector({ onResize })
 
   return (
     <div className={styles.grid_container}>
@@ -116,8 +128,12 @@ export default function NormalScreen({ state, setState }) {
       </Grid>
       <Grid
         container
+        ref={ref}
         className={styles.main_content_container}
         justifyContent="center">
+        <Grid item className={styles.table_item_container} xs={12}>
+          <Table state={state} setState={setState} />
+        </Grid>
         <Grid item>
           <Drawer
             anchor="right"

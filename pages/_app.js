@@ -26,6 +26,7 @@ function MyApp({ Component, pageProps }) {
   const [filteredList, setFilteredList] = useState()
   const [unFilteredList, setUnFilteredList] = useState([])
   const [sortBy, setSortBy] = useState()
+  const [tableHeight, setTableHeight] = useState()
 
   // useEffect(() => {
   //   setApiState({ loading: true })
@@ -69,6 +70,7 @@ function MyApp({ Component, pageProps }) {
     filteredList,
     unFilteredList,
     sortBy,
+    tableHeight,
   }
   const setState = {
     setInputs,
@@ -81,6 +83,7 @@ function MyApp({ Component, pageProps }) {
     setApiState,
     setStoresApi,
     setFilteredList,
+    setTableHeight,
   }
 
   return (

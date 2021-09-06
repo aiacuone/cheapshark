@@ -200,11 +200,7 @@ export default function main({ state, setState }) {
       justifyContent="center"
       alignItems="center"
       style={{ background: 'purple', height: '100%', width: '100%' }}>
-      <NormalScreen
-        state={state}
-        setState={setState}
-        // updateFetch={updateFetch}
-      />
+      <NormalScreen state={state} setState={setState} />
       {apiState.loading || storesApi.loading ? (
         <div className="progress">
           <CircularProgress size="6rem" />
