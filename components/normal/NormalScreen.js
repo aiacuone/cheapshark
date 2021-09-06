@@ -29,14 +29,14 @@ export default function NormalScreen({ state, setState }) {
   const { expanded, storesApi, storesSelected } = state
   const { setExpanded, setTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
-  const style = {
-    grid: {
-      large: {
-        gridTemplateColumns: 'repeat(10,1fr)',
-        gridTemplateRows: ' 170px repeat(10,1fr)',
-      },
-    },
-  }
+  // const style = {
+  //   grid: {
+  //     large: {
+  //       gridTemplateColumns: 'repeat(10,1fr)',
+  //       gridTemplateRows: ' 170px repeat(10,1fr)',
+  //     },
+  //   },
+  // }
 
   const classes = useStyles()
 
