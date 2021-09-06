@@ -13,6 +13,8 @@ import Drawer from '@material-ui/core/Drawer'
 import drawerBackground from '../../public/images/drawerBackground.svg'
 import Table from './Table'
 import { useResizeDetector } from 'react-resize-detector'
+import Radio from '@material-ui/core/Radio'
+import { TrendingUp } from '@material-ui/icons'
 
 const useStyles = makeStyles({
   list: {
@@ -24,8 +26,8 @@ const useStyles = makeStyles({
 })
 
 export default function NormalScreen({ state, setState }) {
-  const { inputs, expanded, tableHeight } = state
-  const { setExpanded, setTableHeight } = setState
+  const { expanded, storesApi, storesSelected } = state
+  const { setExpanded, setTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
   const style = {
     grid: {
@@ -47,6 +49,44 @@ export default function NormalScreen({ state, setState }) {
   }, [])
 
   const { height, ref } = useResizeDetector({ onResize })
+
+  const logos = storesApi?.data?.map((store) => {
+    const pictureURL = `https://www.cheapshark.com${store.images.banner}`
+    const smallLogos = ['AllYouPlay', 'Epic Games Store']
+    const isSmallLogo = smallLogos.indexOf(store.storeName) > -1 ? true : false
+
+    return (
+      <Grid item>
+        <Grid container direcion="column">
+          <Image
+            layout="fixed"
+            src={pictureURL}
+            width={isSmallLogo ? 50 : 130}
+            height={30}
+          />
+        </Grid>
+        <Grid item style={{ textAlign: 'center' }}>
+          <Radio
+            size="small"
+            checked={
+              storesSelected[store.storeName]
+                ? storesSelected[store.storeName]
+                : true
+            }
+            style={{ color: 'white' }}
+            onChange={() => {
+              const newStoresSelected = { ...storesSelected }
+
+              newStoresSelected[store.storeName]
+                ? !storesSelected[store.storeName]
+                : (newStoresSelected[store.storeName] = false)
+              setStoresSelected(newStoresSelected)
+            }}
+          />
+        </Grid>
+      </Grid>
+    )
+  })
 
   return (
     <div className={styles.grid_container}>
@@ -149,13 +189,26 @@ export default function NormalScreen({ state, setState }) {
               justifyContent="center"
               alignItems="center">
               <Grid item className={styles.drawer}>
+                <div container className={styles.background}>
+                  <Image src={drawerBackground} layout="fill" />
+                </div>
                 <Grid
                   container
                   className={styles.drawer_container}
                   justifyContent="center"
                   alignItems="center">
-                  <Grid item className={styles.background}>
-                    <Image src={drawerBackground} layout="fill" />
+                  <Grid item>
+                    <Grid
+                      // style={{ height: '50%', background: 'blue' }}
+                      // wrap="wrap"
+                      className={styles.logos_container}
+                      container
+                      justifyContent="center"
+                      alignItems="center"
+                      // direction="column"
+                      spacing={3}>
+                      {logos}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

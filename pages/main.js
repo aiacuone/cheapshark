@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import NormalScreen from '../components/normal/NormalScreen'
+import PhoneScreen from '../components/normal/PhoneScreen'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
@@ -11,6 +12,7 @@ export default function main({ state, setState }) {
     inputs,
     filteredList,
     unFilteredList,
+    isPhoneScreen,
   } = state
   const {
     setStores,
@@ -199,8 +201,10 @@ export default function main({ state, setState }) {
       container
       justifyContent="center"
       alignItems="center"
-      style={{ background: 'purple', height: '100%', width: '100%' }}>
-      <NormalScreen state={state} setState={setState} />
+      style={{ height: '100%', width: '100%' }}>
+      {isPhoneScreen && <PhoneScreen state={state} setState={setState} />}
+      {!isPhoneScreen && <NormalScreen state={state} setState={setState} />}
+
       {apiState.loading || storesApi.loading ? (
         <div className="progress">
           <CircularProgress size="6rem" />

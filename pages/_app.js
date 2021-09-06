@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import { useState, useEffect } from 'react'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -21,43 +22,22 @@ function MyApp({ Component, pageProps }) {
 
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
-  const [storesSelected, setStoresSelected] = useState(null)
+  const [storesSelected, setStoresSelected] = useState({})
   const [stores, setStores] = useState()
   const [filteredList, setFilteredList] = useState()
   const [unFilteredList, setUnFilteredList] = useState([])
   const [sortBy, setSortBy] = useState()
   const [tableHeight, setTableHeight] = useState()
+  const isPhonePotraitWidth = useMediaQuery('(max-width:450px)')
+  const isPhonePotraitHeight = useMediaQuery('(max-height:860px)')
+  const isPhoneLandscapeWidth = useMediaQuery('(max-width:860px)')
+  const isPhoneLandscapeHeight = useMediaQuery('(max-height:450px)')
+  const isPhoneLandscape =
+    isPhoneLandscapeWidth && isPhoneLandscapeHeight ? true : false
+  const isPhonePortrait =
+    isPhonePotraitWidth && isPhonePotraitHeight ? true : false
 
-  // useEffect(() => {
-  //   setApiState({ loading: true })
-
-  //   fetch('https://www.cheapshark.com/api/1.0/deals?')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setApiState({ loading: false, data: data })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setApiState({ loading: false, data: null, error: true })
-  //     })
-
-  //   //list of stores
-  //   setStoresApi({ loading: true })
-
-  //   fetch('https://www.cheapshark.com/api/1.0/stores')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setStoresApi({ loading: false, data: data })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setStoresApi({ loading: false, data: null, error: true })
-  //     })
-  // }, [])
-
-  // useEffect(() => {
-  //   setFilteredList(apiState.data)
-  // }, [apiState.data])
+  const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
 
   const state = {
     inputs,
@@ -71,6 +51,9 @@ function MyApp({ Component, pageProps }) {
     unFilteredList,
     sortBy,
     tableHeight,
+    isPhoneLandscape,
+    isPhonePotraitWidth,
+    isPhoneScreen,
   }
   const setState = {
     setInputs,
