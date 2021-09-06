@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 export default function NormalScreen({ state, setState }) {
   const { inputs, expanded, tableHeight } = state
   const { setExpanded, setTableHeight } = setState
-
+  const tableItemContainer = useRef()
   const style = {
     grid: {
       large: {
@@ -43,7 +43,7 @@ export default function NormalScreen({ state, setState }) {
   })
 
   useEffect(() => {
-    setTableHeight(ref?.current?.clientHeight)
+    setTableHeight(tableItemContainer?.current?.clientHeight)
   }, [])
 
   const { height, ref } = useResizeDetector({ onResize })
@@ -131,7 +131,11 @@ export default function NormalScreen({ state, setState }) {
         ref={ref}
         className={styles.main_content_container}
         justifyContent="center">
-        <Grid item className={styles.table_item_container} xs={12}>
+        <Grid
+          item
+          ref={tableItemContainer}
+          className={styles.table_item_container}
+          xs={12}>
           <Table state={state} setState={setState} />
         </Grid>
         <Grid item>

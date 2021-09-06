@@ -123,14 +123,14 @@ const rows = [
   createData('Oreo', 437, 18.0),
 ].sort((a, b) => (a.calories < b.calories ? -1 : 1))
 
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-})
+// const useStyles2 = makeStyles({
+//   table: {
+//     minWidth: 500,
+//   },
+// })
 
 export default function GamesTable({ state }) {
-  const classes = useStyles2()
+  //   const classes = useStyles2()
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
@@ -150,8 +150,9 @@ export default function GamesTable({ state }) {
 
   const style = {
     tableContainer: {
-      maxWidth: '1000px',
-      height: tableHeight + 'px',
+      maxWidth: '1200px',
+      height: tableHeight ? tableHeight + 'px' : 'auto',
+      minHeight: '370px',
     },
   }
 
@@ -164,7 +165,7 @@ export default function GamesTable({ state }) {
         component={Paper}
         className={styles.table_container}
         style={style.tableContainer}>
-        <Table className={classes.table} aria-label="custom pagination table">
+        <Table aria-label="custom pagination table">
           <TableBody className={styles.table_body}>
             {(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

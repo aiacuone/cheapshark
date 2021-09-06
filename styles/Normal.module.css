@@ -1,9 +1,6 @@
 .grid_container {
-  /* height: 100%; */
-  /* width: 100%; */
   height: 100vh;
   width: 100vw;
-  /* background: #9ac6d7; */
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: 250px repeat(10, 1fr);
@@ -27,9 +24,7 @@
 
 .main_content_container {
   grid-area: 2/1/12/11;
-  /* position: relative; */
   padding: 80px;
-  /* background: green; */
 }
 
 .input_container {
@@ -58,7 +53,6 @@
 .drawer_container {
   width: 100%;
   height: 100%;
-  /* background: red; */
 }
 
 .drawer {
@@ -78,24 +72,15 @@
 }
 
 .table_item_container {
-  /* width: 100%; */
-  /* height: 80%; */
-
-  /* display: grid; */
-  /* place-items: center; */
-  /* background: orange; */
+  width: auto;
 }
 
 .table_grid_container {
-  /* overflow: scroll; */
 }
 
 .table_container {
   padding: 20px 50px;
-  /* max-height: 80%; */
-  /* max-height: 500px; */
 }
 
 .table_body {
-  /* overflow: hidden; */
 }
