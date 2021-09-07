@@ -16,6 +16,9 @@ export default function Sliders({ state, setState }) {
     paper: {
       minWidth: '50px',
     },
+    typography: {
+      color: 'white',
+    },
   }
 
   const sliderData = [
@@ -77,7 +80,7 @@ export default function Sliders({ state, setState }) {
                 </Paper>
               </Grid>
               <Grid item xs={8}>
-                <Typography align="center">
+                <Typography align="center" style={style.typography}>
                   {name.charAt(0).toUpperCase() + name.slice(1)}
                 </Typography>
               </Grid>
