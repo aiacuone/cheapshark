@@ -43,11 +43,14 @@ export default function PhoneScreen({ state, setState }) {
       padding: '0 10px',
     },
     store_container2: {
-      background: 'rgba(0,0,0,0.2)',
+      background: 'rgba(0,0,0,0.15)',
       borderRadius: '5px',
     },
     radio: {
       color: '#dbdbdb',
+
+      height: '20px',
+      width: '35px',
     },
   }
 
@@ -73,9 +76,8 @@ export default function PhoneScreen({ state, setState }) {
                 width={30}
               />
             </Grid>
-            <Grid item>
-              <Radio style={style.radio} size="small" />
-            </Grid>
+
+            <Radio style={style.radio} size="small" />
           </Grid>
         </Grid>
       )

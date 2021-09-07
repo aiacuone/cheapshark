@@ -51,7 +51,7 @@ export default function NormalScreen({ state, setState }) {
   const { height, ref } = useResizeDetector({ onResize })
 
   const logos = storesApi?.data?.map((store) => {
-    const pictureURL = `https://www.cheapshark.com${store.images.banner}`
+    const pictureURL = `https://www.cheapshark.com${store.images.logo}`
     const smallLogos = ['AllYouPlay', 'Epic Games Store']
     const isSmallLogo = smallLogos.indexOf(store.storeName) > -1 ? true : false
 
@@ -61,8 +61,8 @@ export default function NormalScreen({ state, setState }) {
           <Image
             layout="fixed"
             src={pictureURL}
-            width={isSmallLogo ? 0 : 100}
-            height={20}
+            width={isSmallLogo ? 50 : 50}
+            height={50}
           />
         </Grid>
         <Grid item style={{ textAlign: 'center' }}>
