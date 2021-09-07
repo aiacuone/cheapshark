@@ -42,61 +42,6 @@ export default function PhoneScreen({ state, setState }) {
     setExpanded(true)
   }
 
-  // const Sliders = () => {
-  //   const sliderSize = 12
-
-  //   return (
-  //     <Grid
-  //       className={styles.input_container}
-  //       container
-  //       spacing={3}
-  //       direction="column"
-  //       alignItems="center">
-  //       <Grid item xs={sliderSize}>
-  //         <Slider
-  //           state={state}
-  //           setState={setState}
-  //           name="reviews"
-  //           label="K"
-  //           min={0}
-  //           max={100}
-  //         />
-  //       </Grid>
-  //       <Grid item xs={sliderSize}>
-  //         <Slider
-  //           state={state}
-  //           setState={setState}
-  //           name="price"
-  //           label="£"
-  //           min={0}
-  //           max={50}
-  //         />
-  //       </Grid>
-
-  //       <Grid item xs={sliderSize}>
-  //         <Slider
-  //           state={state}
-  //           setState={setState}
-  //           name="release"
-  //           label=""
-  //           min={1990}
-  //           max={2021}
-  //         />
-  //       </Grid>
-  //       <Grid item xs={sliderSize}>
-  //         <Slider
-  //           state={state}
-  //           setState={setState}
-  //           name="rating"
-  //           label="%"
-  //           min={0}
-  //           max={100}
-  //         />
-  //       </Grid>
-  //     </Grid>
-  //   )
-  // }
-
   const Stores = () => {
     return <p>stores</p>
   }
@@ -109,12 +54,12 @@ export default function PhoneScreen({ state, setState }) {
         className={styles.main_content}
         justifyContent="center"
         alignItems="center"></Grid>
-      {/* <div container className={styles.background}>
+      <div container className={styles.background}>
         <Image
           src={isPhoneLandscape ? headerBackground : drawerBackground}
           layout="fill"
         />
-      </div> */}
+      </div>
       <Grid
         container
         style={style.nav_bar}
@@ -142,38 +87,43 @@ export default function PhoneScreen({ state, setState }) {
           className={styles.drawer_container}
           justifyContent="center"
           alignItems="center">
-          <Grid item className={styles.drawer} style={style.drawer}>
-            {/* <div container className={styles.drawer_background}>
+          <Grid item className={styles.drawer} style={style.drawer} xs={12}>
+            <div container className={styles.drawer_background}>
               <Image src={drawerBackground} layout="fill" />
-            </div> */}
-            <Grid
-              container
-              spacing={3}
-              direction={isPhoneLandscape ? 'row' : 'column'}
-              className={styles.drawer_container}
-              justifyContent="center"
-              alignItems="center">
-              {/* <Grid item xs={12}>
-                {drawerContent === 'stores' ? <Stores /> : <Sliders />}
-              </Grid> */}
-              {isPhoneLandscape && (
-                <Grid item xs={3}>
-                  <Grid container justifyContent="flex-end">
+            </div>
+            {isPhoneLandscape && (
+              <Grid
+                container
+                direction="row"
+                className={styles.drawer_container}
+                justifyContent="center"
+                alignItems="center">
+                <Grid item style={{ paddingRight: '50px' }}>
+                  <Grid container justifyContent="center">
                     <Button variant="contained">OK</Button>
                   </Grid>
                 </Grid>
-              )}
-              <Grid item xs={9}>
-                <Sliders state={state} setState={setState} />
+
+                <Grid item>
+                  <Sliders state={state} setState={setState} />
+                </Grid>
               </Grid>
-              {!isPhoneLandscape && (
-                <Grid item item xs={3}>
-                  <Grid container>
-                    <Button variant="contained">OK</Button>
-                  </Grid>
+            )}
+            {!isPhoneLandscape && (
+              <Grid
+                container
+                direction="column"
+                className={styles.drawer_container}
+                justifyContent="center"
+                alignItems="center">
+                <Grid item>
+                  <Sliders state={state} setState={setState} />
                 </Grid>
-              )}
-            </Grid>
+                <Grid item>
+                  <Button variant="contained">OK</Button>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Drawer>

@@ -9,12 +9,12 @@ export default function Sliders({ state, setState }) {
   const { setInputs } = setState
 
   const style = {
-    slider: {
-      //   width: '300px',
-    },
+    slider: {},
     input_container: {
-      width: '50%',
       minWidth: '200px',
+    },
+    paper: {
+      minWidth: '50px',
     },
   }
 
@@ -68,7 +68,7 @@ export default function Sliders({ state, setState }) {
           <Grid item xs={12}>
             <Grid container spacing={0}>
               <Grid item xs={2}>
-                <Paper>
+                <Paper style={style.paper}>
                   <Grid container justifyContent="center">
                     {showBeforeNumber && label}
                     {inputs[name][0]}
@@ -82,7 +82,7 @@ export default function Sliders({ state, setState }) {
                 </Typography>
               </Grid>
               <Grid item xs={2}>
-                <Paper>
+                <Paper style={style.paper}>
                   <Grid container justifyContent="center">
                     {showBeforeNumber && label}
                     {inputs[name][1]}
@@ -117,7 +117,7 @@ export default function Sliders({ state, setState }) {
   })
 
   return (
-    <Grid container direction="column" spacing={1} alignItems="center">
+    <Grid container direction="column" alignItems="center">
       {sliders}
     </Grid>
   )
