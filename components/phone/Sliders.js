@@ -4,7 +4,16 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
-export default function Sliders({ state, setState, inputs, setInputs }) {
+export default function Sliders({ state, setState }) {
+  const [localInputs, setLocalInputs] = useState({
+    reviews: [0, 100],
+    price: [0, 50],
+    release: [1990, 2021],
+    rating: [0, 100],
+  })
+  const { setInputs } = setState
+  const { reviews, price, release, rating } = localInputs
+
   const style = {
     slider: {},
     input_container: {
@@ -24,7 +33,7 @@ export default function Sliders({ state, setState, inputs, setInputs }) {
       label: 'K',
       min: 0,
       max: 100,
-      value: inputs['reviews'],
+      value: reviews,
       // setValue: setInputs.reviews,
     },
     {
@@ -32,7 +41,7 @@ export default function Sliders({ state, setState, inputs, setInputs }) {
       label: '£',
       min: 0,
       max: 50,
-      value: inputs['price'],
+      value: price,
       // setValue: setInputs['price'],
     },
     {
@@ -40,7 +49,7 @@ export default function Sliders({ state, setState, inputs, setInputs }) {
       label: '',
       min: 1990,
       max: 2021,
-      value: inputs['release'],
+      value: release,
       // setValue: setInputs['release'],
     },
     {
@@ -48,7 +57,7 @@ export default function Sliders({ state, setState, inputs, setInputs }) {
       label: '%',
       min: 0,
       max: 100,
-      value: inputs['rating'],
+      value: rating,
       // setValue: setInputs['rating'],
     },
   ]
@@ -58,12 +67,13 @@ export default function Sliders({ state, setState, inputs, setInputs }) {
   }
 
   const sliders = sliderData.map((slider) => {
-    const { name, label, min, max, value, setValue } = slider
+    const { name, label, min, max, value } = slider
 
     function handleChange(e, newValue) {
-      const newInputs = { ...inputs }
+      const newInputs = { ...localInputs }
       newInputs[name] = newValue
-      setInputs(newInputs)
+      setLocalInputs(newInputs)
+      // setInputs(newInputs)
     }
 
     const showAfterNumber = label === '%' || label === 'K' ? true : false

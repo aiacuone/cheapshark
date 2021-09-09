@@ -14,14 +14,8 @@ import Button from '@material-ui/core/Button'
 import Radio from '@material-ui/core/Radio'
 
 export default function PhoneScreen({ state, setState }) {
-  const { isPhoneLandscape, storesApi, sortBy } = state
+  const { isPhoneLandscape, storesApi, sortBy, inputs } = state
   const { updateFetch } = setState
-  const [inputs, setInputs] = useState({
-    reviews: [0, 100],
-    price: [0, 50],
-    release: [1990, 2021],
-    rating: [0, 100],
-  })
 
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
@@ -51,11 +45,13 @@ export default function PhoneScreen({ state, setState }) {
     },
     store_container2: {
       background: 'rgba(0,0,0,0.15)',
-      borderRadius: '5px',
+      borderRadius: '16px',
+      padding: '10px 8px 8px 8px',
+      // border: '1px solid rgba(255,255,255,0.6)',
+      // '&:hover': { background: 'red' },
     },
     radio: {
       color: '#dbdbdb',
-
       height: '20px',
       width: '35px',
     },
@@ -96,7 +92,7 @@ export default function PhoneScreen({ state, setState }) {
               />
             </Grid>
 
-            <Radio style={style.radio} size="small" />
+            {/* <Radio style={style.radio} size="small" /> */}
           </Grid>
         </Grid>
       )
@@ -133,12 +129,7 @@ export default function PhoneScreen({ state, setState }) {
             </Grid>
           </Grid>
           <Grid item>
-            <Sliders
-              state={state}
-              setState={setState}
-              inputs={inputs}
-              setInputs={setInputs}
-            />
+            <Sliders state={state} setState={setState} />
           </Grid>
         </Grid>
       )
@@ -153,12 +144,7 @@ export default function PhoneScreen({ state, setState }) {
           justifyContent="center"
           alignItems="center">
           <Grid item>
-            <Sliders
-              state={state}
-              setState={setState}
-              inputs={inputs}
-              setInputs={setInputs}
-            />
+            <Sliders state={state} setState={setState} />
           </Grid>
           <Grid item>
             <OKButton />
