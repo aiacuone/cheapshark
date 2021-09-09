@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import { useState, useEffect } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { StateContext } from '../utils/StateContext'
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -81,7 +82,9 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <Component {...pageProps} state={state} setState={setState}></Component>
+    <StateContext.Provider value={{ state, setState }}>
+      <Component {...pageProps}></Component>
+    </StateContext.Provider>
   )
 }
 

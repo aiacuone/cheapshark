@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Slider from '@material-ui/core/Slider'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import { StateContext } from '../../utils/StateContext'
 
-export default function Sliders({ state, setState }) {
+export default function Sliders() {
+  const { state, setState } = useContext(StateContext)
   const [localInputs, setLocalInputs] = useState({
     reviews: [0, 100],
     price: [0, 50],

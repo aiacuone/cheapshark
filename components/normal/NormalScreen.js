@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useContext } from 'react'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
 import Image from 'next/image'
 import logo from '../../public/images/logo.svg'
-import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
 import headerBackground from '../../public/images/headerBackground.svg'
-import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import drawerBackground from '../../public/images/drawerBackground.svg'
@@ -15,6 +13,7 @@ import Table from './Table'
 import { useResizeDetector } from 'react-resize-detector'
 import Radio from '@material-ui/core/Radio'
 import { TrendingUp } from '@material-ui/icons'
+import { StateContext } from '../../utils/StateContext'
 
 const useStyles = makeStyles({
   list: {
@@ -25,20 +24,11 @@ const useStyles = makeStyles({
   },
 })
 
-export default function NormalScreen({ state, setState }) {
+export default function NormalScreen() {
+  const { state, setState } = useContext(StateContext)
   const { expanded, storesApi, storesSelected } = state
   const { setExpanded, setTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
-  // const style = {
-  //   grid: {
-  //     large: {
-  //       gridTemplateColumns: 'repeat(10,1fr)',
-  //       gridTemplateRows: ' 170px repeat(10,1fr)',
-  //     },
-  //   },
-  // }
-
-  const classes = useStyles()
 
   const onResize = useCallback(() => {
     setTableHeight(height)
@@ -119,48 +109,20 @@ export default function NormalScreen({ state, setState }) {
           <Grid item>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Slider
-                  state={state}
-                  setState={setState}
-                  name="reviews"
-                  label="K"
-                  min={0}
-                  max={100}
-                />
+                <Slider name="reviews" label="K" min={0} max={100} />
               </Grid>
               <Grid item xs={6}>
-                <Slider
-                  state={state}
-                  setState={setState}
-                  name="price"
-                  label="£"
-                  min={0}
-                  max={50}
-                />
+                <Slider name="price" label="£" min={0} max={50} />
               </Grid>
             </Grid>
           </Grid>
           <Grid container>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Slider
-                  state={state}
-                  setState={setState}
-                  name="release"
-                  label=""
-                  min={1990}
-                  max={2021}
-                />
+                <Slider name="release" label="" min={1990} max={2021} />
               </Grid>
               <Grid item xs={6}>
-                <Slider
-                  state={state}
-                  setState={setState}
-                  name="rating"
-                  label="%"
-                  min={0}
-                  max={100}
-                />
+                <Slider name="rating" label="%" min={0} max={100} />
               </Grid>
             </Grid>
           </Grid>
@@ -176,7 +138,7 @@ export default function NormalScreen({ state, setState }) {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {/* <Table state={state} setState={setState} /> */}
+          {/* <Table  /> */}
         </Grid>
         <Grid item>
           <Drawer

@@ -1,19 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import NormalScreen from '../components/normal/NormalScreen'
 import PhoneScreen from '../components/phone/PhoneScreen'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { StateContext } from '../utils/StateContext'
 
-export default function main({ state, setState }) {
-  const {
-    apiState,
-    storesApi,
-    storesSelected,
-    inputs,
-    filteredList,
-    unFilteredList,
-    isPhoneScreen,
-  } = state
+export default function main() {
+  const { state, setState } = useContext(StateContext)
+  const { apiState, storesApi, storesSelected, isPhoneScreen } = state
   const {
     setStores,
     setStoresSelected,
@@ -104,57 +98,57 @@ export default function main({ state, setState }) {
 
   //////////////////////// updateFetch //////////////////////////////
 
-  function updateFetch({ sortBy, inputs }) {
-    const { price, rating } = inputs
+  // function updateFetch({ sortBy, inputs }) {
+  //   const { price, rating } = inputs
 
-    //creates list of stores
-    const stores = () => {
-      let arr = []
-      Object.keys(storesSelected).map((item, index) => {
-        storesSelected[item] && arr.push(index)
-      })
-      return arr.join()
-    }
+  //   //creates list of stores
+  //   const stores = () => {
+  //     let arr = []
+  //     Object.keys(storesSelected).map((item, index) => {
+  //       storesSelected[item] && arr.push(index)
+  //     })
+  //     return arr.join()
+  //   }
 
-    const fetchSortBy = sortBy ? sortBy : ''
+  //   const fetchSortBy = sortBy ? sortBy : ''
 
-    // const fetchPage = fetchObj?.page ? fetchObj.page - 1 : page - 1
+  //   // const fetchPage = fetchObj?.page ? fetchObj.page - 1 : page - 1
 
-    const standardAddress =
-      'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
-      price[0] +
-      '&upperPrice=' +
-      price[1] +
-      '&steamRating=' +
-      rating[0] +
-      '&pageNumber=' +
-      1
-    // fetchPage +
-    '&storeID=' + stores()
+  //   const standardAddress =
+  //     'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
+  //     price[0] +
+  //     '&upperPrice=' +
+  //     price[1] +
+  //     '&steamRating=' +
+  //     rating[0] +
+  //     '&pageNumber=' +
+  //     1
+  //   // fetchPage +
+  //   '&storeID=' + stores()
 
-    //Incorporates sortBy, if you add sortBy=, but with no value, it changes the default list, so its better to keep the sortBy out of the code if there is no sorting
-    const fetchAddress =
-      fetchSortBy && fetchSortBy !== 'reviews_amount'
-        ? standardAddress + '&sortBy=' + fetchSortBy
-        : standardAddress
+  //   //Incorporates sortBy, if you add sortBy=, but with no value, it changes the default list, so its better to keep the sortBy out of the code if there is no sorting
+  //   const fetchAddress =
+  //     fetchSortBy && fetchSortBy !== 'reviews_amount'
+  //       ? standardAddress + '&sortBy=' + fetchSortBy
+  //       : standardAddress
 
-    setApiState({ loading: true })
+  //   setApiState({ loading: true })
 
-    fetch(fetchAddress)
-      .then((res) => res.json())
-      .then((data) => {
-        setApiState({ loading: false, data: data })
-        createFilteredLists({
-          gamesList: data,
-          sortByReviews: fetchObj.sortBy == 'reviews_amount' ? true : false,
-          inputs,
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-        setApiState({ loading: false, data: null, error: true })
-      })
-  }
+  //   fetch(fetchAddress)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setApiState({ loading: false, data: data })
+  //       createFilteredLists({
+  //         gamesList: data,
+  //         sortByReviews: fetchObj.sortBy == 'reviews_amount' ? true : false,
+  //         inputs,
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //       setApiState({ loading: false, data: null, error: true })
+  //     })
+  // }
   /////////////////////////// createFilteredList /////////////////////////
 
   function createFilteredLists({ gamesList: list, sortByReviews, inputs }) {
@@ -199,16 +193,14 @@ export default function main({ state, setState }) {
     setFilteredList(filtered)
   }
 
-  setState = { ...setState, updateFetch }
-
   return (
     <Grid
       container
       justifyContent="center"
       alignItems="center"
       style={{ height: '100%', width: '100%' }}>
-      {isPhoneScreen && <PhoneScreen state={state} setState={setState} />}
-      {!isPhoneScreen && <NormalScreen state={state} setState={setState} />}
+      {isPhoneScreen && <PhoneScreen />}
+      {!isPhoneScreen && <NormalScreen />}
 
       {apiState.loading || storesApi.loading ? (
         <div className="progress">
@@ -217,4 +209,58 @@ export default function main({ state, setState }) {
       ) : null}
     </Grid>
   )
+}
+
+export function updateFetch() {
+  let { state, setState } = useContext(StateContext)
+  const { inputs, filteredList, unFilteredList } = state
+  const { price, rating } = inputs
+
+  //creates list of stores
+  const stores = () => {
+    let arr = []
+    Object.keys(storesSelected).map((item, index) => {
+      storesSelected[item] && arr.push(index)
+    })
+    return arr.join()
+  }
+
+  const fetchSortBy = sortBy ? sortBy : ''
+
+  // const fetchPage = fetchObj?.page ? fetchObj.page - 1 : page - 1
+
+  const standardAddress =
+    'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
+    price[0] +
+    '&upperPrice=' +
+    price[1] +
+    '&steamRating=' +
+    rating[0] +
+    '&pageNumber=' +
+    1
+  // fetchPage +
+  '&storeID=' + stores()
+
+  //Incorporates sortBy, if you add sortBy=, but with no value, it changes the default list, so its better to keep the sortBy out of the code if there is no sorting
+  const fetchAddress =
+    fetchSortBy && fetchSortBy !== 'reviews_amount'
+      ? standardAddress + '&sortBy=' + fetchSortBy
+      : standardAddress
+
+  setApiState({ loading: true })
+
+  fetch(fetchAddress)
+    .then((res) => res.json())
+    .then((data) => {
+      setApiState({ loading: false, data: data })
+      createFilteredLists({
+        gamesList: data,
+        sortByReviews: fetchObj.sortBy == 'reviews_amount' ? true : false,
+        inputs,
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+      setApiState({ loading: false, data: null, error: true })
+    })
 }

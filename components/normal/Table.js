@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
@@ -16,6 +16,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import LastPageIcon from '@material-ui/icons/LastPage'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
+import { StateContext } from '../../utils/StateContext'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -129,8 +130,8 @@ const rows = [
 //   },
 // })
 
-export default function GamesTable({ state }) {
-  //   const classes = useStyles2()
+export default function GamesTable() {
+  const { state } = useContext(StateContext)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 

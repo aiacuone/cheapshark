@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../styles/Phone.module.css'
 import TuneIcon from '@material-ui/icons/Tune'
@@ -12,11 +12,12 @@ import Typography from '@material-ui/core/Typography'
 import Sliders from './Sliders'
 import Button from '@material-ui/core/Button'
 import Radio from '@material-ui/core/Radio'
+import updateFetch from '../../pages/main'
+import { StateContext } from '../../utils/StateContext'
 
-export default function PhoneScreen({ state, setState }) {
+export default function PhoneScreen() {
+  const { state, setState } = useContext(StateContext)
   const { isPhoneLandscape, storesApi, sortBy, inputs } = state
-  const { updateFetch } = setState
-
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
 
@@ -47,8 +48,6 @@ export default function PhoneScreen({ state, setState }) {
       background: 'rgba(0,0,0,0.15)',
       borderRadius: '16px',
       padding: '10px 8px 8px 8px',
-      // border: '1px solid rgba(255,255,255,0.6)',
-      // '&:hover': { background: 'red' },
     },
     radio: {
       color: '#dbdbdb',
@@ -91,8 +90,6 @@ export default function PhoneScreen({ state, setState }) {
                 width={30}
               />
             </Grid>
-
-            {/* <Radio style={style.radio} size="small" /> */}
           </Grid>
         </Grid>
       )
@@ -129,7 +126,7 @@ export default function PhoneScreen({ state, setState }) {
             </Grid>
           </Grid>
           <Grid item>
-            <Sliders state={state} setState={setState} />
+            <Sliders />
           </Grid>
         </Grid>
       )
@@ -144,7 +141,7 @@ export default function PhoneScreen({ state, setState }) {
           justifyContent="center"
           alignItems="center">
           <Grid item>
-            <Sliders state={state} setState={setState} />
+            <Sliders />
           </Grid>
           <Grid item>
             <OKButton />
