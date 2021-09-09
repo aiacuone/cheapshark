@@ -19,7 +19,10 @@ function MyApp({ Component, pageProps }) {
     data: null,
     error: false,
   })
-
+  const [reviews, setReviews] = useState([0, 100])
+  const [price, setPrice] = useState([0, 50])
+  const [release, setRelease] = useState([1990, 2021])
+  const [rating, setRating] = useState([0, 100])
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
   const [storesSelected, setStoresSelected] = useState({})
@@ -54,6 +57,10 @@ function MyApp({ Component, pageProps }) {
     isPhoneLandscape,
     isPhonePotraitWidth,
     isPhoneScreen,
+    reviews,
+    price,
+    release,
+    rating,
   }
   const setState = {
     setInputs,
@@ -67,6 +74,10 @@ function MyApp({ Component, pageProps }) {
     setStoresApi,
     setFilteredList,
     setTableHeight,
+    setReviews,
+    setPrice,
+    setRelease,
+    setRating,
   }
 
   return (

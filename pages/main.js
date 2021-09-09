@@ -22,7 +22,7 @@ export default function main({ state, setState }) {
     setApiState,
     setStoresApi,
   } = setState
-  const { reviews, price, release, rating } = inputs
+  // const { reviews, price, release, rating } = inputs
 
   ////////////////////////////////// global variables ///////////////////////////////////
 
@@ -104,7 +104,9 @@ export default function main({ state, setState }) {
 
   //////////////////////// updateFetch //////////////////////////////
 
-  function updateFetch(fetchObj) {
+  function updateFetch({ sortBy, inputs }) {
+    const { price, rating } = inputs
+
     //creates list of stores
     const stores = () => {
       let arr = []
@@ -114,7 +116,7 @@ export default function main({ state, setState }) {
       return arr.join()
     }
 
-    const fetchSortBy = fetchObj?.sortBy ? fetchObj.sortBy : ''
+    const fetchSortBy = sortBy ? sortBy : ''
 
     // const fetchPage = fetchObj?.page ? fetchObj.page - 1 : page - 1
 
@@ -145,6 +147,7 @@ export default function main({ state, setState }) {
         createFilteredLists({
           gamesList: data,
           sortByReviews: fetchObj.sortBy == 'reviews_amount' ? true : false,
+          inputs,
         })
       })
       .catch((error) => {
@@ -154,13 +157,15 @@ export default function main({ state, setState }) {
   }
   /////////////////////////// createFilteredList /////////////////////////
 
-  function createFilteredLists(data) {
+  function createFilteredLists({ gamesList: list, sortByReviews, inputs }) {
     //local sort by reviews amount
-    const gamesList = data.sortByReviews
-      ? data.gamesList.sort((a, b) => {
+
+    const { reviews, release, rating } = inputs
+    const gamesList = sortByReviews
+      ? list.sort((a, b) => {
           return b.steamRatingCount - a.steamRatingCount
         })
-      : data.gamesList
+      : list
 
     const filtered = gamesList.filter((item) => {
       const filter1 =

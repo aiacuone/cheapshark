@@ -16,7 +16,7 @@ export default function RangeSlider({
   const { inputs, sortBy } = state
 
   function handleChange(e, value) {
-    updateFetch({ sortBy: sortBy && sortBy })
+    updateFetch({ sortBy: sortBy && sortBy, inputs })
     const newInputs = { ...inputs }
     newInputs[name] = value
     setInputs(newInputs)

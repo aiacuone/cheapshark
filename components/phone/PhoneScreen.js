@@ -14,7 +14,14 @@ import Button from '@material-ui/core/Button'
 import Radio from '@material-ui/core/Radio'
 
 export default function PhoneScreen({ state, setState }) {
-  const { isPhoneLandscape, storesApi } = state
+  const { isPhoneLandscape, storesApi, sortBy } = state
+  const { updateFetch } = setState
+  const [inputs, setInputs] = useState({
+    reviews: [0, 100],
+    price: [0, 50],
+    release: [1990, 2021],
+    rating: [0, 100],
+  })
 
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
@@ -59,6 +66,18 @@ export default function PhoneScreen({ state, setState }) {
     setExpanded(true)
   }
 
+  function handleOK() {
+    updateFetch({ sortBy, inputs })
+  }
+
+  const OKButton = () => {
+    return (
+      <Button variant="contained" onClick={handleOK}>
+        OK
+      </Button>
+    )
+  }
+
   const Stores = () => {
     const stores = storesApi.data.map((store, index) => {
       return (
@@ -90,6 +109,11 @@ export default function PhoneScreen({ state, setState }) {
         alignItems="center"
         style={style.stores_container}>
         {stores}
+        <Grid item xs={4}>
+          <Grid container justifyContent="center">
+            <OKButton />
+          </Grid>
+        </Grid>
       </Grid>
     )
   }
@@ -105,12 +129,16 @@ export default function PhoneScreen({ state, setState }) {
           alignItems="center">
           <Grid item style={{ paddingRight: '50px' }}>
             <Grid container justifyContent="center">
-              <Button variant="contained">OK</Button>
+              <OKButton />
             </Grid>
           </Grid>
-
           <Grid item>
-            <Sliders state={state} setState={setState} />
+            <Sliders
+              state={state}
+              setState={setState}
+              inputs={inputs}
+              setInputs={setInputs}
+            />
           </Grid>
         </Grid>
       )
@@ -125,10 +153,15 @@ export default function PhoneScreen({ state, setState }) {
           justifyContent="center"
           alignItems="center">
           <Grid item>
-            <Sliders state={state} setState={setState} />
+            <Sliders
+              state={state}
+              setState={setState}
+              inputs={inputs}
+              setInputs={setInputs}
+            />
           </Grid>
           <Grid item>
-            <Button variant="contained">OK</Button>
+            <OKButton />
           </Grid>
         </Grid>
       )
