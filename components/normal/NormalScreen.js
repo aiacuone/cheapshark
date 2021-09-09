@@ -15,20 +15,24 @@ import Radio from '@material-ui/core/Radio'
 import { TrendingUp } from '@material-ui/icons'
 import { StateContext } from '../../utils/StateContext'
 
-const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-})
+import Typography from '@material-ui/core/Typography'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
   const { expanded, storesApi, storesSelected } = state
   const { setExpanded, setTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
+
+  const style = {
+    storesHeader: {
+      color: 'white',
+    },
+    selectAllButton: {
+      color: 'white',
+      zIndex: 1,
+      cursor: 'pointer',
+    },
+  }
 
   const onResize = useCallback(() => {
     setTableHeight(height)
@@ -40,39 +44,42 @@ export default function NormalScreen() {
 
   const { height, ref } = useResizeDetector({ onResize })
 
+  function handleStoreSelect(store) {
+    const newStoresSelected = { ...storesSelected }
+    newStoresSelected[store.storeName] = !newStoresSelected[store.storeName]
+    setStoresSelected(newStoresSelected)
+  }
+
+  function handleSelectAll() {
+    const newStoresSelected = { ...storesSelected }
+    Object.keys(newStoresSelected).forEach((store) => {
+      newStoresSelected[store] = true
+    })
+    setStoresSelected(newStoresSelected)
+  }
+
+  function handleDeselectAll() {
+    const newStoresSelected = { ...storesSelected }
+    Object.keys(newStoresSelected).forEach((store) => {
+      newStoresSelected[store] = false
+    })
+    setStoresSelected(newStoresSelected)
+  }
+
   const logos = storesApi?.data?.map((store) => {
     const pictureURL = `https://www.cheapshark.com${store.images.logo}`
-    const smallLogos = ['AllYouPlay', 'Epic Games Store']
-    const isSmallLogo = smallLogos.indexOf(store.storeName) > -1 ? true : false
-
     return (
-      <Grid item>
+      <Grid
+        item
+        onClick={() => handleStoreSelect(store)}
+        style={{
+          filter: storesSelected[store.storeName]
+            ? 'opacity(100%)'
+            : 'opacity(15%)',
+          cursor: 'pointer',
+        }}>
         <Grid container direcion="column">
-          <Image
-            layout="fixed"
-            src={pictureURL}
-            width={isSmallLogo ? 50 : 50}
-            height={50}
-          />
-        </Grid>
-        <Grid item style={{ textAlign: 'center' }}>
-          <Radio
-            size="small"
-            checked={
-              storesSelected[store.storeName]
-                ? storesSelected[store.storeName]
-                : true
-            }
-            style={{ color: 'white' }}
-            onChange={() => {
-              const newStoresSelected = { ...storesSelected }
-
-              newStoresSelected[store.storeName]
-                ? !storesSelected[store.storeName]
-                : (newStoresSelected[store.storeName] = false)
-              setStoresSelected(newStoresSelected)
-            }}
-          />
+          <Image layout="fixed" src={pictureURL} width={60} height={60} />
         </Grid>
       </Grid>
     )
@@ -161,15 +168,38 @@ export default function NormalScreen() {
                   alignItems="center">
                   <Grid item>
                     <Grid
-                      // style={{ height: '50%', background: 'blue' }}
-                      // wrap="wrap"
                       className={styles.logos_container}
                       container
                       justifyContent="center"
                       alignItems="center"
-                      // direction="column"
-                      spacing={3}>
-                      {logos}
+                      spacing={10}>
+                      <Grid item></Grid>
+                      <Grid
+                        container
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={3}>
+                        {' '}
+                        {logos}
+                      </Grid>
+                      <Grid item style={{ width: '100%' }}>
+                        <Grid
+                          container
+                          justifyContent="space-around"
+                          alignItems="center">
+                          <Typography
+                            onClick={handleDeselectAll}
+                            style={style.selectAllButton}>
+                            Deselect All
+                          </Typography>
+                          <Button variant="contained">OK</Button>
+                          <Typography
+                            onClick={handleSelectAll}
+                            style={style.selectAllButton}>
+                            Select All
+                          </Typography>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>

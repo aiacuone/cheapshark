@@ -20,13 +20,46 @@ function MyApp({ Component, pageProps }) {
     data: null,
     error: false,
   })
-  const [reviews, setReviews] = useState([0, 100])
-  const [price, setPrice] = useState([0, 50])
-  const [release, setRelease] = useState([1990, 2021])
-  const [rating, setRating] = useState([0, 100])
+  // const [reviews, setReviews] = useState([0, 100])
+  // const [price, setPrice] = useState([0, 50])
+  // const [release, setRelease] = useState([1990, 2021])
+  // const [rating, setRating] = useState([0, 100])
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
-  const [storesSelected, setStoresSelected] = useState({})
+  const [storesSelected, setStoresSelected] = useState({
+    Steam: true,
+    GamersGate: true,
+    GreenManGaming: true,
+    Amazon: true,
+    GameStop: true,
+    Direct2Drive: true,
+    GOG: true,
+    Origin: true,
+    'Get Games': true,
+    'Shiny Loot': true,
+    'Humble Store': true,
+    Desura: true,
+    Uplay: true,
+    IndieGameStand: true,
+    Fanatical: true,
+    Gamesrocket: true,
+    'Games Republic': true,
+    SilaGames: true,
+    Playfield: true,
+    ImperialGames: true,
+    WinGameStore: true,
+    FunStockDigital: true,
+    GameBillet: true,
+    Voidu: true,
+    'Epic Games Store': true,
+    'Razer Game Store': true,
+    Gamesplanet: true,
+    Gamesload: true,
+    '2Game': true,
+    IndieGala: true,
+    'Blizzard Shop': true,
+    AllYouPlay: true,
+  })
   const [stores, setStores] = useState()
   const [filteredList, setFilteredList] = useState()
   const [unFilteredList, setUnFilteredList] = useState([])
@@ -58,10 +91,10 @@ function MyApp({ Component, pageProps }) {
     isPhoneLandscape,
     isPhonePotraitWidth,
     isPhoneScreen,
-    reviews,
-    price,
-    release,
-    rating,
+    // reviews,
+    // price,
+    // release,
+    // rating,
   }
   const setState = {
     setInputs,
@@ -75,10 +108,10 @@ function MyApp({ Component, pageProps }) {
     setStoresApi,
     setFilteredList,
     setTableHeight,
-    setReviews,
-    setPrice,
-    setRelease,
-    setRating,
+    // setReviews,
+    // setPrice,
+    // setRelease,
+    // setRating,
   }
 
   return (

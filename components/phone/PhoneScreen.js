@@ -17,7 +17,8 @@ import { StateContext } from '../../utils/StateContext'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
-  const { isPhoneLandscape, storesApi, sortBy, inputs } = state
+  const { isPhoneLandscape, storesApi, sortBy, inputs, storesSelected } = state
+  const { setStoresSelected } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
 
@@ -41,18 +42,13 @@ export default function PhoneScreen() {
     stores_container: {
       height: '100%',
     },
-    store_container: {
-      padding: '0 10px',
+    storesHeader: {
+      color: 'white',
+      textDecoration: 'underline',
     },
-    store_container2: {
-      background: 'rgba(0,0,0,0.15)',
-      borderRadius: '16px',
-      padding: '7px 8px 5px 8px',
-    },
-    radio: {
-      color: '#dbdbdb',
-      height: '20px',
-      width: '35px',
+    selectAllButton: {
+      color: 'white',
+      cursor: 'pointer',
     },
   }
 
@@ -62,7 +58,7 @@ export default function PhoneScreen() {
   }
 
   function handleOK() {
-    updateFetch({ sortBy, inputs })
+    // updateFetch({ sortBy, inputs })
   }
 
   const OKButton = () => {
@@ -73,12 +69,45 @@ export default function PhoneScreen() {
     )
   }
 
+  function handleStoreClick(store) {
+    const newStoresSelected = { ...storesSelected }
+    newStoresSelected[store.storeName] = !newStoresSelected[store.storeName]
+    setStoresSelected(newStoresSelected)
+  }
+
   const Stores = () => {
+    function handleSelectAll() {
+      const newStoresSelected = { ...storesSelected }
+
+      Object.keys(newStoresSelected).forEach((store) => {
+        newStoresSelected[store] = true
+      })
+
+      setStoresSelected(newStoresSelected)
+    }
+
+    function handleDeselectAll() {
+      const newStoresSelected = { ...storesSelected }
+
+      Object.keys(newStoresSelected).forEach((store) => {
+        newStoresSelected[store] = false
+      })
+      setStoresSelected(newStoresSelected)
+    }
+
     const stores = storesApi.data.map((store, index) => {
       return (
-        <Grid item style={style.store_container}>
+        <Grid
+          item
+          style={{
+            margin: '5px 10px',
+            cursor: 'pointer',
+            filter: storesSelected[store.storeName]
+              ? 'opacity(100%)'
+              : 'opacity(15%)',
+          }}
+          onClick={() => handleStoreClick(store)}>
           <Grid
-            style={style.store_container2}
             direction={isPhoneLandscape ? 'row' : 'column'}
             container
             alignItems="center">
@@ -86,8 +115,8 @@ export default function PhoneScreen() {
               <Image
                 src={`https://www.cheapshark.com${store.images.logo}`}
                 layout="fixed"
-                height={30}
-                width={30}
+                height={40}
+                width={40}
               />
             </Grid>
           </Grid>
@@ -102,11 +131,20 @@ export default function PhoneScreen() {
         alignItems="center"
         style={style.stores_container}>
         {stores}
-        <Grid item xs={4}>
-          <Grid container justifyContent="center">
-            <OKButton />
-          </Grid>
+        <Grid container justifyContent="space-around" alignItems="center">
+          <Typography
+            style={style.selectAllButton}
+            variant="contained"
+            size="small"
+            onClick={handleSelectAll}>
+            Select All
+          </Typography>
+          <OKButton />
+          <Typography style={style.selectAllButton} onClick={handleDeselectAll}>
+            Deselect All
+          </Typography>
         </Grid>
+        <Grid item xs={4}></Grid>
       </Grid>
     )
   }
