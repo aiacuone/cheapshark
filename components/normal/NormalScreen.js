@@ -151,7 +151,7 @@ export default function NormalScreen() {
               justifyContent="center"
               alignItems="center">
               <Grid item className={styles.drawer}>
-                <div container className={styles.background}>
+                <div className={styles.background}>
                   <Image src={drawerBackground} layout="fill" />
                 </div>
                 <Grid

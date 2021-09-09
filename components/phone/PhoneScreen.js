@@ -47,7 +47,7 @@ export default function PhoneScreen() {
     store_container2: {
       background: 'rgba(0,0,0,0.15)',
       borderRadius: '16px',
-      padding: '10px 8px 8px 8px',
+      padding: '7px 8px 5px 8px',
     },
     radio: {
       color: '#dbdbdb',
@@ -162,7 +162,7 @@ export default function PhoneScreen() {
         className={styles.main_content}
         justifyContent="center"
         alignItems="center"></Grid>
-      <div container className={styles.background}>
+      <div className={styles.background}>
         {/* <Image
           src={isPhoneLandscape ? headerBackground : drawerBackground}
           layout="fill"
@@ -196,7 +196,7 @@ export default function PhoneScreen() {
           justifyContent="center"
           alignItems="center">
           <Grid item className={styles.drawer} style={style.drawer} xs={12}>
-            {/* <div container className={styles.drawer_background}>
+            {/* <div className={styles.drawer_background}>
               <Image src={drawerBackground} layout="fill" />
             </div> */}
             {drawerContent === 'stores' ? <Stores /> : <OrientatedSliders />}

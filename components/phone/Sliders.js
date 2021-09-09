@@ -7,14 +7,9 @@ import { StateContext } from '../../utils/StateContext'
 
 export default function Sliders() {
   const { state, setState } = useContext(StateContext)
-  const [localInputs, setLocalInputs] = useState({
-    reviews: [0, 100],
-    price: [0, 50],
-    release: [1990, 2021],
-    rating: [0, 100],
-  })
+  const { inputs } = state
   const { setInputs } = setState
-  const { reviews, price, release, rating } = localInputs
+  const { reviews, price, release, rating } = inputs
 
   const style = {
     slider: {},
@@ -36,7 +31,6 @@ export default function Sliders() {
       min: 0,
       max: 100,
       value: reviews,
-      // setValue: setInputs.reviews,
     },
     {
       name: 'price',
@@ -44,7 +38,6 @@ export default function Sliders() {
       min: 0,
       max: 50,
       value: price,
-      // setValue: setInputs['price'],
     },
     {
       name: 'release',
@@ -52,7 +45,6 @@ export default function Sliders() {
       min: 1990,
       max: 2021,
       value: release,
-      // setValue: setInputs['release'],
     },
     {
       name: 'rating',
@@ -60,7 +52,6 @@ export default function Sliders() {
       min: 0,
       max: 100,
       value: rating,
-      // setValue: setInputs['rating'],
     },
   ]
 
@@ -68,14 +59,13 @@ export default function Sliders() {
     return `${value}`
   }
 
-  const sliders = sliderData.map((slider) => {
+  const sliders = sliderData.map((slider, index) => {
     const { name, label, min, max, value } = slider
 
     function handleChange(e, newValue) {
-      const newInputs = { ...localInputs }
+      const newInputs = { ...inputs }
       newInputs[name] = newValue
-      setLocalInputs(newInputs)
-      // setInputs(newInputs)
+      setInputs(newInputs)
     }
 
     const showAfterNumber = label === '%' || label === 'K' ? true : false
@@ -83,7 +73,7 @@ export default function Sliders() {
     const showBeforeNumber = label === '£' ? true : false
 
     return (
-      <Grid item xs={8} style={style.input_container}>
+      <Grid item xs={8} style={style.input_container} key={name + index}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Grid container spacing={0}>
