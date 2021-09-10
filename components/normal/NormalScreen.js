@@ -31,6 +31,11 @@ export default function NormalScreen() {
       color: 'white',
       zIndex: 1,
       cursor: 'pointer',
+      border: '1px solid grey',
+      borderRadius: '10px',
+    },
+    stores_button_container: {
+      minWidth: '400px',
     },
   }
 
@@ -184,20 +189,25 @@ export default function NormalScreen() {
                       </Grid>
                       <Grid item style={{ width: '100%' }}>
                         <Grid
+                          style={style.stores_button_container}
                           container
                           justifyContent="space-around"
                           alignItems="center">
-                          <Typography
+                          <Button
                             onClick={handleDeselectAll}
+                            variant="outlined"
+                            size="small"
                             style={style.selectAllButton}>
                             Deselect All
-                          </Typography>
+                          </Button>
                           <Button variant="contained">OK</Button>
-                          <Typography
+                          <Button
                             onClick={handleSelectAll}
-                            style={style.selectAllButton}>
+                            style={style.selectAllButton}
+                            variant="outlined"
+                            size="small">
                             Select All
-                          </Typography>
+                          </Button>
                         </Grid>
                       </Grid>
                     </Grid>

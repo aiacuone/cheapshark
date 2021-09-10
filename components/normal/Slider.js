@@ -4,14 +4,14 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import { StateContext } from '../../utils/StateContext'
+import { updateFetch } from '../../pages/main'
 
 export default function RangeSlider({ name, label, min, max }) {
   const { state, setState } = useContext(StateContext)
-  const { setInputs, updateFetch } = setState
-  const { inputs, sortBy } = state
+  const { setInputs } = setState
+  const { inputs } = state
 
   function handleChange(e, value) {
-    updateFetch({ sortBy: sortBy && sortBy, inputs })
     const newInputs = { ...inputs }
     newInputs[name] = value
     setInputs(newInputs)
