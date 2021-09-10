@@ -130,13 +130,9 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     setApiState({ loading: true })
 
-    const stores = () => {
-      let arr = []
-      Object.keys(storesSelected).forEach((item, index) => {
-        storesSelected[item] && arr.push(index)
-      })
-      return arr.join()
-    }
+    const stores = Object.keys(storesSelected)
+      .map((store, index) => index)
+      .join()
 
     const address =
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -148,7 +144,7 @@ function MyApp({ Component, pageProps }) {
       '&pageNumber=' +
       1
     // fetchPage +
-    '&storeID=' + stores()
+    '&storeID=' + stores
 
     fetch(address)
       .then((res) => res.json())
