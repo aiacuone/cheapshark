@@ -35,7 +35,17 @@ export default function NormalScreen() {
       borderRadius: '10px',
     },
     stores_button_container: {
-      minWidth: '400px',
+      minWidth: '350px',
+    },
+    logos_container: {
+      padding: '0 20px',
+      minWidth: '150px',
+      maxWidth: '700px',
+      // width: '300px',
+      // background: 'red',
+    },
+    logos_container2: {
+      padding: '0 20px',
     },
   }
 
@@ -173,13 +183,14 @@ export default function NormalScreen() {
                   alignItems="center">
                   <Grid item>
                     <Grid
-                      className={styles.logos_container}
+                      style={style.logos_container}
                       container
                       justifyContent="center"
                       alignItems="center"
                       spacing={10}>
                       <Grid item></Grid>
                       <Grid
+                        style={style.logos_container2}
                         container
                         justifyContent="center"
                         alignItems="center"
