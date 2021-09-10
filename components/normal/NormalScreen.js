@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useContext } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+  useState,
+} from 'react'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
 import Image from 'next/image'
@@ -19,9 +25,12 @@ import Typography from '@material-ui/core/Typography'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
-  const { expanded, storesApi, storesSelected } = state
+  const { expanded, storesApi, storesSelected, localFilteredList } = state
   const { setExpanded, setTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
+  const [localStoresSelected, setLocalStoresSelected] = useState({
+    ...storesSelected,
+  })
 
   const style = {
     storesHeader: {
@@ -41,8 +50,6 @@ export default function NormalScreen() {
       padding: '0 20px',
       minWidth: '150px',
       maxWidth: '700px',
-      // width: '300px',
-      // background: 'red',
     },
     logos_container2: {
       padding: '0 20px',
@@ -60,35 +67,40 @@ export default function NormalScreen() {
   const { height, ref } = useResizeDetector({ onResize })
 
   function handleStoreSelect(store) {
-    const newStoresSelected = { ...storesSelected }
+    const newStoresSelected = { ...localStoresSelected }
     newStoresSelected[store.storeName] = !newStoresSelected[store.storeName]
-    setStoresSelected(newStoresSelected)
+    setLocalStoresSelected(newStoresSelected)
   }
 
   function handleSelectAll() {
-    const newStoresSelected = { ...storesSelected }
+    const newStoresSelected = { ...localStoresSelected }
     Object.keys(newStoresSelected).forEach((store) => {
       newStoresSelected[store] = true
     })
-    setStoresSelected(newStoresSelected)
+    setLocalStoresSelected(newStoresSelected)
   }
 
   function handleDeselectAll() {
-    const newStoresSelected = { ...storesSelected }
+    const newStoresSelected = { ...localStoresSelected }
     Object.keys(newStoresSelected).forEach((store) => {
       newStoresSelected[store] = false
     })
-    setStoresSelected(newStoresSelected)
+    setLocalStoresSelected(newStoresSelected)
   }
 
-  const logos = storesApi?.data?.map((store) => {
+  function handleOK() {
+    setExpanded(false)
+    setStoresSelected(localStoresSelected)
+  }
+
+  const stores = storesApi?.data?.map((store) => {
     const pictureURL = `https://www.cheapshark.com${store.images.logo}`
     return (
       <Grid
         item
         onClick={() => handleStoreSelect(store)}
         style={{
-          filter: storesSelected[store.storeName]
+          filter: localStoresSelected[store.storeName]
             ? 'opacity(100%)'
             : 'opacity(15%)',
           cursor: 'pointer',
@@ -160,13 +172,17 @@ export default function NormalScreen() {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {/* <Table  /> */}
+          {localFilteredList && <Table />}
+          {/* <Table /> */}
         </Grid>
         <Grid item>
           <Drawer
             anchor="right"
             open={expanded}
-            onClose={() => setExpanded(false)}>
+            onClose={() => {
+              setExpanded(false)
+              handleOK()
+            }}>
             <Grid
               container
               className={styles.drawer_container}
@@ -196,7 +212,7 @@ export default function NormalScreen() {
                         alignItems="center"
                         spacing={3}>
                         {' '}
-                        {logos}
+                        {stores}
                       </Grid>
                       <Grid item style={{ width: '100%' }}>
                         <Grid
@@ -211,7 +227,9 @@ export default function NormalScreen() {
                             style={style.selectAllButton}>
                             Deselect All
                           </Button>
-                          <Button variant="contained">OK</Button>
+                          <Button variant="contained" onClick={handleOK}>
+                            OK
+                          </Button>
                           <Button
                             onClick={handleSelectAll}
                             style={style.selectAllButton}

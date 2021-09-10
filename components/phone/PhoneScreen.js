@@ -18,9 +18,10 @@ import { StateContext } from '../../utils/StateContext'
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
   const { isPhoneLandscape, storesApi, sortBy, inputs, storesSelected } = state
-  const { setStoresSelected } = setState
+  const { setStoresSelected, setInputs } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
+  const [localInputs, setLocalInputs] = useState({ ...inputs })
 
   const style = {
     firstContainer: {
@@ -58,7 +59,8 @@ export default function PhoneScreen() {
   }
 
   function handleOK() {
-    // updateFetch({ sortBy, inputs })
+    setInputs(localInputs)
+    setExpanded(false)
   }
 
   const OKButton = () => {
@@ -164,7 +166,10 @@ export default function PhoneScreen() {
             </Grid>
           </Grid>
           <Grid item>
-            <Sliders />
+            <Sliders
+              localInputs={localInputs}
+              setLocalInputs={setLocalInputs}
+            />
           </Grid>
         </Grid>
       )
@@ -179,7 +184,10 @@ export default function PhoneScreen() {
           justifyContent="center"
           alignItems="center">
           <Grid item>
-            <Sliders />
+            <Sliders
+              localInputs={localInputs}
+              setLocalInputs={setLocalInputs}
+            />
           </Grid>
           <Grid item>
             <OKButton />

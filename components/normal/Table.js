@@ -17,6 +17,8 @@ import LastPageIcon from '@material-ui/icons/LastPage'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
 import { StateContext } from '../../utils/StateContext'
+import Image from 'next/image'
+import TableHead from '@material-ui/core/TableHead'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -91,54 +93,30 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 }
 
-function createData(name, calories, fat) {
-  return { name, calories, fat }
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1))
-
-// const useStyles2 = makeStyles({
-//   table: {
-//     minWidth: 500,
-//   },
-// })
-
 export default function GamesTable() {
   const { state } = useContext(StateContext)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
-  const { tableContainerHeight, tableHeight } = state
+  const {
+    tableContainerHeight,
+    tableHeight,
+    localFilteredList: filteredList,
+    localUnfilteredList: unFilteredList,
+  } = state
+
+  const timestampConvert = (timestamp) => {
+    const dateObj = new Date(timestamp)
+
+    const month = dateObj.getMonth() + 1
+    const year = dateObj.getFullYear()
+    const date = dateObj.getDate()
+    return date + '/' + month + '/' + year
+  }
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+    rowsPerPage -
+    Math.min(rowsPerPage, filteredList.length - page * rowsPerPage)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -151,36 +129,103 @@ export default function GamesTable() {
 
   const style = {
     tableContainer: {
-      maxWidth: '1200px',
+      minWidth: '700px',
+      maxWidth: '1500px',
       height: tableHeight ? tableHeight + 'px' : 'auto',
       minHeight: '370px',
+      position: 'relative',
+    },
+    table_grid_container: {
+      // position: 'relative',
     },
   }
 
   return (
-    <Grid
-      container
-      className={styles.table_grid_container}
-      justifyContent="center">
+    <Grid container style={style.table_grid_container} justifyContent="center">
       <TableContainer
         component={Paper}
         className={styles.table_container}
         style={style.tableContainer}>
-        <Table aria-label="custom pagination table">
+        <Table stickyHeader aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ zIndex: 10 }}>Name</TableCell>
+              <TableCell align="right">Date</TableCell>
+              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Release Date</TableCell>
+              <TableCell align="right">Rating</TableCell>
+              <TableCell align="right">Store</TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody className={styles.table_body}>
             {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row) => (
-              <TableRow key={row.name}>
-                <TableCell component="th" scope="row">
-                  {row.name}
+              ? filteredList.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : filteredList
+            ).map((store) => (
+              <TableRow key={store.name}>
+                <TableCell
+                  style={{
+                    width: '200px',
+                    position: 'sticky',
+                    left: '0',
+                    background: 'white',
+                  }}
+                  align="right">
+                  <Grid container alignItems="center" spacing={3}>
+                    <Grid item>
+                      <Image
+                        src={store.thumb}
+                        layout="fixed"
+                        height={50}
+                        width={50}
+                      />
+                    </Grid>
+                    <Grid item>{store.title}</Grid>
+                  </Grid>
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.calories}
+                {/* <TableCell
+                  component="th"
+                  stickyHeader
+                  // scope="store"
+                  style={{ width: 50 }}
+                  align="right">
+                  ReleaseDate
+                </TableCell> */}
+                <TableCell
+                  // component="th"
+                  // scope="store"
+                  style={{ width: 50 }}
+                  align="right">
+                  {store.releaseDate > 0 &&
+                    timestampConvert(store.releaseDate * 1000)}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.fat}
+                <TableCell style={{ width: 50 }} align="right">
+                  {store.salePrice}
+                </TableCell>
+                {/* <TableCell style={{ width: 'auto' }} align="right">
+                  <Grid container alignItems="center" spacing={3}>
+                    <Grid item>
+                      <Image
+                        src={store.thumb}
+                        layout="fixed"
+                        height={50}
+                        width={50}
+                      />
+                    </Grid>
+                    <Grid item>{store.title}</Grid>
+                  </Grid>
+                </TableCell> */}
+                <TableCell style={{ width: 50 }} align="right">
+                  {store.steamRatingPercent}
+                </TableCell>
+                <TableCell style={{ width: 50 }} align="right">
+                  {store.steamRatingCount}
+                </TableCell>
+                <TableCell style={{ width: 50 }} align="right">
+                  {store.storeID}
                 </TableCell>
               </TableRow>
             ))}
@@ -191,12 +236,12 @@ export default function GamesTable() {
               </TableRow>
             )}
           </TableBody>
-          <TableFooter>
+          <TableFooter style={{ position: 'sticky', bottom: 0 }}>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={filteredList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

@@ -5,11 +5,11 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { StateContext } from '../../utils/StateContext'
 
-export default function Sliders() {
+export default function Sliders({ localInputs, setLocalInputs }) {
   const { state, setState } = useContext(StateContext)
   const { inputs } = state
   const { setInputs } = setState
-  const { reviews, price, release, rating } = inputs
+  const { reviews, price, release, rating } = localInputs
 
   const style = {
     slider: {},
@@ -63,9 +63,9 @@ export default function Sliders() {
     const { name, label, min, max, value } = slider
 
     function handleChange(e, newValue) {
-      const newInputs = { ...inputs }
+      const newInputs = { ...localInputs }
       newInputs[name] = newValue
-      setInputs(newInputs)
+      setLocalInputs(newInputs)
     }
 
     const showAfterNumber = label === '%' || label === 'K' ? true : false

@@ -130,9 +130,14 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     setApiState({ loading: true })
 
-    const stores = Object.keys(storesSelected)
-      .map((store, index) => index)
-      .join()
+    const stores = () => {
+      const arr = []
+      Object.keys(storesSelected).forEach((store, index) => {
+        if (!storesSelected[store]) return
+        arr.push(index)
+      })
+      return arr.join()
+    }
 
     const address =
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -142,9 +147,9 @@ function MyApp({ Component, pageProps }) {
       '&steamRating=' +
       rating[0] +
       '&pageNumber=' +
-      1
-    // fetchPage +
-    '&storeID=' + stores
+      1 +
+      '&storeID=' +
+      stores()
 
     fetch(address)
       .then((res) => res.json())
@@ -155,7 +160,7 @@ function MyApp({ Component, pageProps }) {
         console.log(error)
         setApiState({ loading: false, data: null, error: true })
       })
-  }, [price, rating])
+  }, [price, rating, storesSelected])
 
   useEffect(() => {
     setStoresApi({ loading: true })
