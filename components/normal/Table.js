@@ -99,10 +99,10 @@ export default function GamesTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
   const {
-    tableContainerHeight,
-    tableHeight,
+    largeTableHeight,
     localFilteredList: filteredList,
-    localUnfilteredList: unFilteredList,
+    storesApi,
+    isPhoneScreen,
   } = state
 
   const timestampConvert = (timestamp) => {
@@ -129,10 +129,12 @@ export default function GamesTable() {
 
   const style = {
     tableContainer: {
-      minWidth: '700px',
+      minWidth: !isPhoneScreen && '700px',
       maxWidth: '1500px',
-      height: tableHeight ? tableHeight + 'px' : 'auto',
-      minHeight: '370px',
+      height: largeTableHeight ? largeTableHeight + 'px' : 'auto',
+      // minHeight: '370px',
+      minHeight: !isPhoneScreen && '370px',
+      // maxHeight: isPhoneScreen && '200px',
       position: 'relative',
     },
     table_grid_container: {
@@ -149,7 +151,11 @@ export default function GamesTable() {
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ zIndex: 10 }}>Name</TableCell>
+              <TableCell
+              // style={{ zIndex: 10 }}
+              >
+                Name
+              </TableCell>
               <TableCell align="right">Date</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Release Date</TableCell>
@@ -169,12 +175,20 @@ export default function GamesTable() {
                 <TableCell
                   style={{
                     width: '200px',
-                    position: 'sticky',
+                    // position: 'sticky',
                     left: '0',
                     background: 'white',
                   }}
                   align="right">
-                  <Grid container alignItems="center" spacing={3}>
+                  <Grid
+                    style={{
+                      whiteSpace: 'nowrap',
+                      flexWrap: 'nowrap',
+                    }}
+                    container
+                    wrapping="nowrap"
+                    alignItems="center"
+                    spacing={3}>
                     <Grid item>
                       <Image
                         src={store.thumb}
@@ -183,41 +197,18 @@ export default function GamesTable() {
                         width={50}
                       />
                     </Grid>
-                    <Grid item>{store.title}</Grid>
+                    <Grid style={{ flexShrink: 0 }} item>
+                      {store.title}
+                    </Grid>
                   </Grid>
                 </TableCell>
-                {/* <TableCell
-                  component="th"
-                  stickyHeader
-                  // scope="store"
-                  style={{ width: 50 }}
-                  align="right">
-                  ReleaseDate
-                </TableCell> */}
-                <TableCell
-                  // component="th"
-                  // scope="store"
-                  style={{ width: 50 }}
-                  align="right">
+                <TableCell style={{ width: 50 }} align="right">
                   {store.releaseDate > 0 &&
                     timestampConvert(store.releaseDate * 1000)}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
                   {store.salePrice}
                 </TableCell>
-                {/* <TableCell style={{ width: 'auto' }} align="right">
-                  <Grid container alignItems="center" spacing={3}>
-                    <Grid item>
-                      <Image
-                        src={store.thumb}
-                        layout="fixed"
-                        height={50}
-                        width={50}
-                      />
-                    </Grid>
-                    <Grid item>{store.title}</Grid>
-                  </Grid>
-                </TableCell> */}
                 <TableCell style={{ width: 50 }} align="right">
                   {store.steamRatingPercent}
                 </TableCell>
@@ -225,7 +216,15 @@ export default function GamesTable() {
                   {store.steamRatingCount}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
-                  {store.storeID}
+                  {
+                    <Image
+                      src={`https://www.cheapshark.com/${
+                        storesApi?.data?.[store.storeID]?.images.logo
+                      }`}
+                      layout="fixed"
+                      height={50}
+                      width={50}></Image>
+                  }
                 </TableCell>
               </TableRow>
             ))}

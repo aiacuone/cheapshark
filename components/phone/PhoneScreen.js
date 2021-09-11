@@ -1,4 +1,10 @@
-import React, { useState, useContext } from 'react'
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useCallback,
+  useEffect,
+} from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../styles/Phone.module.css'
 import TuneIcon from '@material-ui/icons/Tune'
@@ -14,15 +20,24 @@ import Button from '@material-ui/core/Button'
 import Radio from '@material-ui/core/Radio'
 import updateFetch from '../../pages/main'
 import { StateContext } from '../../utils/StateContext'
+import Table from '../normal/Table'
+import { useResizeDetector } from 'react-resize-detector'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
-  const { isPhoneLandscape, storesApi, sortBy, inputs, storesSelected } = state
-  const { setStoresSelected, setInputs } = setState
+  const {
+    isPhoneLandscape,
+    storesApi,
+    sortBy,
+    inputs,
+    storesSelected,
+    localFilteredList,
+  } = state
+  const { setStoresSelected, setInputs, setLargeTableHeight } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
   const [localInputs, setLocalInputs] = useState({ ...inputs })
-
+  const tableItemContainer = useRef()
   const style = {
     firstContainer: {
       gridTemplateColumns: isPhoneLandscape
@@ -34,6 +49,8 @@ export default function PhoneScreen() {
     },
     main_content: {
       gridArea: isPhoneLandscape ? '1/1/11/11' : '1/1/11/11',
+      padding: '20px',
+      overflow: 'hidden',
     },
     nav_bar: { gridArea: isPhoneLandscape ? '1/11/11/12' : '11/1/12/11' },
     drawer: {
@@ -51,7 +68,23 @@ export default function PhoneScreen() {
       color: 'white',
       cursor: 'pointer',
     },
+    table_item_container: {
+      width: 'auto',
+      height: '100%',
+      background: 'red',
+    },
   }
+
+  const onResize = useCallback(() => {
+    setLargeTableHeight(height)
+  })
+
+  useEffect(() => {
+    setLargeTableHeight(height)
+    // setLargeTableHeight(tableItemContainer?.current?.clientHeight)
+  }, [])
+
+  const { height, ref } = useResizeDetector({ onResize })
 
   function handleClick(value) {
     setDrawerContent(value)
@@ -203,11 +236,20 @@ export default function PhoneScreen() {
   return (
     <div style={style.firstContainer} className={styles.first_container}>
       <Grid
+        ref={ref}
         container
         style={style.main_content}
         className={styles.main_content}
         justifyContent="center"
-        alignItems="center"></Grid>
+        alignItems="center">
+        <Grid
+          ref={tableItemContainer}
+          item
+          style={style.table_item_container}
+          xs={12}>
+          {localFilteredList?.length > 0 && <Table />}
+        </Grid>
+      </Grid>
       <div className={styles.background}>
         {/* <Image
           src={isPhoneLandscape ? headerBackground : drawerBackground}
@@ -232,6 +274,7 @@ export default function PhoneScreen() {
           </IconButton>
         </Grid>
       </Grid>
+
       <Drawer
         anchor={isPhoneLandscape ? 'left' : 'top'}
         open={expanded}

@@ -26,7 +26,7 @@ import Typography from '@material-ui/core/Typography'
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
   const { expanded, storesApi, storesSelected, localFilteredList } = state
-  const { setExpanded, setTableHeight, setStoresSelected } = setState
+  const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
   const [localStoresSelected, setLocalStoresSelected] = useState({
     ...storesSelected,
@@ -57,11 +57,11 @@ export default function NormalScreen() {
   }
 
   const onResize = useCallback(() => {
-    setTableHeight(height)
+    setLargeTableHeight(height)
   })
 
   useEffect(() => {
-    setTableHeight(tableItemContainer?.current?.clientHeight)
+    setLargeTableHeight(tableItemContainer?.current?.clientHeight)
   }, [])
 
   const { height, ref } = useResizeDetector({ onResize })
@@ -172,8 +172,7 @@ export default function NormalScreen() {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {localFilteredList && <Table />}
-          {/* <Table /> */}
+          {localFilteredList?.length > 0 && <Table />}
         </Grid>
         <Grid item>
           <Drawer
