@@ -32,27 +32,57 @@ export default function NormalScreen() {
     ...storesSelected,
   })
 
+  const buttonBorderColor = '#DCDCDC'
+
   const style = {
     storesHeader: {
       color: 'white',
     },
-    selectAllButton: {
-      color: 'white',
-      zIndex: 1,
-      cursor: 'pointer',
-      border: '1px solid grey',
-      borderRadius: '10px',
-    },
     stores_button_container: {
       minWidth: '350px',
     },
-    logos_container: {
-      padding: '0 20px',
-      minWidth: '150px',
-      maxWidth: '700px',
+    stores_grid: {
+      height: '100%',
+      width: '100%',
+      display: 'grid',
+      gridAreaColumns: 'repeat(20,1fr)',
+      gridAreaRows: 'repeat(20,1fr)',
     },
-    logos_container2: {
-      padding: '0 20px',
+    drawer_container: {
+      width: '100%',
+      height: '100%',
+      overflow: 'hidden',
+    },
+    stores_container: {
+      gridArea: '1/1/13/22',
+      padding: '50px',
+    },
+
+    stores_button_container: {
+      gridArea: '13/1/22/22',
+      background: 'white',
+      flexFlow: 'nowrap',
+    },
+    select_button: {
+      flex: 1,
+      display: 'grid',
+      placeItems: 'center',
+      borderBottom: `1px solid ${buttonBorderColor}`,
+      maxHeight: '80px',
+      cursor: 'pointer',
+    },
+    ok_button: {
+      flex: 1,
+      display: 'grid',
+      placeItems: 'center',
+      borderBottom: `1px solid ${buttonBorderColor}`,
+      borderRight: `1px solid ${buttonBorderColor}`,
+      borderLeft: `1px solid ${buttonBorderColor}`,
+      maxHeight: '80px',
+      cursor: 'pointer',
+      '&:hover': {
+        background: 'red',
+      },
     },
   }
 
@@ -184,63 +214,48 @@ export default function NormalScreen() {
             }}>
             <Grid
               container
-              className={styles.drawer_container}
+              style={style.drawer_container}
               justifyContent="center"
               alignItems="center">
               <Grid item className={styles.drawer}>
-                <div className={styles.background}>
-                  <Image src={drawerBackground} layout="fill" />
-                </div>
-                <Grid
-                  container
-                  className={styles.drawer_container}
-                  justifyContent="center"
-                  alignItems="center">
-                  <Grid item>
-                    <Grid
-                      style={style.logos_container}
-                      container
-                      justifyContent="center"
-                      alignItems="center"
-                      spacing={10}>
-                      <Grid item></Grid>
-                      <Grid
-                        style={style.logos_container2}
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={3}>
-                        {' '}
-                        {stores}
-                      </Grid>
-                      <Grid item style={{ width: '100%' }}>
-                        <Grid
-                          style={style.stores_button_container}
-                          container
-                          justifyContent="space-around"
-                          alignItems="center">
-                          <Button
-                            onClick={handleDeselectAll}
-                            variant="outlined"
-                            size="small"
-                            style={style.selectAllButton}>
-                            Deselect All
-                          </Button>
-                          <Button variant="contained" onClick={handleOK}>
-                            OK
-                          </Button>
-                          <Button
-                            onClick={handleSelectAll}
-                            style={style.selectAllButton}
-                            variant="outlined"
-                            size="small">
-                            Select All
-                          </Button>
-                        </Grid>
-                      </Grid>
+                <div style={style.stores_grid}>
+                  <Grid
+                    container
+                    spacing={3}
+                    style={style.stores_container}
+                    justifyContent="center"
+                    alignItems="center">
+                    <Grid container spacing={3} justifyContent="center">
+                      {stores}
                     </Grid>
                   </Grid>
-                </Grid>
+                  <Grid
+                    container
+                    style={style.stores_button_container}
+                    alignSelf="stretch">
+                    <Grid
+                      item
+                      className={styles.store_button}
+                      style={style.select_button}
+                      onClick={handleDeselectAll}>
+                      Deselect All
+                    </Grid>
+                    <Grid
+                      item
+                      className={styles.store_button}
+                      style={style.ok_button}
+                      onClick={handleOK}>
+                      OK
+                    </Grid>
+                    <Grid
+                      item
+                      className={styles.store_button}
+                      style={style.select_button}
+                      onClick={handleSelectAll}>
+                      Select All
+                    </Grid>
+                  </Grid>
+                </div>
               </Grid>
             </Grid>
           </Drawer>

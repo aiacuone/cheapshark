@@ -131,10 +131,11 @@ export default function GamesTable() {
     tableContainer: {
       minWidth: !isPhoneScreen && '700px',
       maxWidth: '1500px',
-      height: largeTableHeight ? largeTableHeight + 'px' : 'auto',
-      // minHeight: '370px',
+      // height: largeTableHeight ? largeTableHeight + 'px' : 'auto',
+      height: largeTableHeight + 'px',
+
       minHeight: !isPhoneScreen && '370px',
-      // maxHeight: isPhoneScreen && '200px',
+
       position: 'relative',
     },
     table_grid_container: {

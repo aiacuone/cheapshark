@@ -60,6 +60,7 @@ function MyApp({ Component, pageProps }) {
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
   const [largeTableHeight, setLargeTableHeight] = useState()
+  const [windowHeight, setWindowHeight] = useState()
 
   const isPhonePotraitWidth = useMediaQuery('(max-width:450px)')
   const isPhonePotraitHeight = useMediaQuery('(max-height:860px)')
@@ -100,6 +101,18 @@ function MyApp({ Component, pageProps }) {
     }
   })
 
+  useEffect(() => {
+    function handleResize() {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   const state = {
     inputs,
     expanded,
@@ -115,6 +128,7 @@ function MyApp({ Component, pageProps }) {
     isPhoneLandscape,
     isPhonePotraitWidth,
     isPhoneScreen,
+    windowHeight,
   }
   const setState = {
     setInputs,
@@ -127,7 +141,6 @@ function MyApp({ Component, pageProps }) {
     setStoresApi,
     setLargeTableHeight,
   }
-  console.log(largeTableHeight)
 
   useEffect(() => {
     setApiState({ loading: true })

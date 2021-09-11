@@ -32,6 +32,7 @@ export default function PhoneScreen() {
     inputs,
     storesSelected,
     localFilteredList,
+    windowHeight,
   } = state
   const { setStoresSelected, setInputs, setLargeTableHeight } = setState
   const [drawerContent, setDrawerContent] = useState()
@@ -79,9 +80,8 @@ export default function PhoneScreen() {
   })
 
   useEffect(() => {
-    // setLargeTableHeight(height)
     setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  })
+  }, [windowHeight])
 
   const { height, ref } = useResizeDetector({ onResize })
 

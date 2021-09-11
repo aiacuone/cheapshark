@@ -50,12 +50,6 @@
   padding-right: 20px;
 }
 
-.drawer_container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
 .drawer {
   width: 50vw;
   height: 100%;
@@ -74,11 +68,13 @@
 
 .table_item_container {
   width: auto;
+  /* background: red; */
 }
 
 .table_container {
   padding: 20px 50px;
 }
 
-.table_body {
+.store_button:hover {
+  background: #f8f8f8;
 }
