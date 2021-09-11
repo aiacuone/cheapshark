@@ -71,7 +71,6 @@ export default function PhoneScreen() {
     table_item_container: {
       width: 'auto',
       height: '100%',
-      background: 'red',
     },
   }
 
@@ -80,9 +79,9 @@ export default function PhoneScreen() {
   })
 
   useEffect(() => {
-    setLargeTableHeight(height)
-    // setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  }, [])
+    // setLargeTableHeight(height)
+    setLargeTableHeight(tableItemContainer?.current?.clientHeight)
+  })
 
   const { height, ref } = useResizeDetector({ onResize })
 

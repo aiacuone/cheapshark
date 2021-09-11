@@ -158,8 +158,8 @@ export default function GamesTable() {
               </TableCell>
               <TableCell align="right">Date</TableCell>
               <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Release Date</TableCell>
               <TableCell align="right">Rating</TableCell>
+              <TableCell align="right">Reviews</TableCell>
               <TableCell align="right">Store</TableCell>
             </TableRow>
           </TableHead>
