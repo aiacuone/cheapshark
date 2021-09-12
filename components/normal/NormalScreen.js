@@ -32,7 +32,10 @@ export default function NormalScreen() {
     ...storesSelected,
   })
 
-  const buttonBorderColor = '#DCDCDC'
+  const groupedStyles = {
+    spacingAroundStoresIcons: 4,
+    backgroundOfButtons: 'white',
+  }
 
   const style = {
     storesHeader: {
@@ -53,36 +56,38 @@ export default function NormalScreen() {
       height: '100%',
       overflow: 'hidden',
     },
-    stores_container: {
-      gridArea: '1/1/13/22',
-      padding: '50px',
-    },
-
-    stores_button_container: {
-      gridArea: '13/1/22/22',
-      background: 'white',
-      flexFlow: 'nowrap',
+    drawer_container2: {
+      height: '100%',
+      maxWidth: '800px', //Maximum Width of both Button and Logos Container
     },
     select_button: {
+      backgroundOfButtons: 'white',
       flex: 1,
       display: 'grid',
       placeItems: 'center',
-      borderBottom: `1px solid ${buttonBorderColor}`,
-      maxHeight: '80px',
       cursor: 'pointer',
+      background: groupedStyles.backgroundOfButtons,
     },
     ok_button: {
       flex: 1,
       display: 'grid',
       placeItems: 'center',
-      borderBottom: `1px solid ${buttonBorderColor}`,
-      borderRight: `1px solid ${buttonBorderColor}`,
-      borderLeft: `1px solid ${buttonBorderColor}`,
-      maxHeight: '80px',
       cursor: 'pointer',
-      '&:hover': {
-        background: 'red',
-      },
+      margin: '0 3px',
+      background: groupedStyles.backgroundOfButtons,
+    },
+    drawer_stores_buttons_item: {
+      width: '100%',
+      height: '100px', // Height of Buttons
+      marginTop: '120px', // Seperation Netween Stores and Buttons
+    },
+    stores_container: {
+      padding: '20px', //Padding in Stores Container
+    },
+    stores_button_container: {
+      width: '100%',
+      height: '100%',
+      padding: '20px',
     },
   }
 
@@ -218,10 +223,59 @@ export default function NormalScreen() {
               justifyContent="center"
               alignItems="center">
               <Grid item className={styles.drawer}>
-                <div style={style.stores_grid}>
-                  <Grid
+                <Grid
+                  container
+                  style={style.drawer_container2}
+                  alignItems="center"
+                  justifyContent="center">
+                  <Grid item>
+                    <Grid
+                      container
+                      // spacing={3}
+                    >
+                      <Grid item>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          style={style.stores_container}
+                          spacing={groupedStyles.spacingAroundStoresIcons}>
+                          {stores}
+                        </Grid>
+                      </Grid>
+                      <Grid item style={style.drawer_stores_buttons_item}>
+                        <Grid
+                          container
+                          // spacing={3}
+                          style={style.stores_button_container}>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.select_button}
+                            onClick={handleDeselectAll}>
+                            Deselect All
+                          </Grid>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.ok_button}
+                            onClick={handleOK}>
+                            OK
+                          </Grid>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.select_button}
+                            onClick={handleSelectAll}>
+                            Select All
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* <Grid
                     container
                     spacing={3}
+                    // className={styles.drawer}
                     style={style.stores_container}
                     justifyContent="center"
                     alignItems="center">
@@ -254,8 +308,8 @@ export default function NormalScreen() {
                       onClick={handleSelectAll}>
                       Select All
                     </Grid>
-                  </Grid>
-                </div>
+                  </Grid> */}
+                </Grid>
               </Grid>
             </Grid>
           </Drawer>

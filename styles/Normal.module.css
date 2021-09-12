@@ -60,6 +60,8 @@
     rgba(19, 80, 138, 1) 66%,
     rgba(0, 128, 255, 1) 100%
   );
+  display: grid;
+  place-items: center;
 }
 
 .drawer_background {
@@ -76,5 +78,6 @@
 }
 
 .store_button:hover {
-  background: #f8f8f8;
+  /* background: #f8f8f8; */
+  background: black;
 }
