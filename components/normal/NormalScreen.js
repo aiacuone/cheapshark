@@ -79,7 +79,7 @@ export default function NormalScreen() {
     drawer_stores_buttons_item: {
       width: '100%',
       height: '100px', // Height of Buttons
-      marginTop: '120px', // Seperation Netween Stores and Buttons
+      marginTop: '20px', // Seperation Netween Stores and Buttons
     },
     stores_container: {
       padding: '20px', //Padding in Stores Container
@@ -88,6 +88,12 @@ export default function NormalScreen() {
       width: '100%',
       height: '100%',
       padding: '20px',
+    },
+    table_item: {
+      zIndex: 2,
+    },
+    table_item: {
+      zIndex: 1,
     },
   }
 
@@ -141,7 +147,7 @@ export default function NormalScreen() {
           cursor: 'pointer',
         }}>
         <Grid container direcion="column">
-          <Image layout="fixed" src={pictureURL} width={60} height={60} />
+          <Image layout="fixed" src={pictureURL} width={50} height={50} />
         </Grid>
       </Grid>
     )
@@ -203,13 +209,14 @@ export default function NormalScreen() {
         className={styles.main_content_container}
         justifyContent="center">
         <Grid
+          style={style.table_item}
           item
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
           {localFilteredList?.length > 0 && <Table />}
         </Grid>
-        <Grid item>
+        <Grid item style={style.drawer_item}>
           <Drawer
             anchor="right"
             open={expanded}
@@ -272,43 +279,6 @@ export default function NormalScreen() {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {/* <Grid
-                    container
-                    spacing={3}
-                    // className={styles.drawer}
-                    style={style.stores_container}
-                    justifyContent="center"
-                    alignItems="center">
-                    <Grid container spacing={3} justifyContent="center">
-                      {stores}
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    style={style.stores_button_container}
-                    alignSelf="stretch">
-                    <Grid
-                      item
-                      className={styles.store_button}
-                      style={style.select_button}
-                      onClick={handleDeselectAll}>
-                      Deselect All
-                    </Grid>
-                    <Grid
-                      item
-                      className={styles.store_button}
-                      style={style.ok_button}
-                      onClick={handleOK}>
-                      OK
-                    </Grid>
-                    <Grid
-                      item
-                      className={styles.store_button}
-                      style={style.select_button}
-                      onClick={handleSelectAll}>
-                      Select All
-                    </Grid>
-                  </Grid> */}
                 </Grid>
               </Grid>
             </Grid>

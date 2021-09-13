@@ -52,6 +52,7 @@ export default function PhoneScreen() {
       gridArea: isPhoneLandscape ? '1/1/11/11' : '1/1/11/11',
       padding: '20px',
       overflow: 'hidden',
+      zIndex: 1,
     },
     nav_bar: {
       gridArea: isPhoneLandscape ? '1/11/11/12' : '11/1/12/11',
@@ -68,6 +69,7 @@ export default function PhoneScreen() {
     table_item_container: {
       width: 'auto',
       height: '100%',
+      background: 'red',
     },
     drawer: {
       width: isPhoneLandscape ? '70vw' : '100vw',
@@ -113,18 +115,20 @@ export default function PhoneScreen() {
       background: 'white',
       display: 'grid',
       placeItems: 'center',
-      width: '100px',
+      width: '150px',
       cursor: 'pointer',
+      // borderRadius: '5px',
     },
+    drawer_start: { zIndex: 2 },
   }
-
+  // console.log(windowHeight)
   const onResize = useCallback(() => {
     setLargeTableHeight(height)
   })
 
   useEffect(() => {
     setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  }, [windowHeight])
+  })
 
   const { height, ref } = useResizeDetector({ onResize })
 
@@ -334,6 +338,7 @@ export default function PhoneScreen() {
       </Grid>
 
       <Drawer
+        style={style.drawer_start}
         anchor={isPhoneLandscape ? 'left' : 'top'}
         open={expanded}
         onClose={() => setExpanded(false)}>

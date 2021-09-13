@@ -131,7 +131,7 @@ export default function GamesTable() {
     tableContainer: {
       minWidth: !isPhoneScreen && '700px',
       maxWidth: '1500px',
-      // height: largeTableHeight ? largeTableHeight + 'px' : 'auto',
+
       height: largeTableHeight + 'px',
 
       minHeight: !isPhoneScreen && '370px',
