@@ -53,14 +53,10 @@ export default function PhoneScreen() {
       padding: '20px',
       overflow: 'hidden',
     },
-    nav_bar: { gridArea: isPhoneLandscape ? '1/11/11/12' : '11/1/12/11' },
-    drawer: {
-      width: isPhoneLandscape ? '70vw' : '100vw',
-      height: isPhoneLandscape ? '100vh' : '70vh',
+    nav_bar: {
+      gridArea: isPhoneLandscape ? '1/11/11/12' : '11/1/12/11',
     },
-    stores_container: {
-      height: '100%',
-    },
+
     storesHeader: {
       color: 'white',
       textDecoration: 'underline',
@@ -72,6 +68,53 @@ export default function PhoneScreen() {
     table_item_container: {
       width: 'auto',
       height: '100%',
+    },
+    drawer: {
+      width: isPhoneLandscape ? '70vw' : '100vw',
+      height: isPhoneLandscape ? '100vh' : '70vh',
+      display: 'grid',
+      gridTemplateColumns:
+        drawerContent === 'stores' ? 'repeat(10,1fr)' : '80px repeat(9,1fr)',
+      gridTemplateRows:
+        drawerContent === 'stores' ? 'repeat(9,1fr) 40px' : 'repeat(10,1fr)',
+    },
+    stores_container: {
+      gridArea: '1/1/10/11',
+    },
+    buttons_container: {
+      background: 'white',
+      gridArea: '10/1/11/11',
+    },
+    drawer_container: {
+      width: '100%',
+      height: '100%',
+    },
+    select_button: {
+      cursor: 'pointer',
+      flex: 1,
+      display: 'grid',
+      placeItems: 'center',
+    },
+    ok_button: {
+      flex: 1,
+      cursor: 'pointer',
+      borderRight: '1px solid grey',
+      borderLeft: '1px solid grey',
+      display: 'grid',
+      placeItems: 'center',
+    },
+    slider_container: {
+      gridArea: isPhoneLandscape ? '1/2/11/11' : '1/1/10/11',
+    },
+    ok_button_sliders_container: {
+      gridArea: isPhoneLandscape ? '4/1/7/2' : '10/1/11/11',
+    },
+    ok_button_sliders: {
+      background: 'white',
+      display: 'grid',
+      placeItems: 'center',
+      width: '100px',
+      cursor: 'pointer',
     },
   }
 
@@ -159,72 +202,88 @@ export default function PhoneScreen() {
     })
 
     return (
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        style={style.stores_container}>
-        {stores}
-        <Grid container justifyContent="space-around" alignItems="center">
-          <Typography
-            style={style.selectAllButton}
-            variant="contained"
-            size="small"
-            onClick={handleSelectAll}>
-            Select All
-          </Typography>
-          <OKButton />
-          <Typography style={style.selectAllButton} onClick={handleDeselectAll}>
-            Deselect All
-          </Typography>
+      <>
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          style={style.stores_container}>
+          {stores}
         </Grid>
-        <Grid item xs={4}></Grid>
-      </Grid>
+        <Grid
+          container
+          style={style.buttons_container}
+          justifyContent="space-around"
+          alignItems="center">
+          <Grid item style={style.select_button} onClick={handleDeselectAll}>
+            Deselect All
+          </Grid>
+          <Grid item style={style.ok_button} onClick={handleOK}>
+            OK
+          </Grid>
+          <Grid item style={style.select_button} onClick={handleSelectAll}>
+            Select All
+          </Grid>
+        </Grid>
+      </>
     )
   }
 
   const OrientatedSliders = () => {
     const Landscape = () => {
       return (
-        <Grid
-          container
-          direction="row"
-          className={styles.drawer_container}
-          justifyContent="center"
-          alignItems="center">
-          <Grid item style={{ paddingRight: '50px' }}>
-            <Grid container justifyContent="center">
-              <OKButton />
+        <>
+          <Grid
+            container
+            direction="row"
+            style={style.slider_container}
+            justifyContent="center"
+            alignItems="center">
+            <Grid item>
+              <Sliders
+                localInputs={localInputs}
+                setLocalInputs={setLocalInputs}
+              />
             </Grid>
           </Grid>
-          <Grid item>
-            <Sliders
-              localInputs={localInputs}
-              setLocalInputs={setLocalInputs}
-            />
+          <Grid
+            container
+            style={style.ok_button_sliders_container}
+            justifyContent="center">
+            <Grid item style={style.ok_button_sliders} onClick={handleOK}>
+              OK
+            </Grid>
           </Grid>
-        </Grid>
+        </>
       )
     }
 
     const Portrait = () => {
       return (
-        <Grid
-          container
-          direction="column"
-          className={styles.drawer_container}
-          justifyContent="center"
-          alignItems="center">
-          <Grid item>
-            <Sliders
-              localInputs={localInputs}
-              setLocalInputs={setLocalInputs}
-            />
+        <>
+          <Grid
+            container
+            direction="column"
+            style={style.slider_container}
+            // className={styles.drawer_container}
+            justifyContent="center"
+            alignItems="center">
+            <Grid item>
+              <Sliders
+                localInputs={localInputs}
+                setLocalInputs={setLocalInputs}
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <OKButton />
+          <Grid
+            container
+            style={style.ok_button_sliders_container}
+            justifyContent="center">
+            <Grid item style={style.ok_button_sliders} onClick={handleOK}>
+              OK
+            </Grid>
           </Grid>
-        </Grid>
+        </>
       )
     }
 
@@ -280,10 +339,15 @@ export default function PhoneScreen() {
         onClose={() => setExpanded(false)}>
         <Grid
           container
+          style={style.drawer_container}
           className={styles.drawer_container}
           justifyContent="center"
           alignItems="center">
-          <Grid item className={styles.drawer} style={style.drawer} xs={12}>
+          <Grid
+            container
+            className={styles.drawer}
+            style={style.drawer}
+            xs={12}>
             {/* <div className={styles.drawer_background}>
               <Image src={drawerBackground} layout="fill" />
             </div> */}
