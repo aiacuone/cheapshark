@@ -34,7 +34,12 @@ export default function PhoneScreen() {
     localFilteredList,
     windowHeight,
   } = state
-  const { setStoresSelected, setInputs, setLargeTableHeight } = setState
+  const {
+    setStoresSelected,
+    setInputs,
+    setLargeTableHeight,
+    setExpanded: setLargeExpanded,
+  } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
   const [localInputs, setLocalInputs] = useState({ ...inputs })
@@ -91,6 +96,7 @@ export default function PhoneScreen() {
     stores_container: {
       gridArea: '1/1/10/11',
       padding: '20px', //padding in stores container
+      overflow: 'hidden',
     },
     buttons_container: {
       background: 'white',
@@ -141,6 +147,10 @@ export default function PhoneScreen() {
   useEffect(() => {
     setLargeTableHeight(tableItemContainer?.current?.clientHeight)
   })
+
+  useEffect(() => {
+    setLargeExpanded(false)
+  }, [])
 
   const { height, ref } = useResizeDetector({ onResize })
 

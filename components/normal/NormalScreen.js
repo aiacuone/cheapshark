@@ -20,7 +20,11 @@ import { useResizeDetector } from 'react-resize-detector'
 import Radio from '@material-ui/core/Radio'
 import { TrendingUp } from '@material-ui/icons'
 import { StateContext } from '../../utils/StateContext'
-
+import fish from '../../public/images/singleFish.svg'
+import fish2 from '../../public/images/singleFish2.svg'
+import schoolFish from '../../public/images/schoolFish3.svg'
+import seaweed1 from '../../public/images/seaweed1.svg'
+import seaweed2 from '../../public/images/seaweed2.svg'
 import Typography from '@material-ui/core/Typography'
 
 export default function NormalScreen() {
@@ -55,6 +59,7 @@ export default function NormalScreen() {
       width: '100%',
       height: '100%',
       overflow: 'hidden',
+      position: 'relative',
     },
     drawer_container2: {
       height: '100%',
@@ -67,14 +72,18 @@ export default function NormalScreen() {
       placeItems: 'center',
       cursor: 'pointer',
       background: groupedStyles.backgroundOfButtons,
+      zIndex: 2,
     },
     ok_button: {
       flex: 1,
       display: 'grid',
       placeItems: 'center',
       cursor: 'pointer',
-      margin: '0 3px',
+      // margin: '0 3px',
       background: groupedStyles.backgroundOfButtons,
+      zIndex: 2,
+      borderRight: '1px solid grey',
+      borderLeft: '1px solid grey',
     },
     drawer_stores_buttons_item: {
       width: '100%',
@@ -95,6 +104,24 @@ export default function NormalScreen() {
     table_item: {
       zIndex: 1,
     },
+
+    stores_fish_background: {
+      position: 'absolute',
+      top: '50px',
+      left: '80px',
+      minWidth: '800px',
+    },
+    seaweed1: {
+      position: 'absolute',
+      bottom: '-80px',
+      left: -230,
+    },
+    seaweed2: {
+      marginTop: '800px',
+      position: 'absolute',
+      bottom: '-30px',
+      right: -20,
+    },
   }
 
   const onResize = useCallback(() => {
@@ -103,7 +130,7 @@ export default function NormalScreen() {
 
   useEffect(() => {
     setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  }, [])
+  })
 
   const { height, ref } = useResizeDetector({ onResize })
 
@@ -155,6 +182,12 @@ export default function NormalScreen() {
 
   return (
     <div className={styles.grid_container}>
+      <Grid style={style.seaweed1}>
+        <Image src={seaweed1} layout="fixed" width="700px" height="700px" />
+      </Grid>
+      <Grid style={style.seaweed2}>
+        <Image src={seaweed2} layout="fixed" width="500px" height="500px" />
+      </Grid>
       <Grid
         wrap="nowrap"
         className={styles.header_container}
@@ -229,6 +262,14 @@ export default function NormalScreen() {
               style={style.drawer_container}
               justifyContent="center"
               alignItems="center">
+              {/* <Grid item style={style.stores_fish_background}>
+                <Image
+                  src={schoolFish}
+                  layout="fixed"
+                  height={180}
+                  width={300}
+                />
+              </Grid> */}
               <Grid item className={styles.drawer}>
                 <Grid
                   container
@@ -236,10 +277,7 @@ export default function NormalScreen() {
                   alignItems="center"
                   justifyContent="center">
                   <Grid item>
-                    <Grid
-                      container
-                      // spacing={3}
-                    >
+                    <Grid container>
                       <Grid item>
                         <Grid
                           container
@@ -250,10 +288,7 @@ export default function NormalScreen() {
                         </Grid>
                       </Grid>
                       <Grid item style={style.drawer_stores_buttons_item}>
-                        <Grid
-                          container
-                          // spacing={3}
-                          style={style.stores_button_container}>
+                        <Grid container style={style.stores_button_container}>
                           <Grid
                             item
                             className={styles.store_button}
