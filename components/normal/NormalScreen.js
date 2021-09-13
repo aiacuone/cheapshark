@@ -121,19 +121,13 @@ export default function NormalScreen() {
       width: '100%',
       height: '500px',
       marginTop: '300px',
-    },
-    seaweed_container3: {
-      flex: 1,
-    },
-    seaweed_container4: {
-      flex: 1,
+      minWidth: '1000px',
     },
     seaweed1: {
       position: 'absolute',
       bottom: '-50px',
     },
     seaweed2: {
-      flex: 1,
       position: 'absolute',
       bottom: '-20px',
       right: -10,
@@ -200,26 +194,11 @@ export default function NormalScreen() {
     <div className={styles.grid_container}>
       <Grid container style={style.seaweed_container} alignItems="flex-end">
         <Grid container style={style.seaweed_container2}>
-          {/* <Grid style={style.seaweed_filler} /> */}
-          <Grid container style={style.seaweed_container3}>
-            <Grid item style={style.seaweed1} alignItems="flex-end">
-              <Image
-                src={seaweed1}
-                layout="fixed"
-                width="500px"
-                height="500px"
-              />
-            </Grid>
+          <Grid item style={style.seaweed1} alignItems="flex-end">
+            <Image src={seaweed1} layout="fixed" width="500px" height="500px" />
           </Grid>
-          <Grid container style={style.seaweed_container4}>
-            <Grid item style={style.seaweed2}>
-              <Image
-                src={seaweed2}
-                layout="fixed"
-                width="500px"
-                height="500px"
-              />
-            </Grid>
+          <Grid item style={style.seaweed2}>
+            <Image src={seaweed2} layout="fixed" width="500px" height="500px" />
           </Grid>
         </Grid>
       </Grid>
