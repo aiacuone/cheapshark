@@ -111,16 +111,32 @@ export default function NormalScreen() {
       left: '80px',
       minWidth: '800px',
     },
+    seaweed_container: {
+      position: 'absolute',
+      width: '100vw',
+      height: '100vh',
+    },
+    seaweed_container2: {
+      position: 'relative',
+      width: '100%',
+      height: '500px',
+      marginTop: '300px',
+    },
+    seaweed_container3: {
+      flex: 1,
+    },
+    seaweed_container4: {
+      flex: 1,
+    },
     seaweed1: {
       position: 'absolute',
-      bottom: '-80px',
-      left: -230,
+      bottom: '-50px',
     },
     seaweed2: {
-      marginTop: '800px',
+      flex: 1,
       position: 'absolute',
-      bottom: '-30px',
-      right: -20,
+      bottom: '-20px',
+      right: -10,
     },
   }
 
@@ -182,11 +198,30 @@ export default function NormalScreen() {
 
   return (
     <div className={styles.grid_container}>
-      <Grid style={style.seaweed1}>
-        <Image src={seaweed1} layout="fixed" width="700px" height="700px" />
-      </Grid>
-      <Grid style={style.seaweed2}>
-        <Image src={seaweed2} layout="fixed" width="500px" height="500px" />
+      <Grid container style={style.seaweed_container} alignItems="flex-end">
+        <Grid container style={style.seaweed_container2}>
+          {/* <Grid style={style.seaweed_filler} /> */}
+          <Grid container style={style.seaweed_container3}>
+            <Grid item style={style.seaweed1} alignItems="flex-end">
+              <Image
+                src={seaweed1}
+                layout="fixed"
+                width="500px"
+                height="500px"
+              />
+            </Grid>
+          </Grid>
+          <Grid container style={style.seaweed_container4}>
+            <Grid item style={style.seaweed2}>
+              <Image
+                src={seaweed2}
+                layout="fixed"
+                width="500px"
+                height="500px"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
       <Grid
         wrap="nowrap"
