@@ -39,6 +39,12 @@ export default function PhoneScreen() {
   const [expanded, setExpanded] = useState(false)
   const [localInputs, setLocalInputs] = useState({ ...inputs })
   const tableItemContainer = useRef()
+
+  const groupedStyles = {
+    buttonColor: '#545454',
+    borderColor: '#cccccc',
+  }
+
   const style = {
     firstContainer: {
       gridTemplateColumns: isPhoneLandscape
@@ -69,19 +75,22 @@ export default function PhoneScreen() {
     table_item_container: {
       width: 'auto',
       height: '100%',
-      background: 'red',
     },
     drawer: {
       width: isPhoneLandscape ? '70vw' : '100vw',
       height: isPhoneLandscape ? '100vh' : '70vh',
       display: 'grid',
-      gridTemplateColumns:
-        drawerContent === 'stores' ? 'repeat(10,1fr)' : '80px repeat(9,1fr)',
-      gridTemplateRows:
-        drawerContent === 'stores' ? 'repeat(9,1fr) 40px' : 'repeat(10,1fr)',
+      gridTemplateColumns: isPhoneLandscape
+        ? '80px repeat(9,1fr)'
+        : 'repeat(10,1fr)',
+
+      gridTemplateRows: isPhoneLandscape
+        ? 'repeat(10,1fr)'
+        : 'repeat(9,1fr) 50px',
     },
     stores_container: {
       gridArea: '1/1/10/11',
+      padding: '20px', //padding in stores container
     },
     buttons_container: {
       background: 'white',
@@ -96,20 +105,24 @@ export default function PhoneScreen() {
       flex: 1,
       display: 'grid',
       placeItems: 'center',
+      color: groupedStyles.buttonColor,
     },
     ok_button: {
       flex: 1,
       cursor: 'pointer',
-      borderRight: '1px solid grey',
-      borderLeft: '1px solid grey',
+      borderRight: `1px solid ${groupedStyles.borderColor}`,
+      borderLeft: `1px solid ${groupedStyles.borderColor}`,
       display: 'grid',
       placeItems: 'center',
+      height: '100%',
+      color: groupedStyles.buttonColor,
     },
     slider_container: {
       gridArea: isPhoneLandscape ? '1/2/11/11' : '1/1/10/11',
     },
     ok_button_sliders_container: {
       gridArea: isPhoneLandscape ? '4/1/7/2' : '10/1/11/11',
+      // padding: '10px',
     },
     ok_button_sliders: {
       background: 'white',
@@ -117,7 +130,6 @@ export default function PhoneScreen() {
       placeItems: 'center',
       width: '150px',
       cursor: 'pointer',
-      // borderRadius: '5px',
     },
     drawer_start: { zIndex: 2 },
   }
@@ -140,14 +152,6 @@ export default function PhoneScreen() {
   function handleOK() {
     setInputs(localInputs)
     setExpanded(false)
-  }
-
-  const OKButton = () => {
-    return (
-      <Button variant="contained" onClick={handleOK}>
-        OK
-      </Button>
-    )
   }
 
   function handleStoreClick(store) {
