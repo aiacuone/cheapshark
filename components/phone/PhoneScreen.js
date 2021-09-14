@@ -9,16 +9,10 @@ import Grid from '@material-ui/core/Grid'
 import styles from '../../styles/Phone.module.css'
 import TuneIcon from '@material-ui/icons/Tune'
 import StoreIcon from '@material-ui/icons/Store'
-import drawerBackground from '../../public/images/drawerBackground.svg'
-import headerBackground from '../../public/images/headerBackground.svg'
 import Image from 'next/image'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
-import Typography from '@material-ui/core/Typography'
 import Sliders from './Sliders'
-import Button from '@material-ui/core/Button'
-import Radio from '@material-ui/core/Radio'
-import updateFetch from '../../pages/main'
 import { StateContext } from '../../utils/StateContext'
 import Table from '../normal/Table'
 import { useResizeDetector } from 'react-resize-detector'
@@ -32,11 +26,9 @@ export default function PhoneScreen() {
   const {
     isPhoneLandscape,
     storesApi,
-    sortBy,
     inputs,
     storesSelected,
     localFilteredList,
-    windowHeight,
   } = state
   const {
     setStoresSelected,
@@ -87,6 +79,7 @@ export default function PhoneScreen() {
     table_item_container: {
       width: 'auto',
       height: '100%',
+      zIndex: 1,
     },
     drawer: {
       width: isPhoneLandscape ? '70vw' : '100vw',
@@ -153,25 +146,19 @@ export default function PhoneScreen() {
     },
     background_container2: {
       flex: 1,
-      // background: 'yellow',
     },
     background_container3: {
       flex: 1,
-      // background: 'purple',
     },
     background_container4: {
       flex: 1,
-      // background: 'green',
     },
     seaweed_item1: {
       flex: 1,
-      // background: 'orange',
     },
     seaweed_item2: {
       flex: 1,
-      // background: 'blue',
     },
-    diver: {},
   }
 
   const onResize = useCallback(() => {
@@ -364,7 +351,7 @@ export default function PhoneScreen() {
             style={style.background_container2}
             justifyContent="flex-end"
             alignItems="center">
-            <Grid item style={style.diver}>
+            <Grid item>
               <Image src={diver} layout="fixed" width={200} height={50} />
             </Grid>
           </Grid>
@@ -385,7 +372,7 @@ export default function PhoneScreen() {
               container
               alignItems="flex-end"
               style={style.seaweed_item1}>
-              <Image src={seaweed1} layout="fixed" width={100} height={100} />
+              <Image src={seaweed1} layout="fixed" width={100} height={90} />
             </Grid>
             <Grid
               item
@@ -393,7 +380,7 @@ export default function PhoneScreen() {
               justifyContent="flex-end"
               alignItems="flex-end"
               style={style.seaweed_item2}>
-              <Image src={seaweed2} layout="fixed" width={100} height={100} />
+              <Image src={seaweed2} layout="fixed" width={100} height={90} />
             </Grid>
           </Grid>
         </Grid>

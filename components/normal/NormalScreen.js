@@ -12,20 +12,12 @@ import logo from '../../public/images/logo.svg'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
 import headerBackground from '../../public/images/headerBackground.svg'
-import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
-import drawerBackground from '../../public/images/drawerBackground.svg'
 import Table from './Table'
 import { useResizeDetector } from 'react-resize-detector'
-import Radio from '@material-ui/core/Radio'
-import { TrendingUp } from '@material-ui/icons'
 import { StateContext } from '../../utils/StateContext'
-import fish from '../../public/images/singleFish.svg'
-import fish2 from '../../public/images/singleFish2.svg'
-import schoolFish from '../../public/images/schoolFish3.svg'
 import seaweed1 from '../../public/images/seaweed1.svg'
 import seaweed2 from '../../public/images/seaweed2.svg'
-import Typography from '@material-ui/core/Typography'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
@@ -121,15 +113,15 @@ export default function NormalScreen() {
       width: '100%',
       height: '500px',
       marginTop: '300px',
-      minWidth: '1000px',
+      minWidth: '750px', //width between seaweeds
     },
     seaweed1: {
       position: 'absolute',
-      bottom: '-50px',
+      bottom: '0px',
     },
     seaweed2: {
       position: 'absolute',
-      bottom: '-20px',
+      bottom: '-0px',
       right: -10,
     },
   }
@@ -195,10 +187,10 @@ export default function NormalScreen() {
       <Grid container style={style.seaweed_container} alignItems="flex-end">
         <Grid container style={style.seaweed_container2}>
           <Grid item style={style.seaweed1} alignItems="flex-end">
-            <Image src={seaweed1} layout="fixed" width="500px" height="500px" />
+            <Image src={seaweed1} layout="fixed" width={400} height={300} />
           </Grid>
           <Grid item style={style.seaweed2}>
-            <Image src={seaweed2} layout="fixed" width="500px" height="500px" />
+            <Image src={seaweed2} layout="fixed" width={400} height={300} />
           </Grid>
         </Grid>
       </Grid>
