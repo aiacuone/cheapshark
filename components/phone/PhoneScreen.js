@@ -22,6 +22,10 @@ import updateFetch from '../../pages/main'
 import { StateContext } from '../../utils/StateContext'
 import Table from '../normal/Table'
 import { useResizeDetector } from 'react-resize-detector'
+import logo from '../../public/images/logo.svg'
+import seaweed1 from '../../public/images/seaweed1.svg'
+import seaweed2 from '../../public/images/seaweed2.svg'
+import diver from '../../public/images/diver.svg'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
@@ -60,10 +64,13 @@ export default function PhoneScreen() {
         : 'repeat(10,1fr) 60px',
     },
     main_content: {
-      gridArea: isPhoneLandscape ? '1/1/11/11' : '1/1/11/11',
+      gridArea: '1/1/11/11',
       padding: '20px',
       overflow: 'hidden',
       zIndex: 1,
+      height: '100%',
+      width: '100%',
+      position: 'relative',
     },
     nav_bar: {
       gridArea: isPhoneLandscape ? '1/11/11/12' : '11/1/12/11',
@@ -138,8 +145,35 @@ export default function PhoneScreen() {
       cursor: 'pointer',
     },
     drawer_start: { zIndex: 2 },
+    background_container: {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      // background: 'yellow',
+    },
+    background_container2: {
+      flex: 1,
+      // background: 'yellow',
+    },
+    background_container3: {
+      flex: 1,
+      // background: 'purple',
+    },
+    background_container4: {
+      flex: 1,
+      // background: 'green',
+    },
+    seaweed_item1: {
+      flex: 1,
+      // background: 'orange',
+    },
+    seaweed_item2: {
+      flex: 1,
+      // background: 'blue',
+    },
+    diver: {},
   }
-  // console.log(windowHeight)
+
   const onResize = useCallback(() => {
     setLargeTableHeight(height)
   })
@@ -315,7 +349,6 @@ export default function PhoneScreen() {
         ref={ref}
         container
         style={style.main_content}
-        className={styles.main_content}
         justifyContent="center"
         alignItems="center">
         <Grid
@@ -325,7 +358,47 @@ export default function PhoneScreen() {
           xs={12}>
           {localFilteredList?.length > 0 && <Table />}
         </Grid>
+        <Grid container style={style.background_container} direction="column">
+          <Grid
+            container
+            style={style.background_container2}
+            justifyContent="flex-end"
+            alignItems="center">
+            <Grid item style={style.diver}>
+              <Image src={diver} layout="fixed" width={200} height={50} />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            style={style.background_container3}
+            justifyContent="center"
+            alignItems="center">
+            <Image src={logo} height={100} width={200} layout="fixed" />
+          </Grid>
+          <Grid
+            container
+            wrap="nowrap"
+            // alignItems="flex-end"
+            style={style.background_container4}>
+            <Grid
+              item
+              container
+              alignItems="flex-end"
+              style={style.seaweed_item1}>
+              <Image src={seaweed1} layout="fixed" width={100} height={100} />
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              style={style.seaweed_item2}>
+              <Image src={seaweed2} layout="fixed" width={100} height={100} />
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
+
       <div className={styles.background}>
         {/* <Image
           src={isPhoneLandscape ? headerBackground : drawerBackground}
