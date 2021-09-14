@@ -10,6 +10,7 @@ export default function Sliders({ localInputs, setLocalInputs }) {
   const { inputs } = state
   const { setInputs } = setState
   const { reviews, price, release, rating } = localInputs
+  let { searchedAllPages } = state
 
   const style = {
     slider: {},
@@ -63,6 +64,7 @@ export default function Sliders({ localInputs, setLocalInputs }) {
     const { name, label, min, max, value } = slider
 
     function handleChange(e, newValue) {
+      searchedAllPages = false
       const newInputs = { ...localInputs }
       newInputs[name] = newValue
       setLocalInputs(newInputs)

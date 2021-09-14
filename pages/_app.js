@@ -57,11 +57,12 @@ function MyApp({ Component, pageProps }) {
     'Blizzard Shop': true,
     AllYouPlay: true,
   })
+  const [page, setPage] = useState(1)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
+  const [searchedAllPages, setSearchedAllPages] = useState(false)
   const [largeTableHeight, setLargeTableHeight] = useState()
   const [windowHeight, setWindowHeight] = useState()
-
   const isPhonePotraitWidth = useMediaQuery('(max-width:450px)')
   const isPhonePotraitHeight = useMediaQuery('(max-height:860px)')
   const isPhoneLandscapeWidth = useMediaQuery('(max-width:860px)')
@@ -129,6 +130,7 @@ function MyApp({ Component, pageProps }) {
     isPhonePotraitWidth,
     isPhoneScreen,
     windowHeight,
+    searchedAllPages,
   }
   const setState = {
     setInputs,
@@ -140,31 +142,32 @@ function MyApp({ Component, pageProps }) {
     setApiState,
     setStoresApi,
     setLargeTableHeight,
+    setSearchedAllPages,
   }
+
+  const storesString = () => {
+    const arr = []
+    Object.keys(storesSelected).forEach((store, index) => {
+      if (!storesSelected[store]) return
+      arr.push(index)
+    })
+    return arr.join()
+  }
+
+  const address =
+    'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
+    price[0] +
+    '&upperPrice=' +
+    price[1] +
+    '&steamRating=' +
+    rating[0] +
+    '&pageNumber=' +
+    page +
+    '&storeID=' +
+    storesString()
 
   useEffect(() => {
     setApiState({ loading: true })
-
-    const stores = () => {
-      const arr = []
-      Object.keys(storesSelected).forEach((store, index) => {
-        if (!storesSelected[store]) return
-        arr.push(index)
-      })
-      return arr.join()
-    }
-
-    const address =
-      'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
-      price[0] +
-      '&upperPrice=' +
-      price[1] +
-      '&steamRating=' +
-      rating[0] +
-      '&pageNumber=' +
-      1 +
-      '&storeID=' +
-      stores()
 
     fetch(address)
       .then((res) => res.json())
@@ -190,6 +193,36 @@ function MyApp({ Component, pageProps }) {
         setStoresApi({ loading: false, data: null, error: true })
       })
   }, [])
+
+  console.log(localFilteredList, 'localFilteredList')
+  const notEnoughGames =
+    localFilteredList?.length < 10 && page < 21 && !apiState.loading
+      ? true
+      : false
+
+  notEnoughGames && !searchedAllPages && getMoreGames()
+
+  function getMoreGames() {
+    if (page === 20) {
+      setSearchedAllPages(true)
+      setPage(1)
+      return
+    }
+    setPage(page + 1)
+    setApiState({ ...apiState, loading: true })
+    console.log(apiState, 'api state')
+    fetch(address)
+      .then((res) => res.json())
+      .then((data) => {
+        const newData = [...apiState.data, ...data]
+        setApiState({ loading: false, data: newData })
+      })
+      .catch((error) => {
+        console.log(error)
+        setApiState({ loading: false, data: null, error: true })
+      })
+    return
+  }
 
   return (
     <StateContext.Provider value={{ state, setState }}>

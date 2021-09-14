@@ -8,10 +8,12 @@ import { updateFetch } from '../../pages/main'
 
 export default function RangeSlider({ name, label, min, max }) {
   const { state, setState } = useContext(StateContext)
-  const { setInputs } = setState
+  const { setInputs, setSearchedAllPages } = setState
   const { inputs } = state
+  let { searchedAllPages } = state
 
   function handleChange(e, value) {
+    setSearchedAllPages(false)
     const newInputs = { ...inputs }
     newInputs[name] = value
     setInputs(newInputs)
