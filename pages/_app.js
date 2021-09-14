@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import { useState, useEffect } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
+var _ = require('lodash')
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -166,18 +167,39 @@ function MyApp({ Component, pageProps }) {
     '&storeID=' +
     storesString()
 
-  useEffect(() => {
-    setApiState({ loading: true })
+  // useEffect(() => {
+  //   setApiState({ loading: true })
 
-    fetch(address)
-      .then((res) => res.json())
-      .then((data) => {
-        setApiState({ loading: false, data: data })
-      })
-      .catch((error) => {
-        console.log(error)
-        setApiState({ loading: false, data: null, error: true })
-      })
+  //   fetch(address)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setApiState({ loading: false, data: data })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //       setApiState({ loading: false, data: null, error: true })
+  //     })
+  // }, [price, rating, storesSelected])
+
+  const debouncedGetGames = _.debounce(
+    function getGames() {
+      setApiState({ loading: true })
+      console.log('get games')
+      fetch(address)
+        .then((res) => res.json())
+        .then((data) => {
+          setApiState({ loading: false, data: data })
+        })
+        .catch((error) => {
+          console.log(error)
+          setApiState({ loading: false, data: null, error: true })
+        })
+    },
+    [500]
+  )
+
+  useEffect(() => {
+    debouncedGetGames
   }, [price, rating, storesSelected])
 
   useEffect(() => {
@@ -194,38 +216,70 @@ function MyApp({ Component, pageProps }) {
       })
   }, [])
 
-  console.log(localFilteredList, 'localFilteredList')
   const notEnoughGames =
     localFilteredList?.length < 10 && page < 21 && !apiState.loading
       ? true
       : false
 
-  notEnoughGames && !searchedAllPages && getMoreGames()
-
-  function getMoreGames() {
-    if (page === 20) {
-      setSearchedAllPages(true)
-      setPage(1)
+  const debounceGetMoreGames = _.debounce(
+    function getMoreGames() {
+      console.log('get more games')
+      if (page === 20) {
+        setSearchedAllPages(true)
+        setPage(1)
+        return
+      }
+      setPage(page + 1)
+      setApiState({ ...apiState, loading: true })
+      console.log(apiState, 'api state')
+      fetch(address)
+        .then((res) => res.json())
+        .then((data) => {
+          const newData = [...apiState.data, ...data]
+          setApiState({ loading: false, data: newData })
+        })
+        .catch((error) => {
+          console.log(error)
+          setApiState({ loading: false, data: null, error: true })
+        })
       return
-    }
-    setPage(page + 1)
-    setApiState({ ...apiState, loading: true })
-    console.log(apiState, 'api state')
-    fetch(address)
-      .then((res) => res.json())
-      .then((data) => {
-        const newData = [...apiState.data, ...data]
-        setApiState({ loading: false, data: newData })
-      })
-      .catch((error) => {
-        console.log(error)
-        setApiState({ loading: false, data: null, error: true })
-      })
-    return
+    },
+    [1000]
+  )
+
+  notEnoughGames && !searchedAllPages && debounceGetMoreGames
+
+  // function getMoreGames() {
+  //   if (page === 20) {
+  //     setSearchedAllPages(true)
+  //     setPage(1)
+  //     return
+  //   }
+  //   setPage(page + 1)
+  //   setApiState({ ...apiState, loading: true })
+  //   console.log(apiState, 'api state')
+  //   fetch(address)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const newData = [...apiState.data, ...data]
+  //       setApiState({ loading: false, data: newData })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //       setApiState({ loading: false, data: null, error: true })
+  //     })
+  //   return
+  // }
+
+  function handleTest() {
+    console.log('change')
   }
+
+  const debounceTest = _.debounce(handleTest, [500])
 
   return (
     <StateContext.Provider value={{ state, setState }}>
+      <input type="range" onChange={debounceTest} />
       <Component {...pageProps}></Component>
     </StateContext.Provider>
   )
