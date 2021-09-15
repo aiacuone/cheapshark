@@ -24,13 +24,8 @@ import Typography from '@material-ui/core/Typography'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
-  const {
-    isPhoneLandscape,
-    storesApi,
-    inputs,
-    storesSelected,
-    localFilteredList,
-  } = state
+  const { isPhoneLandscape, storesApi, inputs, storesSelected, filteredList } =
+    state
   const {
     setStoresSelected,
     setInputs,
@@ -344,7 +339,7 @@ export default function PhoneScreen() {
           item
           style={style.table_item_container}
           xs={12}>
-          {localFilteredList?.length > 0 && <Table />}
+          {filteredList?.length > 0 && <Table />}
         </Grid>
         <Grid container style={style.background_container} direction="column">
           <Grid

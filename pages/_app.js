@@ -1,8 +1,8 @@
 import '../styles/globals.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
-var _ = require('lodash')
+import { debounce } from 'lodash'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 
 function MyApp({ Component, pageProps }) {
@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
   })
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
-  // const [storesSelected, setStoresSelected] = useState()
+  const [initialApiCallComplete, setInitialApiCallComplete] = useState(false)
   const [storesSelected, setStoresSelected] = useState({
     Steam: true,
     GamersGate: true,
@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }) {
     'Blizzard Shop': true,
     AllYouPlay: true,
   })
-  const [toggleGetGames, setToggleGetGames] = useState(false)
+  const [filteredList, setFilteredList] = useState([])
   const [page, setPage] = useState(1)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
@@ -78,34 +78,6 @@ function MyApp({ Component, pageProps }) {
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
 
-  const localFilteredList = apiState?.data?.filter((item) => {
-    const { steamRatingCount, steamRatingPercent, releaseDate } = item
-    const filter1 =
-      reviews[0] == 0 ? item : steamRatingCount >= reviews[0] * 1000
-    const filter2 =
-      reviews[1] == 100 ? item : steamRatingCount <= reviews[1] * 1000
-    const filter3 =
-      rating[0] == 100
-        ? item
-        : steamRatingPercent == '0' || steamRatingPercent <= rating[1]
-    const filter4 =
-      release[0] == 1990
-        ? item
-        : releaseDate * 1000 > new Date(release[0], 0, 1).getTime()
-    const filter5 =
-      release[1] == 2021
-        ? item
-        : releaseDate * 1000 < new Date(release[1], 11, 31).getTime()
-
-    return filter1 && filter2 && filter3 && filter4 && filter5
-  })
-
-  const localUnfilteredList = apiState?.data?.filter((item) => {
-    if (localFilteredList.indexOf(item) == -1) {
-      return item
-    }
-  })
-
   useEffect(() => {
     function handleResize() {
       setWindowHeight(window.innerHeight)
@@ -118,15 +90,17 @@ function MyApp({ Component, pageProps }) {
     }
   }, [])
 
-  function createStoresSelections(data) {
-    const obj = {}
-    data.forEach((store) => {
-      obj[store.storeName] = true
-    })
-    return setStoresSelected(obj)
-  }
+  useEffect(() => {
+    if (!apiState.data) {
+      return
+    }
+    function handleFilter() {
+      setFilteredList(getFilteredList(apiState?.data))
+    }
+    const debouncedFilter = debounce(handleFilter, [500])
 
-  console.log(storesSelected, 'storesSelected')
+    debouncedFilter()
+  }, [release, reviews, rating])
 
   const storesString = () => {
     const arr = []
@@ -136,6 +110,8 @@ function MyApp({ Component, pageProps }) {
     })
     return arr.join()
   }
+
+  console.log(apiState.data)
 
   const address =
     'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -149,33 +125,92 @@ function MyApp({ Component, pageProps }) {
     '&storeID=' +
     storesString()
 
-  // useEffect(() => {
-  //   setApiState({ loading: true })
+  function getFilteredList(data) {
+    return data.filter((item) => {
+      const { steamRatingCount, steamRatingPercent, releaseDate } = item
+      const filter1 =
+        reviews[0] == 0 ? item : steamRatingCount >= reviews[0] * 1000
+      const filter2 =
+        reviews[1] == 100 ? item : steamRatingCount <= reviews[1] * 1000
+      const filter3 =
+        rating[0] == 100
+          ? item
+          : steamRatingPercent == '0' || steamRatingPercent <= rating[1]
+      const filter4 =
+        release[0] == 1990
+          ? item
+          : releaseDate * 1000 > new Date(release[0], 0, 1).getTime()
+      const filter5 =
+        release[1] == 2021
+          ? item
+          : releaseDate * 1000 < new Date(release[1], 11, 31).getTime()
 
-  //   fetch(address)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setApiState({ loading: false, data: data })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setApiState({ loading: false, data: null, error: true })
-  //     })
-  // }, [price, rating, storesSelected])
+      return filter1 && filter2 && filter3 && filter4 && filter5
+    })
+  }
 
-  const debouncedGetGames = _.debounce(
-    function getGames() {
+  async function getMoreGames() {
+    if (!apiState.data) {
+      console.log(apiState.data, 'returned value')
+      return
+    }
+    var fetchedGames = []
+    async function fetchMoreGames() {
+      console.log('fetching')
+      setApiState({ ...apiState, loading: true })
+      await fetch(address)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(apiState.data)
+          setApiState({
+            ...apiState,
+            loading: false,
+            data: [...apiState.data, ...data],
+          })
+          fetchedGames = [...fetchedGames, ...data]
+          console.log(fetchedGames, 'fetched games')
+          console.log(data, 'data')
+        })
+        .catch((error) => {
+          console.log(error)
+          setApiState({ loading: false, data: null, error: true })
+        })
+    }
+    await fetchMoreGames()
+    const filtered = getFilteredList(fetchedGames)
+    if (filteredList.length + filtered.length <= 10) {
+      console.log('not enough', [...filteredList, ...filtered])
+      fetchMoreGames()
+    }
+    console.log('enough', [...filteredList, ...filtered])
+    setFilteredList([...filteredList, ...filtered])
+  }
+
+  const debouncedGetMoreGames = useCallback(debounce(getMoreGames, 500), [])
+
+  function createStoresSelections(data) {
+    const obj = {}
+    data.forEach((store) => {
+      obj[store.storeName] = true
+    })
+    return setStoresSelected(obj)
+  }
+
+  const debouncedGetGames = debounce(
+    // GAMES API
+    function () {
       setApiState({ loading: true })
-      console.log('get games')
       fetch(address)
         .then((res) => res.json())
         .then((data) => {
+          setFilteredList(getFilteredList(data))
           setApiState({ loading: false, data: data })
         })
         .catch((error) => {
           console.log(error)
           setApiState({ loading: false, data: null, error: true })
         })
+      setInitialApiCallComplete(true)
     },
     [500]
   )
@@ -185,13 +220,14 @@ function MyApp({ Component, pageProps }) {
   }, [price, rating, storesSelected])
 
   useEffect(() => {
+    //STORES API
     setStoresApi({ loading: true })
 
     fetch('https://www.cheapshark.com/api/1.0/stores')
       .then((res) => res.json())
       .then((data) => {
-        setStoresApi({ loading: false, data: data })
         createStoresSelections(data)
+        setStoresApi({ loading: false, data: data })
       })
       .catch((error) => {
         console.log(error)
@@ -199,64 +235,34 @@ function MyApp({ Component, pageProps }) {
       })
   }, [])
 
-  const notEnoughGames = localFilteredList?.length < 10 && page < 21
+  const notEnoughGames = filteredList?.length < 10 && page < 10 ? true : false
 
-  const debounceGetMoreGames = _.debounce(
-    async function getMoreGames() {
-      console.log('get more games')
+  apiState.data &&
+    initialApiCallComplete &&
+    notEnoughGames &&
+    !searchedAllPages &&
+    !apiState.loading &&
+    debouncedGetMoreGames()
 
-      const list = [...localFilteredList]
-      if (page === 20) {
-        setSearchedAllPages(true)
-        setPage(1)
-        return
-      }
-      setPage(page + 1)
-      setApiState({ ...apiState, loading: true })
-      console.log(apiState, 'api state')
-      await fetch(address)
-        .then((res) => res.json())
-        .then((data) => {
-          const newData = [...apiState.data, ...data]
-          setApiState({ loading: false, data: newData })
-        })
-        .catch((error) => {
-          console.log(error)
-          setApiState({ loading: false, data: null, error: true })
-        })
-      if (localFilteredList > 10) {
-        setSearchedAllPages(true)
-      }
-      return
-    },
-    [1000]
-  )
-
-  notEnoughGames && !searchedAllPages && debounceGetMoreGames()
-
-  // toggleGetGames && debounceGetMoreGames()
-
-  // function getMoreGames() {
-  //   if (page === 20) {
-  //     setSearchedAllPages(true)
-  //     setPage(1)
-  //     return
-  //   }
-  //   setPage(page + 1)
-  //   setApiState({ ...apiState, loading: true })
-  //   console.log(apiState, 'api state')
-  //   fetch(address)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const newData = [...apiState.data, ...data]
-  //       setApiState({ loading: false, data: newData })
+  // apiState.data &&
+  // initialApiCallComplete &&
+  // notEnoughGames &&
+  // !searchedAllPages &&
+  // !apiState.loading
+  //   ? console.log('true', {
+  //       apiState,
+  //       initialApiCallComplete,
+  //       notEnoughGames,
+  //       searchedAllPages,
+  //       apiState,
   //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setApiState({ loading: false, data: null, error: true })
+  //   : console.log('false', {
+  //       apiState,
+  //       initialApiCallComplete,
+  //       notEnoughGames,
+  //       searchedAllPages,
+  //       apiState,
   //     })
-  //   return
-  // }
 
   const theme = createTheme({
     typography: {
@@ -294,8 +300,6 @@ function MyApp({ Component, pageProps }) {
     storesSelected,
     storesMenu,
     stores,
-    localFilteredList,
-    localUnfilteredList,
     sortBy,
     largeTableHeight,
     isPhoneLandscape,
@@ -303,6 +307,7 @@ function MyApp({ Component, pageProps }) {
     isPhoneScreen,
     windowHeight,
     searchedAllPages,
+    filteredList,
   }
   const setState = {
     setInputs,
@@ -316,11 +321,13 @@ function MyApp({ Component, pageProps }) {
     setLargeTableHeight,
     setSearchedAllPages,
   }
-  console.log(localFilteredList, 'localFilteredList')
-  console.log(page, 'page')
-  console.log(searchedAllPages, 'searchedAllPages')
-  console.log(notEnoughGames, 'notEnoughGames')
+  // console.log(page, 'page')
+  // console.log(filteredList, 'filteredList')
+  // console.log(searchedAllPages, 'searchedAllPages')
+  // console.log(notEnoughGames, 'notEnoughGames')
+  // console.log(apiState, 'apiState')
   // console.log(storesApi.data, 'storesApi.data')
+  // console.log(storesSelected, 'storesSelected')
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState }}>

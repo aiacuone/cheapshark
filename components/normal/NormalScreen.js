@@ -21,7 +21,7 @@ import seaweed2 from '../../public/images/seaweed2.svg'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
-  const { expanded, storesApi, storesSelected, localFilteredList } = state
+  const { expanded, storesApi, storesSelected, filteredList } = state
   const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
   const [localStoresSelected, setLocalStoresSelected] = useState({
@@ -256,7 +256,7 @@ export default function NormalScreen() {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {localFilteredList?.length > 0 && <Table />}
+          {filteredList?.length > 0 && <Table />}
         </Grid>
         <Grid item style={style.drawer_item}>
           <Drawer

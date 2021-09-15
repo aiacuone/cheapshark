@@ -98,12 +98,7 @@ export default function GamesTable() {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
-  const {
-    largeTableHeight,
-    localFilteredList: filteredList,
-    storesApi,
-    isPhoneScreen,
-  } = state
+  const { largeTableHeight, filteredList, storesApi, isPhoneScreen } = state
 
   const timestampConvert = (timestamp) => {
     const dateObj = new Date(timestamp)
@@ -116,7 +111,7 @@ export default function GamesTable() {
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, filteredList.length - page * rowsPerPage)
+    Math.min(rowsPerPage, filteredList?.length - page * rowsPerPage)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -166,7 +161,7 @@ export default function GamesTable() {
           </TableHead>
           <TableBody className={styles.table_body}>
             {(rowsPerPage > 0
-              ? filteredList.slice(
+              ? filteredList?.slice(
                   page * rowsPerPage,
                   page * rowsPerPage + rowsPerPage
                 )
@@ -241,7 +236,7 @@ export default function GamesTable() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={filteredList.length}
+                count={filteredList?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
