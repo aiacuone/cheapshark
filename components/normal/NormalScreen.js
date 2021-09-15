@@ -201,7 +201,10 @@ export default function NormalScreen() {
         alignItems="center"
         justifyContent="center">
         <Grid item className={styles.stores_button_container}>
-          <Button variant="contained" onClick={() => setExpanded(true)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setExpanded(true)}>
             STORES
           </Button>
         </Grid>

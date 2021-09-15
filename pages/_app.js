@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
 var _ = require('lodash')
+import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps }) {
   })
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
+  // const [storesSelected, setStoresSelected] = useState()
   const [storesSelected, setStoresSelected] = useState({
     Steam: true,
     GamersGate: true,
@@ -58,6 +60,7 @@ function MyApp({ Component, pageProps }) {
     'Blizzard Shop': true,
     AllYouPlay: true,
   })
+  const [toggleGetGames, setToggleGetGames] = useState(false)
   const [page, setPage] = useState(1)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
@@ -115,40 +118,19 @@ function MyApp({ Component, pageProps }) {
     }
   }, [])
 
-  const state = {
-    inputs,
-    expanded,
-    apiState,
-    storesApi,
-    storesSelected,
-    storesMenu,
-    stores,
-    localFilteredList,
-    localUnfilteredList,
-    sortBy,
-    largeTableHeight,
-    isPhoneLandscape,
-    isPhonePotraitWidth,
-    isPhoneScreen,
-    windowHeight,
-    searchedAllPages,
+  function createStoresSelections(data) {
+    const obj = {}
+    data.forEach((store) => {
+      obj[store.storeName] = true
+    })
+    return setStoresSelected(obj)
   }
-  const setState = {
-    setInputs,
-    setExpanded,
-    setStoresMenu,
-    setStoresSelected,
-    setStores,
-    setSortBy,
-    setApiState,
-    setStoresApi,
-    setLargeTableHeight,
-    setSearchedAllPages,
-  }
+
+  console.log(storesSelected, 'storesSelected')
 
   const storesString = () => {
     const arr = []
-    Object.keys(storesSelected).forEach((store, index) => {
+    Object.keys(storesSelected)?.forEach((store, index) => {
       if (!storesSelected[store]) return
       arr.push(index)
     })
@@ -199,7 +181,7 @@ function MyApp({ Component, pageProps }) {
   )
 
   useEffect(() => {
-    debouncedGetGames
+    debouncedGetGames()
   }, [price, rating, storesSelected])
 
   useEffect(() => {
@@ -209,6 +191,7 @@ function MyApp({ Component, pageProps }) {
       .then((res) => res.json())
       .then((data) => {
         setStoresApi({ loading: false, data: data })
+        createStoresSelections(data)
       })
       .catch((error) => {
         console.log(error)
@@ -216,14 +199,13 @@ function MyApp({ Component, pageProps }) {
       })
   }, [])
 
-  const notEnoughGames =
-    localFilteredList?.length < 10 && page < 21 && !apiState.loading
-      ? true
-      : false
+  const notEnoughGames = localFilteredList?.length < 10 && page < 21
 
   const debounceGetMoreGames = _.debounce(
-    function getMoreGames() {
+    async function getMoreGames() {
       console.log('get more games')
+
+      const list = [...localFilteredList]
       if (page === 20) {
         setSearchedAllPages(true)
         setPage(1)
@@ -232,7 +214,7 @@ function MyApp({ Component, pageProps }) {
       setPage(page + 1)
       setApiState({ ...apiState, loading: true })
       console.log(apiState, 'api state')
-      fetch(address)
+      await fetch(address)
         .then((res) => res.json())
         .then((data) => {
           const newData = [...apiState.data, ...data]
@@ -242,12 +224,17 @@ function MyApp({ Component, pageProps }) {
           console.log(error)
           setApiState({ loading: false, data: null, error: true })
         })
+      if (localFilteredList > 10) {
+        setSearchedAllPages(true)
+      }
       return
     },
     [1000]
   )
 
-  notEnoughGames && !searchedAllPages && debounceGetMoreGames
+  notEnoughGames && !searchedAllPages && debounceGetMoreGames()
+
+  // toggleGetGames && debounceGetMoreGames()
 
   // function getMoreGames() {
   //   if (page === 20) {
@@ -271,17 +258,75 @@ function MyApp({ Component, pageProps }) {
   //   return
   // }
 
-  function handleTest() {
-    console.log('change')
+  const theme = createTheme({
+    typography: {
+      fontFamily: 'Urbanist',
+      fontSize: 16,
+    },
+    palette: {
+      primary: {
+        main: '#dddddd',
+        dark: '#c9c9c9',
+      },
+    },
+    shape: {
+      borderRadius: 3,
+    },
+    overrides: {
+      MuiSlider: {
+        thumb: {
+          width: '15px',
+          height: '15px',
+          // border: '1px black solid',
+        },
+      },
+    },
+    props: {
+      MuiButton: { disableRipple: true },
+    },
+  })
+
+  const state = {
+    inputs,
+    expanded,
+    apiState,
+    storesApi,
+    storesSelected,
+    storesMenu,
+    stores,
+    localFilteredList,
+    localUnfilteredList,
+    sortBy,
+    largeTableHeight,
+    isPhoneLandscape,
+    isPhonePotraitWidth,
+    isPhoneScreen,
+    windowHeight,
+    searchedAllPages,
   }
-
-  const debounceTest = _.debounce(handleTest, [500])
-
+  const setState = {
+    setInputs,
+    setExpanded,
+    setStoresMenu,
+    setStoresSelected,
+    setStores,
+    setSortBy,
+    setApiState,
+    setStoresApi,
+    setLargeTableHeight,
+    setSearchedAllPages,
+  }
+  console.log(localFilteredList, 'localFilteredList')
+  console.log(page, 'page')
+  console.log(searchedAllPages, 'searchedAllPages')
+  console.log(notEnoughGames, 'notEnoughGames')
+  // console.log(storesApi.data, 'storesApi.data')
   return (
-    <StateContext.Provider value={{ state, setState }}>
-      <input type="range" onChange={debounceTest} />
-      <Component {...pageProps}></Component>
-    </StateContext.Provider>
+    <ThemeProvider theme={theme}>
+      <StateContext.Provider value={{ state, setState }}>
+        <Component {...pageProps}></Component>
+      </StateContext.Provider>
+    </ThemeProvider>
   )
 }
 

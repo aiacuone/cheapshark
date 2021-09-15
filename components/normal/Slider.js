@@ -45,13 +45,16 @@ export default function RangeSlider({ name, label, min, max }) {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Typography align="center">{name}</Typography>
+            <Typography align="center">
+              {name.charAt(0).toUpperCase() + name.slice(1)}
+            </Typography>
           </Grid>
           <Grid item xs={3}>
             <Paper>
               <Typography align="center">
                 {showBeforeNumber && label}
                 {inputs[name][1]}
+
                 {showAfterNumber && label}
               </Typography>
             </Paper>

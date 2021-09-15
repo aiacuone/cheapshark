@@ -20,6 +20,7 @@ import logo from '../../public/images/logo.svg'
 import seaweed1 from '../../public/images/seaweed1.svg'
 import seaweed2 from '../../public/images/seaweed2.svg'
 import diver from '../../public/images/diver.svg'
+import Typography from '@material-ui/core/Typography'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
@@ -255,13 +256,13 @@ export default function PhoneScreen() {
           justifyContent="space-around"
           alignItems="center">
           <Grid item style={style.select_button} onClick={handleDeselectAll}>
-            Deselect All
+            <Typography>Deselect All</Typography>
           </Grid>
           <Grid item style={style.ok_button} onClick={handleOK}>
-            OK
+            <Typography>OK</Typography>
           </Grid>
           <Grid item style={style.select_button} onClick={handleSelectAll}>
-            Select All
+            <Typography>Select All</Typography>
           </Grid>
         </Grid>
       </>

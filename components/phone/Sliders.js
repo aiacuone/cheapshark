@@ -82,9 +82,11 @@ export default function Sliders({ localInputs, setLocalInputs }) {
               <Grid item xs={2}>
                 <Paper style={style.paper}>
                   <Grid container justifyContent="center">
-                    {showBeforeNumber && label}
-                    {value[0]}
-                    {showAfterNumber && label}
+                    <Typography>
+                      {showBeforeNumber && label}
+                      {value[0]}
+                      {showAfterNumber && label}
+                    </Typography>
                   </Grid>
                 </Paper>
               </Grid>
@@ -96,9 +98,11 @@ export default function Sliders({ localInputs, setLocalInputs }) {
               <Grid item xs={2}>
                 <Paper style={style.paper}>
                   <Grid container justifyContent="center">
-                    {showBeforeNumber && label}
-                    {value[1]}
-                    {showAfterNumber && label}
+                    <Typography>
+                      {showBeforeNumber && label}
+                      {value[1]}
+                      {showAfterNumber && label}
+                    </Typography>
                   </Grid>
                 </Paper>
               </Grid>
