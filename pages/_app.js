@@ -111,8 +111,6 @@ function MyApp({ Component, pageProps }) {
     return arr.join()
   }
 
-  console.log(apiState.data)
-
   const address =
     'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
     price[0] +
@@ -149,44 +147,38 @@ function MyApp({ Component, pageProps }) {
     })
   }
 
-  async function getMoreGames() {
-    if (!apiState.data) {
-      console.log(apiState.data, 'returned value')
-      return
-    }
+  async function getMoreGames({ data }) {
     var fetchedGames = []
     async function fetchMoreGames() {
-      console.log('fetching')
       setApiState({ ...apiState, loading: true })
       await fetch(address)
         .then((res) => res.json())
-        .then((data) => {
-          console.log(apiState.data)
+        .then((newData) => {
           setApiState({
             ...apiState,
             loading: false,
-            data: [...apiState.data, ...data],
+            data: [...data, ...newData],
           })
-          fetchedGames = [...fetchedGames, ...data]
-          console.log(fetchedGames, 'fetched games')
-          console.log(data, 'data')
+          fetchedGames = [...fetchedGames, ...newData]
         })
         .catch((error) => {
           console.log(error)
-          setApiState({ loading: false, data: null, error: true })
+          setApiState({ ...apiState, loading: false, error: true })
         })
     }
     await fetchMoreGames()
     const filtered = getFilteredList(fetchedGames)
     if (filteredList.length + filtered.length <= 10) {
-      console.log('not enough', [...filteredList, ...filtered])
       fetchMoreGames()
     }
-    console.log('enough', [...filteredList, ...filtered])
+
     setFilteredList([...filteredList, ...filtered])
   }
 
-  const debouncedGetMoreGames = useCallback(debounce(getMoreGames, 500), [])
+  const debouncedGetMoreGames = useCallback(
+    debounce(({ data }) => getMoreGames({ data }), 500),
+    []
+  )
 
   function createStoresSelections(data) {
     const obj = {}
@@ -199,7 +191,7 @@ function MyApp({ Component, pageProps }) {
   const debouncedGetGames = debounce(
     // GAMES API
     function () {
-      setApiState({ loading: true })
+      setApiState({ ...apiState, loading: true })
       fetch(address)
         .then((res) => res.json())
         .then((data) => {
@@ -208,7 +200,7 @@ function MyApp({ Component, pageProps }) {
         })
         .catch((error) => {
           console.log(error)
-          setApiState({ loading: false, data: null, error: true })
+          setApiState({ ...apiState, loading: false, error: true })
         })
       setInitialApiCallComplete(true)
     },
@@ -242,27 +234,7 @@ function MyApp({ Component, pageProps }) {
     notEnoughGames &&
     !searchedAllPages &&
     !apiState.loading &&
-    debouncedGetMoreGames()
-
-  // apiState.data &&
-  // initialApiCallComplete &&
-  // notEnoughGames &&
-  // !searchedAllPages &&
-  // !apiState.loading
-  //   ? console.log('true', {
-  //       apiState,
-  //       initialApiCallComplete,
-  //       notEnoughGames,
-  //       searchedAllPages,
-  //       apiState,
-  //     })
-  //   : console.log('false', {
-  //       apiState,
-  //       initialApiCallComplete,
-  //       notEnoughGames,
-  //       searchedAllPages,
-  //       apiState,
-  //     })
+    debouncedGetMoreGames({ data: apiState?.data })
 
   const theme = createTheme({
     typography: {
@@ -321,13 +293,7 @@ function MyApp({ Component, pageProps }) {
     setLargeTableHeight,
     setSearchedAllPages,
   }
-  // console.log(page, 'page')
-  // console.log(filteredList, 'filteredList')
-  // console.log(searchedAllPages, 'searchedAllPages')
-  // console.log(notEnoughGames, 'notEnoughGames')
-  // console.log(apiState, 'apiState')
-  // console.log(storesApi.data, 'storesApi.data')
-  // console.log(storesSelected, 'storesSelected')
+
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState }}>
