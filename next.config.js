@@ -19,6 +19,7 @@ module.exports = {
       'images.2game.com',
       'www.indiegalacdn.com',
       'cdn.fanatical.com',
+      'images-4.gog-statics.com',
     ],
   },
 }

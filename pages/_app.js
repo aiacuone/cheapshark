@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
     AllYouPlay: true,
   })
   const [filteredList, setFilteredList] = useState([])
-  const [page, setPage] = useState(1)
+  // const [page, setPage] = useState(1)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
   const [searchedAllPages, setSearchedAllPages] = useState(false)
@@ -77,7 +77,9 @@ function MyApp({ Component, pageProps }) {
     isPhonePotraitWidth && isPhonePotraitHeight ? true : false
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
-
+  useEffect(() => {
+    // console.log('state change')
+  })
   useEffect(() => {
     function handleResize() {
       setWindowHeight(window.innerHeight)
@@ -110,6 +112,8 @@ function MyApp({ Component, pageProps }) {
     })
     return arr.join()
   }
+
+  var page = 1
 
   const address =
     'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -147,18 +151,19 @@ function MyApp({ Component, pageProps }) {
     })
   }
 
-  async function getMoreGames({ data }) {
+  async function getMoreGames(data) {
     var fetchedGames = []
+    // console.log('get more games')
+    setApiState({ ...apiState, loading: true })
+    // console.log(apiState)
     async function fetchMoreGames() {
-      setApiState({ ...apiState, loading: true })
+      page = page + 1
       await fetch(address)
         .then((res) => res.json())
         .then((newData) => {
-          setApiState({
-            ...apiState,
-            loading: false,
-            data: [...data, ...newData],
-          })
+          if (!fetchedGames) {
+            return (fetchedGames = [...newData])
+          }
           fetchedGames = [...fetchedGames, ...newData]
         })
         .catch((error) => {
@@ -171,12 +176,16 @@ function MyApp({ Component, pageProps }) {
     if (filteredList.length + filtered.length <= 10) {
       fetchMoreGames()
     }
-
+    setApiState({
+      ...apiState,
+      loading: false,
+      data: [...data, ...fetchedGames],
+    })
     setFilteredList([...filteredList, ...filtered])
   }
 
   const debouncedGetMoreGames = useCallback(
-    debounce(({ data }) => getMoreGames({ data }), 500),
+    debounce(({ data }) => getMoreGames(data), 500),
     []
   )
 
@@ -191,6 +200,7 @@ function MyApp({ Component, pageProps }) {
   const debouncedGetGames = debounce(
     // GAMES API
     function () {
+      // console.log('get games')
       setApiState({ ...apiState, loading: true })
       fetch(address)
         .then((res) => res.json())
@@ -214,7 +224,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     //STORES API
     setStoresApi({ loading: true })
-
+    // console.log('stores api')
     fetch('https://www.cheapshark.com/api/1.0/stores')
       .then((res) => res.json())
       .then((data) => {
@@ -293,6 +303,9 @@ function MyApp({ Component, pageProps }) {
     setLargeTableHeight,
     setSearchedAllPages,
   }
+
+  // console.log(filteredList, 'filteredList')
+  // console.log(inputs, 'inputs')
 
   return (
     <ThemeProvider theme={theme}>

@@ -21,12 +21,13 @@ import seaweed2 from '../../public/images/seaweed2.svg'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
-  const { expanded, storesApi, storesSelected, filteredList } = state
+  const { expanded, storesApi, storesSelected, filteredList, inputs } = state
   const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
   const [localStoresSelected, setLocalStoresSelected] = useState({
     ...storesSelected,
   })
+  const [localInputs, setLocalInputs] = useState({ ...inputs })
 
   const groupedStyles = {
     spacingAroundStoresIcons: 4,
@@ -226,20 +227,48 @@ export default function NormalScreen() {
           <Grid item>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Slider name="reviews" label="K" min={0} max={100} />
+                <Slider
+                  name="reviews"
+                  label="K"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
               </Grid>
               <Grid item xs={6}>
-                <Slider name="price" label="£" min={0} max={50} />
+                <Slider
+                  name="price"
+                  label="£"
+                  min={0}
+                  max={50}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
               </Grid>
             </Grid>
           </Grid>
           <Grid container>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Slider name="release" label="" min={1990} max={2021} />
+                <Slider
+                  name="release"
+                  label=""
+                  min={1990}
+                  max={2021}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
               </Grid>
               <Grid item xs={6}>
-                <Slider name="rating" label="%" min={0} max={100} />
+                <Slider
+                  name="rating"
+                  label="%"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
               </Grid>
             </Grid>
           </Grid>

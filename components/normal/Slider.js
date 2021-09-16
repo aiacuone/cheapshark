@@ -1,28 +1,37 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useCallback } from 'react'
 import MUISlider from '@material-ui/core/Slider'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import { StateContext } from '../../utils/StateContext'
 import { updateFetch } from '../../pages/main'
+import { debounce } from 'lodash'
 
-export default function RangeSlider({ name, label, min, max }) {
-  const { state, setState } = useContext(StateContext)
+export default function RangeSlider({
+  name,
+  label,
+  min,
+  max,
+  localInputs,
+  setLocalInputs,
+}) {
+  const { setState } = useContext(StateContext)
   const { setInputs, setSearchedAllPages } = setState
-  const { inputs } = state
-  let { searchedAllPages } = state
 
   function handleChange(e, value) {
     setSearchedAllPages(false)
-    const newInputs = { ...inputs }
+    const newInputs = { ...localInputs }
     newInputs[name] = value
-    setInputs(newInputs)
+    setLocalInputs(newInputs)
   }
 
   function valuetext(value) {
     return `${value}${label}`
   }
 
+  function handleChangeCommit(newLocalInputs) {
+    setInputs({ ...newLocalInputs })
+  }
   const showAfterNumber = label === '%' || label === 'K' ? true : false
 
   const showBeforeNumber = label === '£' ? true : false
@@ -39,8 +48,8 @@ export default function RangeSlider({ name, label, min, max }) {
             <Paper>
               <Typography align="center">
                 {showBeforeNumber && label}
-                {inputs[name][0]}
-                {showAfterNumber && inputs[name][0] !== 0 && label}
+                {localInputs[name][0]}
+                {showAfterNumber && localInputs[name][0] !== 0 && label}
               </Typography>
             </Paper>
           </Grid>
@@ -53,7 +62,7 @@ export default function RangeSlider({ name, label, min, max }) {
             <Paper>
               <Typography align="center">
                 {showBeforeNumber && label}
-                {inputs[name][1]}
+                {localInputs[name][1]}
 
                 {showAfterNumber && label}
               </Typography>
@@ -65,10 +74,11 @@ export default function RangeSlider({ name, label, min, max }) {
         <Grid container>
           <Grid item xs={12}>
             <MUISlider
-              value={inputs[name]}
+              value={localInputs[name]}
               min={min}
               max={max}
               onChange={handleChange}
+              onChangeCommitted={() => handleChangeCommit(localInputs)}
               // aria-label={label}
               //   valueLabelDisplay="auto"
               aria-labelledby="range-slider"
