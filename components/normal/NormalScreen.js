@@ -1,88 +1,185 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+  useState,
+} from 'react'
 import styles from '../../styles/Normal.module.css'
 import Grid from '@material-ui/core/Grid'
 import Image from 'next/image'
 import logo from '../../public/images/logo.svg'
-import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Slider from './Slider'
 import headerBackground from '../../public/images/headerBackground.svg'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
-import drawerBackground from '../../public/images/drawerBackground.svg'
 import Table from './Table'
 import { useResizeDetector } from 'react-resize-detector'
-import Radio from '@material-ui/core/Radio'
-import { TrendingUp } from '@material-ui/icons'
+import { StateContext } from '../../utils/StateContext'
+import seaweed1 from '../../public/images/seaweed1.svg'
+import seaweed2 from '../../public/images/seaweed2.svg'
 
-const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-})
+export default function NormalScreen() {
+  const { state, setState } = useContext(StateContext)
+  const { expanded, storesApi, storesSelected, inputs, apiState } = state
+  const { filteredList } = apiState
 
-export default function NormalScreen({ state, setState }) {
-  const { expanded, storesApi, storesSelected } = state
-  const { setExpanded, setTableHeight, setStoresSelected } = setState
+  const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
-  // const style = {
-  //   grid: {
-  //     large: {
-  //       gridTemplateColumns: 'repeat(10,1fr)',
-  //       gridTemplateRows: ' 170px repeat(10,1fr)',
-  //     },
-  //   },
-  // }
+  const [localStoresSelected, setLocalStoresSelected] = useState({
+    ...storesSelected,
+  })
+  const [localInputs, setLocalInputs] = useState({ ...inputs })
 
-  const classes = useStyles()
+  const groupedStyles = {
+    spacingAroundStoresIcons: 4,
+    backgroundOfButtons: 'white',
+  }
+
+  const style = {
+    storesHeader: {
+      color: 'white',
+    },
+    stores_button_container: {
+      minWidth: '350px',
+    },
+    stores_grid: {
+      height: '100%',
+      width: '100%',
+      display: 'grid',
+      gridAreaColumns: 'repeat(20,1fr)',
+      gridAreaRows: 'repeat(20,1fr)',
+    },
+    drawer_container: {
+      width: '100%',
+      height: '100%',
+      overflow: 'hidden',
+      position: 'relative',
+    },
+    drawer_container2: {
+      height: '100%',
+      maxWidth: '800px', //Maximum Width of both Button and Logos Container
+    },
+    select_button: {
+      backgroundOfButtons: 'white',
+      flex: 1,
+      display: 'grid',
+      placeItems: 'center',
+      cursor: 'pointer',
+      background: groupedStyles.backgroundOfButtons,
+      zIndex: 2,
+    },
+    ok_button: {
+      flex: 1,
+      display: 'grid',
+      placeItems: 'center',
+      cursor: 'pointer',
+      // margin: '0 3px',
+      background: groupedStyles.backgroundOfButtons,
+      zIndex: 2,
+      borderRight: '1px solid grey',
+      borderLeft: '1px solid grey',
+    },
+    drawer_stores_buttons_item: {
+      width: '100%',
+      height: '100px', // Height of Buttons
+      marginTop: '20px', // Seperation Netween Stores and Buttons
+    },
+    stores_container: {
+      padding: '20px', //Padding in Stores Container
+    },
+    stores_button_container: {
+      width: '100%',
+      height: '100%',
+      padding: '20px',
+    },
+    table_item: {
+      zIndex: 2,
+    },
+    table_item: {
+      zIndex: 1,
+    },
+
+    stores_fish_background: {
+      position: 'absolute',
+      top: '50px',
+      left: '80px',
+      minWidth: '800px',
+    },
+    seaweed_container: {
+      position: 'absolute',
+      width: '100vw',
+      height: '100vh',
+    },
+    seaweed_container2: {
+      position: 'relative',
+      width: '100%',
+      height: '500px',
+      marginTop: '300px',
+      minWidth: '750px', //width between seaweeds
+    },
+    seaweed1: {
+      position: 'absolute',
+      bottom: '0px',
+    },
+    seaweed2: {
+      position: 'absolute',
+      bottom: '-0px',
+      right: -10,
+    },
+  }
 
   const onResize = useCallback(() => {
-    setTableHeight(height)
+    setLargeTableHeight(height)
   })
 
   useEffect(() => {
-    setTableHeight(tableItemContainer?.current?.clientHeight)
-  }, [])
+    setLargeTableHeight(tableItemContainer?.current?.clientHeight)
+  })
 
   const { height, ref } = useResizeDetector({ onResize })
 
-  const logos = storesApi?.data?.map((store) => {
+  function handleStoreSelect(store) {
+    const newStoresSelected = { ...localStoresSelected }
+    newStoresSelected[store.storeName] = !newStoresSelected[store.storeName]
+    setLocalStoresSelected(newStoresSelected)
+  }
+
+  function handleSelectAll() {
+    const newStoresSelected = { ...localStoresSelected }
+    Object.keys(newStoresSelected).forEach((store) => {
+      newStoresSelected[store] = true
+    })
+    setLocalStoresSelected(newStoresSelected)
+  }
+
+  function handleDeselectAll() {
+    const newStoresSelected = { ...localStoresSelected }
+    Object.keys(newStoresSelected).forEach((store) => {
+      newStoresSelected[store] = false
+    })
+    setLocalStoresSelected(newStoresSelected)
+  }
+
+  function handleOK() {
+    setExpanded(false)
+    setStoresSelected(localStoresSelected)
+  }
+
+  const stores = storesApi?.data?.map((store) => {
     const pictureURL = `https://www.cheapshark.com${store.images.logo}`
-    const smallLogos = ['AllYouPlay', 'Epic Games Store']
-    const isSmallLogo = smallLogos.indexOf(store.storeName) > -1 ? true : false
-
     return (
-      <Grid item>
+      <Grid
+        item
+        onClick={() => handleStoreSelect(store)}
+        style={{
+          filter: localStoresSelected[store.storeName]
+            ? 'opacity(100%)'
+            : 'opacity(15%)',
+          cursor: 'pointer',
+        }}>
         <Grid container direcion="column">
-          <Image
-            layout="fixed"
-            src={pictureURL}
-            width={isSmallLogo ? 50 : 50}
-            height={50}
-          />
-        </Grid>
-        <Grid item style={{ textAlign: 'center' }}>
-          <Radio
-            size="small"
-            checked={
-              storesSelected[store.storeName]
-                ? storesSelected[store.storeName]
-                : true
-            }
-            style={{ color: 'white' }}
-            onChange={() => {
-              const newStoresSelected = { ...storesSelected }
-
-              newStoresSelected[store.storeName]
-                ? !storesSelected[store.storeName]
-                : (newStoresSelected[store.storeName] = false)
-              setStoresSelected(newStoresSelected)
-            }}
-          />
+          <Image layout="fixed" src={pictureURL} width={50} height={50} />
         </Grid>
       </Grid>
     )
@@ -90,6 +187,16 @@ export default function NormalScreen({ state, setState }) {
 
   return (
     <div className={styles.grid_container}>
+      <Grid container style={style.seaweed_container} alignItems="flex-end">
+        <Grid container style={style.seaweed_container2}>
+          <Grid item style={style.seaweed1} alignItems="flex-end">
+            <Image src={seaweed1} layout="fixed" width={400} height={300} />
+          </Grid>
+          <Grid item style={style.seaweed2}>
+            <Image src={seaweed2} layout="fixed" width={400} height={300} />
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid
         wrap="nowrap"
         className={styles.header_container}
@@ -97,7 +204,10 @@ export default function NormalScreen({ state, setState }) {
         alignItems="center"
         justifyContent="center">
         <Grid item className={styles.stores_button_container}>
-          <Button variant="contained" onClick={() => setExpanded(true)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setExpanded(true)}>
             STORES
           </Button>
         </Grid>
@@ -120,22 +230,22 @@ export default function NormalScreen({ state, setState }) {
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <Slider
-                  state={state}
-                  setState={setState}
                   name="reviews"
                   label="K"
                   min={0}
                   max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
                 />
               </Grid>
               <Grid item xs={6}>
                 <Slider
-                  state={state}
-                  setState={setState}
                   name="price"
                   label="£"
                   min={0}
                   max={50}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
                 />
               </Grid>
             </Grid>
@@ -144,22 +254,22 @@ export default function NormalScreen({ state, setState }) {
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <Slider
-                  state={state}
-                  setState={setState}
                   name="release"
                   label=""
                   min={1990}
                   max={2021}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
                 />
               </Grid>
               <Grid item xs={6}>
                 <Slider
-                  state={state}
-                  setState={setState}
                   name="rating"
                   label="%"
                   min={0}
                   max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
                 />
               </Grid>
             </Grid>
@@ -172,42 +282,76 @@ export default function NormalScreen({ state, setState }) {
         className={styles.main_content_container}
         justifyContent="center">
         <Grid
+          style={style.table_item}
           item
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {/* <Table state={state} setState={setState} /> */}
+          {filteredList?.length > 0 && <Table />}
         </Grid>
-        <Grid item>
+        <Grid item style={style.drawer_item}>
           <Drawer
             anchor="right"
             open={expanded}
-            onClose={() => setExpanded(false)}>
+            onClose={() => {
+              setExpanded(false)
+              handleOK()
+            }}>
             <Grid
               container
-              className={styles.drawer_container}
+              style={style.drawer_container}
               justifyContent="center"
               alignItems="center">
+              {/* <Grid item style={style.stores_fish_background}>
+                <Image
+                  src={schoolFish}
+                  layout="fixed"
+                  height={180}
+                  width={300}
+                />
+              </Grid> */}
               <Grid item className={styles.drawer}>
-                <div container className={styles.background}>
-                  <Image src={drawerBackground} layout="fill" />
-                </div>
                 <Grid
                   container
-                  className={styles.drawer_container}
-                  justifyContent="center"
-                  alignItems="center">
+                  style={style.drawer_container2}
+                  alignItems="center"
+                  justifyContent="center">
                   <Grid item>
-                    <Grid
-                      // style={{ height: '50%', background: 'blue' }}
-                      // wrap="wrap"
-                      className={styles.logos_container}
-                      container
-                      justifyContent="center"
-                      alignItems="center"
-                      // direction="column"
-                      spacing={3}>
-                      {logos}
+                    <Grid container>
+                      <Grid item>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          style={style.stores_container}
+                          spacing={groupedStyles.spacingAroundStoresIcons}>
+                          {stores}
+                        </Grid>
+                      </Grid>
+                      <Grid item style={style.drawer_stores_buttons_item}>
+                        <Grid container style={style.stores_button_container}>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.select_button}
+                            onClick={handleDeselectAll}>
+                            Deselect All
+                          </Grid>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.ok_button}
+                            onClick={handleOK}>
+                            OK
+                          </Grid>
+                          <Grid
+                            item
+                            className={styles.store_button}
+                            style={style.select_button}
+                            onClick={handleSelectAll}>
+                            Select All
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
