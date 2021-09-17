@@ -21,7 +21,9 @@ import seaweed2 from '../../public/images/seaweed2.svg'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
-  const { expanded, storesApi, storesSelected, filteredList, inputs } = state
+  const { expanded, storesApi, storesSelected, inputs, apiState } = state
+  const { filteredList } = apiState
+
   const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
   const [localStoresSelected, setLocalStoresSelected] = useState({

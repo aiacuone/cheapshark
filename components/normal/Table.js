@@ -98,7 +98,8 @@ export default function GamesTable() {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
-  const { largeTableHeight, filteredList, storesApi, isPhoneScreen } = state
+  const { largeTableHeight, storesApi, isPhoneScreen, apiState } = state
+  const { filteredList } = apiState
 
   const timestampConvert = (timestamp) => {
     const dateObj = new Date(timestamp)
