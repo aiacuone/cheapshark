@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }) {
     AllYouPlay: true,
     DLGamer: true,
   })
-  // const [filteredList, setFilteredList] = useState([])
+  const [initialApiCallComplete, setInitialApiCallComplete] = useState(false)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
   const [searchedAllPages, setSearchedAllPages] = useState(false)
@@ -78,7 +78,7 @@ function MyApp({ Component, pageProps }) {
     isPhonePotraitWidth && isPhonePotraitHeight ? true : false
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
-  var initialApiCallComplete = false
+  // var initialApiCallComplete = false
 
   useEffect(() => {
     console.log('state change')
@@ -101,8 +101,10 @@ function MyApp({ Component, pageProps }) {
       return
     }
     function handleFilter() {
-      // setFilteredList(getFilteredList({ data: apiState?.data }))
-      setApiState({ ...apiState, filteredList: apiState?.data })
+      setApiState({
+        ...apiState,
+        filteredList: getFilteredList({ data: apiState?.data }),
+      })
     }
     const debouncedFilter = debounce(handleFilter, [500])
 
@@ -151,66 +153,48 @@ function MyApp({ Component, pageProps }) {
     '&storeID=' +
     storesString()
 
-  async function getMoreGames({ data, inputs: passedInputs, filteredList }) {
-    var fetchedGames = []
-    var filtered
+  const getMoreGames = useCallback(
+    debounce(async function ({ data, inputs: passedInputs, filteredList }) {
+      var fetchedGames = []
+      var filtered
 
-    console.log('get more games')
+      console.log('get more games')
 
-    // console.log(
-    //   apiState.data,
-    //   'apiState.data',
-    //   initialApiCallComplete,
-    //   'initialApiCallComplete',
-    //   notEnoughGames,
-    //   'notEnoughGames',
-    //   searchedAllPages,
-    //   'searchedAllPages',
-    //   apiState.loading,
-    //   'apiState.loading'
-    // )
-    setApiState({ ...apiState, loading: true })
+      setApiState({ ...apiState, loading: true })
 
-    async function fetchMoreGames() {
-      page = page + 1
+      async function fetchMoreGames() {
+        page = page + 1
 
-      await fetch(address)
-        .then((res) => res.json())
-        .then((newData) => {
-          fetchedGames = [...fetchedGames, ...newData]
-        })
-        .catch((error) => {
-          console.log(error)
-          setApiState({ ...apiState, loading: false, error: true })
-        })
-      filtered = getFilteredList({ data: fetchedGames, passedInputs })
-      if (filteredList.length + filtered.length < 10) {
-        console.log(
-          'NOT enough games',
-          `length ${filteredList.length + filtered.length}`
-        )
-        fetchMoreGames()
+        await fetch(address)
+          .then((res) => res.json())
+          .then((newData) => {
+            fetchedGames = [...fetchedGames, ...newData]
+          })
+          .catch((error) => {
+            console.log(error)
+            setApiState({ ...apiState, loading: false, error: true })
+          })
+        filtered = getFilteredList({ data: fetchedGames, passedInputs })
+        if (filteredList.length + filtered.length < 10) {
+          console.log(
+            'NOT enough games',
+            `length ${filteredList.length + filtered.length}`
+          )
+          fetchMoreGames()
+        }
       }
-    }
-    await fetchMoreGames()
+      await fetchMoreGames()
 
-    setApiState({
-      ...apiState,
-      loading: false,
-      data: [...data, ...fetchedGames],
-      filteredList: [...filteredList, ...filtered],
-    })
+      setApiState({
+        ...apiState,
+        loading: false,
+        data: [...data, ...fetchedGames],
+        filteredList: [...filteredList, ...filtered],
+      })
 
-    page = 1
-    return
-  }
-
-  const debouncedGetMoreGames = useCallback(
-    debounce(
-      ({ data, inputs, filteredList }) =>
-        getMoreGames({ data, inputs, filteredList }),
-      1000
-    ),
+      page = 1
+      return
+    }, 1000),
     []
   )
 
@@ -222,55 +206,47 @@ function MyApp({ Component, pageProps }) {
   //   return setStoresSelected(obj)
   // }
 
-  const debouncedGetGames = debounce(
-    // GAMES API
-    function () {
-      setApiState({ ...apiState, loading: true })
-      fetch(address)
-        .then((res) => res.json())
-        .then((data) => {
-          setApiState({
-            ...apiState,
-            loading: false,
-            data: data,
-            filteredList: getFilteredList({ data, inputs }),
+  const debouncedGetGames = useCallback(
+    debounce(
+      // GAMES API
+      function () {
+        setApiState({ ...apiState, loading: true })
+        fetch(address)
+          .then((res) => res.json())
+          .then((data) => {
+            setApiState({
+              ...apiState,
+              loading: false,
+              data: data,
+              filteredList: getFilteredList({ data, inputs }),
+            })
           })
-        })
-        .catch((error) => {
-          console.log(error)
-          setApiState({ ...apiState, loading: false, error: true })
-        })
-      initialApiCallComplete = true
-    },
-    [500]
+          .catch((error) => {
+            console.log(error)
+            setApiState({ ...apiState, loading: false, error: true })
+          })
+        setInitialApiCallComplete(true)
+      },
+      [500]
+    ),
+    []
   )
 
   const notEnoughGames = filteredList?.length < 10 && page < 10 ? true : false
 
-  function test() {
-    console.log('test')
-    // debouncedGetMoreGames({ data: apiState?.data, inputs, filteredList })
+  const test = useCallback(
+    debounce(() => {
+      console.log('test')
+    }, 1000),
+    []
+  )
 
-    console.log(
-      // apiState.data,
-      // 'apiState.data',
-      initialApiCallComplete,
-      'initialApiCallComplete',
-      notEnoughGames,
-      'notEnoughGames',
-      searchedAllPages,
-      'searchedAllPages',
-      apiState.loading,
-      'apiState.loading'
-    )
-  }
   apiState.data &&
     initialApiCallComplete &&
     notEnoughGames &&
     !searchedAllPages &&
     !apiState.loading &&
-    // debouncedGetMoreGames({ data: apiState?.data, inputs, filteredList })
-    test()
+    getMoreGames({ data: apiState?.data, inputs, filteredList })
 
   function getFilteredList({ data, passedInputs }) {
     const { rating, reviews, release } = passedInputs ? passedInputs : inputs
