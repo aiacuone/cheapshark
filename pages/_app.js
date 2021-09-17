@@ -15,9 +15,9 @@ function MyApp({ Component, pageProps }) {
   const { price, rating, reviews, release } = inputs
   const [apiState, setApiState] = useState({
     loading: false,
-    data: null,
+    data: [],
     error: false,
-    filteredList: null,
+    filteredList: [],
   })
   const { filteredList } = apiState
   const [storesApi, setStoresApi] = useState({
@@ -81,7 +81,7 @@ function MyApp({ Component, pageProps }) {
   // var initialApiCallComplete = false
 
   useEffect(() => {
-    console.log('state change')
+    // console.log('state change')
   })
 
   useEffect(() => {
@@ -90,6 +90,8 @@ function MyApp({ Component, pageProps }) {
     }
 
     window.addEventListener('resize', handleResize)
+
+    debouncedGetGames()
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -103,7 +105,10 @@ function MyApp({ Component, pageProps }) {
     function handleFilter() {
       setApiState({
         ...apiState,
-        filteredList: getFilteredList({ data: apiState?.data }),
+        filteredList: getFilteredList({
+          data: apiState?.data,
+          passedInputs: inputs,
+        }),
       })
     }
     const debouncedFilter = debounce(handleFilter, [500])
@@ -138,87 +143,71 @@ function MyApp({ Component, pageProps }) {
     })
     return arr.join()
   }
-
   var page = 1
-
-  const address =
-    'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
-    price[0] +
-    '&upperPrice=' +
-    price[1] +
-    '&steamRating=' +
-    rating[0] +
-    '&pageNumber=' +
-    page +
-    '&storeID=' +
-    storesString()
+  const address = (page) => {
+    return (
+      'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
+      price[0] +
+      '&upperPrice=' +
+      price[1] +
+      '&steamRating=' +
+      rating[0] +
+      '&pageNumber=' +
+      page +
+      '&storeID=' +
+      storesString()
+    )
+  }
 
   const getMoreGames = useCallback(
-    debounce(async function ({ data, inputs: passedInputs, filteredList }) {
-      var fetchedGames = []
-      var filtered
-
-      console.log('get more games')
-
+    debounce(async ({ passedInputs }) => {
+      var filtered = [...filteredList]
+      var fetched = []
       setApiState({ ...apiState, loading: true })
-
       async function fetchMoreGames() {
         page = page + 1
-
-        await fetch(address)
-          .then((res) => res.json())
-          .then((newData) => {
-            fetchedGames = [...fetchedGames, ...newData]
-          })
-          .catch((error) => {
-            console.log(error)
-            setApiState({ ...apiState, loading: false, error: true })
-          })
-        filtered = getFilteredList({ data: fetchedGames, passedInputs })
-        if (filteredList.length + filtered.length < 10) {
-          console.log(
-            'NOT enough games',
-            `length ${filteredList.length + filtered.length}`
-          )
+        console.log('fetch', address(page))
+        try {
+          const res = await fetch(address(page))
+          const data = await res.json()
+          filtered = [...filtered, ...getFilteredList({ data, passedInputs })]
+          fetched = [...fetched, ...data]
+        } catch (err) {
+          console.log(err)
+        }
+        if (filtered.length < 10 && page < 10) {
+          console.log('not enough games', filtered)
           fetchMoreGames()
+        } else {
+          page = 1
+          setApiState({
+            ...apiState,
+            loading: false,
+            data: [...apiState.data, ...fetched],
+            filteredList: filtered,
+          })
+          console.log('enough games', filtered)
         }
       }
       await fetchMoreGames()
-
-      setApiState({
-        ...apiState,
-        loading: false,
-        data: [...data, ...fetchedGames],
-        filteredList: [...filteredList, ...filtered],
-      })
-
-      page = 1
-      return
-    }, 1000),
+    }, 500),
     []
   )
-
-  // function createStoresSelections(data) {
-  //   const obj = {}
-  //   data.forEach((store) => {
-  //     obj[store.storeName] = true
-  //   })
-  //   return setStoresSelected(obj)
-  // }
 
   const debouncedGetGames = useCallback(
     debounce(
       // GAMES API
       function () {
         setApiState({ ...apiState, loading: true })
-        fetch(address)
+        fetch(address(1))
           .then((res) => res.json())
           .then((data) => {
+            console.log(data, 'get games data', address(1), 'address')
             setApiState({
               ...apiState,
               loading: false,
               data: data,
-              filteredList: getFilteredList({ data, inputs }),
+              filteredList: getFilteredList({ data, passedInputs: inputs }),
             })
           })
           .catch((error) => {
@@ -234,23 +223,24 @@ function MyApp({ Component, pageProps }) {
 
   const notEnoughGames = filteredList?.length < 10 && page < 10 ? true : false
 
-  const test = useCallback(
-    debounce(() => {
-      console.log('test')
-    }, 1000),
-    []
-  )
+  // const test = useCallback(
+  //   debounce(() => {
+  //     console.log('test')
+  //   }, 1000),
+  //   []
+  // )
 
   apiState.data &&
     initialApiCallComplete &&
     notEnoughGames &&
     !searchedAllPages &&
     !apiState.loading &&
-    getMoreGames({ data: apiState?.data, inputs, filteredList })
+    getMoreGames({ data: apiState?.data, passedInputs: inputs, filteredList })
+  // test()
 
   function getFilteredList({ data, passedInputs }) {
-    const { rating, reviews, release } = passedInputs ? passedInputs : inputs
-    // console.log(newInputs, 'newInputs')
+    const { rating, reviews, release } = passedInputs
+
     return data.filter((item) => {
       const { steamRatingCount, steamRatingPercent, releaseDate } = item
       const filter1 =

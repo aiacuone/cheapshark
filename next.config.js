@@ -20,6 +20,7 @@ module.exports = {
       'www.indiegalacdn.com',
       'cdn.fanatical.com',
       'images-4.gog-statics.com',
+      'cdn.atgames.net',
     ],
   },
 }
