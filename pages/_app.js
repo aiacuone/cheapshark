@@ -99,25 +99,46 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
+    //LOCAL FILTERING
     if (!apiState.data) {
       return
     }
-    function handleFilter() {
-      setApiState({
-        ...apiState,
-        filteredList: getFilteredList({
-          data: apiState?.data,
-          passedInputs: inputs,
-        }),
-      })
-    }
-    const debouncedFilter = debounce(handleFilter, [500])
+    // function handleFilter() {
+    setApiState({
+      ...apiState,
+      filteredList: getFilteredList({
+        data: apiState?.data,
+        passedInputs: inputs,
+      }),
+    })
+    // }
+    // const debouncedFilter = debounce(handleFilter, [500])
 
-    debouncedFilter()
+    // debouncedFilter()
   }, [release, reviews, rating])
 
   useEffect(() => {
-    debouncedGetGames()
+    //API FILTERING
+    ;(async function () {
+      console.log('API FILTERING')
+      try {
+        setApiState({ ...apiState, loading: true })
+        const res = await fetch(address(1))
+        const data = await res.json()
+        // console.log(data, 'data')
+        setApiState({
+          ...apiState,
+          loading: false,
+          data: [...apiState.data, ...data],
+          filteredList: getFilteredList({
+            passedInputs: inputs,
+            data: [...data, ...filteredList],
+          }),
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    })()
   }, [price, rating, storesSelected])
 
   useEffect(() => {
@@ -166,7 +187,7 @@ function MyApp({ Component, pageProps }) {
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
         page = page + 1
-        console.log('fetch', address(page))
+        // console.log('fetch', address(page))
         try {
           const res = await fetch(address(page))
           const data = await res.json()
@@ -176,7 +197,7 @@ function MyApp({ Component, pageProps }) {
           console.log(err)
         }
         if (filtered.length < 10 && page < 10) {
-          console.log('not enough games', filtered)
+          // console.log('not enough games', filtered)
           fetchMoreGames()
         } else {
           page = 1
@@ -186,7 +207,7 @@ function MyApp({ Component, pageProps }) {
             data: [...apiState.data, ...fetched],
             filteredList: filtered,
           })
-          console.log('enough games', filtered)
+          // console.log('enough games', filtered)
         }
       }
       await fetchMoreGames()
@@ -202,7 +223,7 @@ function MyApp({ Component, pageProps }) {
         fetch(address(1))
           .then((res) => res.json())
           .then((data) => {
-            console.log(data, 'get games data', address(1), 'address')
+            // console.log(data, 'get games data', address(1), 'address')
             setApiState({
               ...apiState,
               loading: false,
@@ -321,7 +342,11 @@ function MyApp({ Component, pageProps }) {
     setLargeTableHeight,
     setSearchedAllPages,
   }
-
+  // console.log(
+  //   filteredList.forEach((item) => {
+  //     console.log(item.steamRatingCount)
+  //   })
+  // )
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState }}>
