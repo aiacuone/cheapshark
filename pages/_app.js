@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }) {
   })
   const [expanded, setExpanded] = useState(false)
   const [storesMenu, setStoresMenu] = useState(false)
+
   const [storesSelected, setStoresSelected] = useState({
     Steam: true,
     GamersGate: true,
@@ -62,9 +63,11 @@ function MyApp({ Component, pageProps }) {
     AllYouPlay: true,
     DLGamer: true,
   })
+  // const [page, setPage] = useState(1)
   const [initialApiCallComplete, setInitialApiCallComplete] = useState(false)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
+  const [searchForGames, setSearchForGames] = useState(true)
   const [searchedAllPages, setSearchedAllPages] = useState(false)
   const [largeTableHeight, setLargeTableHeight] = useState()
   const [windowHeight, setWindowHeight] = useState()
@@ -78,10 +81,12 @@ function MyApp({ Component, pageProps }) {
     isPhonePotraitWidth && isPhonePotraitHeight ? true : false
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
-  // var initialApiCallComplete = false
-
+  var page = 1
+  const maxPageCount = 8
+  const minimumGamesCount = 10
   useEffect(() => {
     // console.log('state change')
+    console.log(inputs)
   })
 
   useEffect(() => {
@@ -91,7 +96,7 @@ function MyApp({ Component, pageProps }) {
 
     window.addEventListener('resize', handleResize)
 
-    debouncedGetGames()
+    getGames()
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -100,6 +105,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     //LOCAL FILTERING
+    console.log('LOCAL FILTERING', inputs)
     if (!apiState.data) {
       return
     }
@@ -107,7 +113,7 @@ function MyApp({ Component, pageProps }) {
     setApiState({
       ...apiState,
       filteredList: getFilteredList({
-        data: apiState?.data,
+        data: [...apiState?.data, ...filteredList],
         passedInputs: inputs,
       }),
     })
@@ -115,7 +121,7 @@ function MyApp({ Component, pageProps }) {
     // const debouncedFilter = debounce(handleFilter, [500])
 
     // debouncedFilter()
-  }, [release, reviews, rating])
+  }, [release, reviews, rating[1]])
 
   useEffect(() => {
     //API FILTERING
@@ -132,14 +138,15 @@ function MyApp({ Component, pageProps }) {
           data: [...apiState.data, ...data],
           filteredList: getFilteredList({
             passedInputs: inputs,
-            data: [...data, ...filteredList],
+            // data: [...data, ...filteredList],
+            data: data,
           }),
         })
       } catch (err) {
         console.log(err)
       }
     })()
-  }, [price, rating, storesSelected])
+  }, [price, rating[0], storesSelected])
 
   useEffect(() => {
     //STORES API
@@ -156,6 +163,14 @@ function MyApp({ Component, pageProps }) {
       })
   }, [])
 
+  useEffect(() => {
+    // setPage(1)
+
+    page = 1
+    setSearchForGames(true)
+    // getGames()
+  }, [inputs, storesSelected])
+
   const storesString = () => {
     const arr = []
     Object.keys(storesSelected)?.forEach((store, index) => {
@@ -164,7 +179,7 @@ function MyApp({ Component, pageProps }) {
     })
     return arr.join()
   }
-  var page = 1
+  // var page = 1
   const address = (page) => {
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -182,12 +197,20 @@ function MyApp({ Component, pageProps }) {
 
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
+      console.log('getMoreGames')
+      // var newPage = 2
+      page = 1
       var filtered = [...filteredList]
       var fetched = []
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
+        if (page > maxPageCount) {
+          console.log('returned first', page, 'page')
+          return setApiState({ ...apiState, loading: false })
+        }
         page = page + 1
-        // console.log('fetch', address(page))
+        // await setPage(page + 1)
+        console.log('fetchMoreGames', page)
         try {
           const res = await fetch(address(page))
           const data = await res.json()
@@ -196,12 +219,19 @@ function MyApp({ Component, pageProps }) {
         } catch (err) {
           console.log(err)
         }
-        if (filtered.length < 10 && page < 10) {
-          // console.log('not enough games', filtered)
+        if (page > maxPageCount) {
+          console.log('returned last')
+          setApiState({ ...apiState, loading: false })
+          setSearchForGames(false)
+          return
+        }
+        if (filtered.length < minimumGamesCount) {
+          console.log('not enough games', filtered, page, searchForGames)
           fetchMoreGames()
         } else {
-          page = 1
-          setApiState({
+          // page = 1
+          console.log('returned', page, filtered)
+          return setApiState({
             ...apiState,
             loading: false,
             data: [...apiState.data, ...fetched],
@@ -215,10 +245,11 @@ function MyApp({ Component, pageProps }) {
     []
   )
 
-  const debouncedGetGames = useCallback(
+  const getGames = useCallback(
     debounce(
       // GAMES API
       function () {
+        console.log('getGames')
         setApiState({ ...apiState, loading: true })
         fetch(address(1))
           .then((res) => res.json())
@@ -235,6 +266,7 @@ function MyApp({ Component, pageProps }) {
             console.log(error)
             setApiState({ ...apiState, loading: false, error: true })
           })
+
         setInitialApiCallComplete(true)
       },
       [500]
@@ -242,20 +274,17 @@ function MyApp({ Component, pageProps }) {
     []
   )
 
-  const notEnoughGames = filteredList?.length < 10 && page < 10 ? true : false
-
-  // const test = useCallback(
-  //   debounce(() => {
-  //     console.log('test')
-  //   }, 1000),
-  //   []
-  // )
+  const notEnoughGames =
+    filteredList?.length < minimumGamesCount && page < maxPageCount
+      ? true
+      : false
 
   apiState.data &&
     initialApiCallComplete &&
     notEnoughGames &&
     !searchedAllPages &&
     !apiState.loading &&
+    searchForGames &&
     getMoreGames({ data: apiState?.data, passedInputs: inputs, filteredList })
   // test()
 
@@ -342,6 +371,10 @@ function MyApp({ Component, pageProps }) {
     setLargeTableHeight,
     setSearchedAllPages,
   }
+
+  const vars = {
+    page,
+  }
   // console.log(
   //   filteredList.forEach((item) => {
   //     console.log(item.steamRatingCount)
@@ -349,7 +382,7 @@ function MyApp({ Component, pageProps }) {
   // )
   return (
     <ThemeProvider theme={theme}>
-      <StateContext.Provider value={{ state, setState }}>
+      <StateContext.Provider value={{ state, setState, vars }}>
         <Component {...pageProps}></Component>
       </StateContext.Provider>
     </ThemeProvider>
