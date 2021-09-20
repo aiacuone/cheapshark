@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import { StateContext } from '../../utils/StateContext'
-import { updateFetch } from '../../pages/main'
 import { debounce } from 'lodash'
 
 export default function RangeSlider({
@@ -15,10 +14,12 @@ export default function RangeSlider({
   localInputs,
   setLocalInputs,
 }) {
-  const { setState } = useContext(StateContext)
+  const { setState, vars } = useContext(StateContext)
   const { setInputs, setSearchedAllPages } = setState
+  var { page } = vars
 
   function handleChange(e, value) {
+    page = 1
     setSearchedAllPages(false)
     const newInputs = { ...localInputs }
     newInputs[name] = value

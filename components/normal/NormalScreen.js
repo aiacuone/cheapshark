@@ -162,8 +162,8 @@ export default function NormalScreen() {
   }
 
   function handleOK() {
-    setExpanded(false)
     setStoresSelected(localStoresSelected)
+    setExpanded(false)
   }
 
   const stores = storesApi?.data?.map((store) => {
@@ -287,7 +287,7 @@ export default function NormalScreen() {
           ref={tableItemContainer}
           className={styles.table_item_container}
           xs={12}>
-          {filteredList?.length > 0 && <Table />}
+          {filteredList?.length > 0 && !apiState.loading && <Table />}
         </Grid>
         <Grid item style={style.drawer_item}>
           <Drawer
