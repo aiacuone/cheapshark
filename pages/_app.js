@@ -82,20 +82,20 @@ function MyApp({ Component, pageProps }) {
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
   var page = 1
-  const maxPageCount = 8
+  const maxPageCount = 5
   const minimumGamesCount = 10
   useEffect(() => {
     console.log('state change')
     // console.log(inputs)
-    filteredList.forEach((item) => {
-      const {
-        salePrice: price,
-        title,
-        steamRatingCount: reviews,
-        steamRatingPercent: rating,
-      } = item
-      console.log({ rating, reviews, price })
-    })
+    // filteredList.forEach((item) => {
+    //   const {
+    //     salePrice: price,
+    //     title,
+    //     steamRatingCount: reviews,
+    //     steamRatingPercent: rating,
+    //   } = item
+    //   console.log({ rating, reviews, price, title }, 'filteredList')
+    // })
   })
 
   useEffect(() => {
@@ -118,21 +118,6 @@ function MyApp({ Component, pageProps }) {
     if (!apiState.data) {
       return
     }
-    // function handleFilter() {
-    // apiState?.data.forEach((item) => {
-    //   const { salePrice, title, steamRatingCount, steamRatingPercent } = item
-    //   console.log({ steamRatingPercent })
-    // })
-
-    // console.log(inputs)
-    // getFilteredList({
-    //   data: [...apiState?.data, ...filteredList],
-    //   passedInputs: inputs,
-    // }).forEach((item) => {
-    //   const { salePrice, title, steamRatingCount, steamRatingPercent } = item
-    //   console.log({ steamRatingPercent })
-    // })
-
     setApiState({
       ...apiState,
       filteredList: getFilteredList({
@@ -140,19 +125,14 @@ function MyApp({ Component, pageProps }) {
         passedInputs: inputs,
       }),
     })
-
-    // }
-    // const debouncedFilter = debounce(handleFilter, [500])
-
-    // debouncedFilter()
   }, [release, reviews, rating[1]])
 
   useEffect(() => {
+    setApiState({ ...apiState, loading: true })
     //API FILTERING
     ;(async function () {
       console.log('API FILTERING')
       try {
-        setApiState({ ...apiState, loading: true })
         const res = await fetch(address(1))
         const data = await res.json()
         // console.log(data, 'data')
@@ -206,6 +186,7 @@ function MyApp({ Component, pageProps }) {
   }
   // var page = 1
   const address = (page) => {
+    console.log(inputs, 'inputs @ address')
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
       price[0] +
@@ -223,38 +204,78 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       console.log('getMoreGames')
-      console.log(inputs, 'inputs getMoreGames')
+      // console.log(inputs, 'inputs getMoreGames')
       page = 1
-      var filtered = [...filteredList]
+      // var filtered = [...filteredList]//INPUTS THE PREVIOUS FILTERED LIST, NEED FRESH LIST
+      var filtered = []
       var fetched = []
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
         if (page > maxPageCount) {
           // console.log('returned first', page, 'page')
-          return setApiState({ ...apiState, loading: false })
+          // setApiState({ ...apiState, loading: false })
+          return
         }
         page = page + 1
         // console.log('fetchMoreGames', page)
         try {
           const res = await fetch(address(page))
           const data = await res.json()
-          filtered = [...filtered, ...getFilteredList({ data, passedInputs })]
+          data.forEach((item) => {
+            const {
+              salePrice: price,
+              title,
+              steamRatingCount: reviews,
+              steamRatingPercent: rating,
+            } = item
+            console.log(
+              { rating, reviews, price, title },
+              'DATA fetchMoreGames'
+            )
+          })
+          // console.log(data, 'data getMoreGames')
+          filtered = [
+            ...getFilteredList({
+              // data: [...data, ...apiState.data, ...filtered],// INCLUDES THE PREVIOUS API STATE DATA, WE NEED FRESH DATA
+              data: [...data, ...filtered],
+              passedInputs,
+            }),
+          ]
+          filtered.forEach((item) => {
+            const {
+              salePrice: price,
+              title,
+              steamRatingCount: reviews,
+              steamRatingPercent: rating,
+            } = item
+            console.log(
+              { rating, reviews, price, title },
+              'FILTERED fetchMoreGames'
+            )
+          })
           fetched = [...fetched, ...data]
+          // setApiState({apiState,})
         } catch (err) {
           console.log(err)
         }
         if (page > maxPageCount) {
           // console.log('returned last')
-          setApiState({ ...apiState, loading: false })
+          setApiState({
+            ...apiState,
+            filteredList: filtered,
+            loading: false,
+            data: [...apiState.data, ...fetched],
+          })
           setSearchForGames(false)
           return
         }
         if (filtered.length < minimumGamesCount) {
           // console.log('not enough games', filtered, page, searchForGames)
+          // setApiState({ ...apiState, filteredList: filtered })
           fetchMoreGames()
         } else {
           // page = 1
-          // console.log('returned', page, filtered)
+          // console.log('RETURNED', page, filtered)
           return setApiState({
             ...apiState,
             loading: false,
@@ -265,7 +286,7 @@ function MyApp({ Component, pageProps }) {
       }
       await fetchMoreGames()
     }, 500),
-    []
+    [inputs]
   )
 
   const getGames = useCallback(

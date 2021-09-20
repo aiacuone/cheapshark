@@ -23,6 +23,8 @@ module.exports = {
       'cdn.atgames.net',
       'images-2.gog-statics.com',
       'originassets.akamaized.net',
+      'us.gamesplanet.com',
+      'cdn.allyouplay.com',
     ],
   },
 }
