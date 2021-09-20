@@ -86,16 +86,7 @@ function MyApp({ Component, pageProps }) {
   const minimumGamesCount = 10
   useEffect(() => {
     console.log('state change')
-    // console.log(inputs)
-    // filteredList.forEach((item) => {
-    //   const {
-    //     salePrice: price,
-    //     title,
-    //     steamRatingCount: reviews,
-    //     steamRatingPercent: rating,
-    //   } = item
-    //   console.log({ rating, reviews, price, title }, 'filteredList')
-    // })
+    // console.log(storesSelected)
   })
 
   useEffect(() => {
@@ -114,7 +105,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     //LOCAL FILTERING
-    console.log('LOCAL FILTERING', inputs)
+    // console.log('LOCAL FILTERING', inputs)
     if (!apiState.data) {
       return
     }
@@ -128,14 +119,17 @@ function MyApp({ Component, pageProps }) {
   }, [release, reviews, rating[1]])
 
   useEffect(() => {
+    console.log('useEffect API')
     setApiState({ ...apiState, loading: true })
     //API FILTERING
     ;(async function () {
       console.log('API FILTERING')
+      console.log(storesSelected, 'storesSelected @ API FILTERING')
       try {
         const res = await fetch(address(1))
         const data = await res.json()
         // console.log(data, 'data')
+        console.log('api filtered change state')
         setApiState({
           ...apiState,
           loading: false,
@@ -172,13 +166,16 @@ function MyApp({ Component, pageProps }) {
     // setPage(1)
 
     page = 1
+    console.log('search for games')
     setSearchForGames(true)
     // getGames()
   }, [inputs, storesSelected])
 
   const storesString = () => {
+    console.log(storesSelected, 'storesSelected @storesString')
     const arr = []
     Object.keys(storesSelected)?.forEach((store, index) => {
+      // console.log(store)
       if (!storesSelected[store]) return
       arr.push(index)
     })
@@ -186,7 +183,8 @@ function MyApp({ Component, pageProps }) {
   }
   // var page = 1
   const address = (page) => {
-    console.log(inputs, 'inputs @ address')
+    // console.log(inputs, 'inputs @ address')
+    console.log(storesSelected, 'storesSelected @address')
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
       price[0] +
@@ -203,7 +201,7 @@ function MyApp({ Component, pageProps }) {
 
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
-      console.log('getMoreGames')
+      // console.log('getMoreGames')
       // console.log(inputs, 'inputs getMoreGames')
       page = 1
       // var filtered = [...filteredList]//INPUTS THE PREVIOUS FILTERED LIST, NEED FRESH LIST
@@ -228,10 +226,10 @@ function MyApp({ Component, pageProps }) {
               steamRatingCount: reviews,
               steamRatingPercent: rating,
             } = item
-            console.log(
-              { rating, reviews, price, title },
-              'DATA fetchMoreGames'
-            )
+            // console.log(
+            //   { rating, reviews, price, title },
+            //   'DATA fetchMoreGames'
+            // )
           })
           // console.log(data, 'data getMoreGames')
           filtered = [
@@ -248,10 +246,10 @@ function MyApp({ Component, pageProps }) {
               steamRatingCount: reviews,
               steamRatingPercent: rating,
             } = item
-            console.log(
-              { rating, reviews, price, title },
-              'FILTERED fetchMoreGames'
-            )
+            // console.log(
+            //   { rating, reviews, price, title },
+            //   'FILTERED fetchMoreGames'
+            // )
           })
           fetched = [...fetched, ...data]
           // setApiState({apiState,})
@@ -293,7 +291,7 @@ function MyApp({ Component, pageProps }) {
     debounce(
       // GAMES API
       function () {
-        console.log('getGames')
+        // console.log('getGames')
         setApiState({ ...apiState, loading: true })
         fetch(address(1))
           .then((res) => res.json())
