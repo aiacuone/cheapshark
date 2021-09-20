@@ -85,8 +85,17 @@ function MyApp({ Component, pageProps }) {
   const maxPageCount = 8
   const minimumGamesCount = 10
   useEffect(() => {
-    // console.log('state change')
-    console.log(inputs)
+    console.log('state change')
+    // console.log(inputs)
+    filteredList.forEach((item) => {
+      const {
+        salePrice: price,
+        title,
+        steamRatingCount: reviews,
+        steamRatingPercent: rating,
+      } = item
+      console.log({ rating, reviews, price })
+    })
   })
 
   useEffect(() => {
@@ -110,6 +119,20 @@ function MyApp({ Component, pageProps }) {
       return
     }
     // function handleFilter() {
+    // apiState?.data.forEach((item) => {
+    //   const { salePrice, title, steamRatingCount, steamRatingPercent } = item
+    //   console.log({ steamRatingPercent })
+    // })
+
+    // console.log(inputs)
+    // getFilteredList({
+    //   data: [...apiState?.data, ...filteredList],
+    //   passedInputs: inputs,
+    // }).forEach((item) => {
+    //   const { salePrice, title, steamRatingCount, steamRatingPercent } = item
+    //   console.log({ steamRatingPercent })
+    // })
+
     setApiState({
       ...apiState,
       filteredList: getFilteredList({
@@ -117,6 +140,7 @@ function MyApp({ Component, pageProps }) {
         passedInputs: inputs,
       }),
     })
+
     // }
     // const debouncedFilter = debounce(handleFilter, [500])
 
@@ -135,7 +159,8 @@ function MyApp({ Component, pageProps }) {
         setApiState({
           ...apiState,
           loading: false,
-          data: [...apiState.data, ...data],
+          // data: [...apiState.data, ...data],
+          data: data,
           filteredList: getFilteredList({
             passedInputs: inputs,
             // data: [...data, ...filteredList],
@@ -198,19 +223,18 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       console.log('getMoreGames')
-      // var newPage = 2
+      console.log(inputs, 'inputs getMoreGames')
       page = 1
       var filtered = [...filteredList]
       var fetched = []
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
         if (page > maxPageCount) {
-          console.log('returned first', page, 'page')
+          // console.log('returned first', page, 'page')
           return setApiState({ ...apiState, loading: false })
         }
         page = page + 1
-        // await setPage(page + 1)
-        console.log('fetchMoreGames', page)
+        // console.log('fetchMoreGames', page)
         try {
           const res = await fetch(address(page))
           const data = await res.json()
@@ -220,24 +244,23 @@ function MyApp({ Component, pageProps }) {
           console.log(err)
         }
         if (page > maxPageCount) {
-          console.log('returned last')
+          // console.log('returned last')
           setApiState({ ...apiState, loading: false })
           setSearchForGames(false)
           return
         }
         if (filtered.length < minimumGamesCount) {
-          console.log('not enough games', filtered, page, searchForGames)
+          // console.log('not enough games', filtered, page, searchForGames)
           fetchMoreGames()
         } else {
           // page = 1
-          console.log('returned', page, filtered)
+          // console.log('returned', page, filtered)
           return setApiState({
             ...apiState,
             loading: false,
             data: [...apiState.data, ...fetched],
             filteredList: filtered,
           })
-          // console.log('enough games', filtered)
         }
       }
       await fetchMoreGames()
@@ -289,6 +312,7 @@ function MyApp({ Component, pageProps }) {
   // test()
 
   function getFilteredList({ data, passedInputs }) {
+    // console.log(data, passedInputs, 'getFilteredList')
     const { rating, reviews, release } = passedInputs
 
     return data.filter((item) => {
