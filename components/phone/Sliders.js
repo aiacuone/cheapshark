@@ -5,12 +5,14 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { StateContext } from '../../utils/StateContext'
 
-export default function Sliders({ localInputs, setLocalInputs }) {
+export default function Sliders() {
   const { state, setState } = useContext(StateContext)
   const { inputs } = state
   const { setInputs } = setState
-  const { reviews, price, release, rating } = localInputs
+
   let { searchedAllPages } = state
+  const [localInputs, setLocalInputs] = useState({ ...inputs })
+  const { reviews, price, release, rating } = localInputs
 
   const style = {
     slider: {},
@@ -63,13 +65,6 @@ export default function Sliders({ localInputs, setLocalInputs }) {
   const sliders = sliderData.map((slider, index) => {
     const { name, label, min, max, value } = slider
 
-    function handleChange(e, newValue) {
-      searchedAllPages = false
-      const newInputs = { ...localInputs }
-      newInputs[name] = newValue
-      setLocalInputs(newInputs)
-    }
-
     const showAfterNumber = label === '%' || label === 'K' ? true : false
 
     const showBeforeNumber = label === '£' ? true : false
@@ -116,7 +111,13 @@ export default function Sliders({ localInputs, setLocalInputs }) {
                   value={value}
                   min={min}
                   max={max}
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  onChange={(e, value) =>
+                    setLocalInputs({ ...localInputs, [name]: value })
+                  }
+                  onChangeCommitted={(e, value) =>
+                    setInputs({ ...inputs, [name]: value })
+                  }
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
                 />

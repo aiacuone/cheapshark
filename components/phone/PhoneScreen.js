@@ -34,7 +34,7 @@ export default function PhoneScreen() {
   } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
-  const [localInputs, setLocalInputs] = useState({ ...inputs })
+  // const [localInputs, setLocalInputs] = useState({ ...inputs })
   const tableItemContainer = useRef()
 
   const groupedStyles = {
@@ -177,7 +177,7 @@ export default function PhoneScreen() {
   }
 
   function handleOK() {
-    setInputs(localInputs)
+    // setInputs(localInputs)
     setExpanded(false)
   }
 
@@ -276,8 +276,8 @@ export default function PhoneScreen() {
             alignItems="center">
             <Grid item>
               <Sliders
-                localInputs={localInputs}
-                setLocalInputs={setLocalInputs}
+              // localInputs={localInputs}
+              // setLocalInputs={setLocalInputs}
               />
             </Grid>
           </Grid>
@@ -305,8 +305,8 @@ export default function PhoneScreen() {
             alignItems="center">
             <Grid item>
               <Sliders
-                localInputs={localInputs}
-                setLocalInputs={setLocalInputs}
+              // localInputs={localInputs}
+              // setLocalInputs={setLocalInputs}
               />
             </Grid>
           </Grid>
