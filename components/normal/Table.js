@@ -96,7 +96,7 @@ TablePaginationActions.propTypes = {
 export default function GamesTable() {
   const { state } = useContext(StateContext)
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(-1)
 
   const { largeTableHeight, storesApi, isPhoneScreen, apiState } = state
   const { filteredList } = apiState
@@ -200,17 +200,20 @@ export default function GamesTable() {
                   </Grid>
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
-                  {store.releaseDate > 0 &&
-                    timestampConvert(store.releaseDate * 1000)}
+                  {store.releaseDate > 0
+                    ? timestampConvert(store.releaseDate * 1000)
+                    : '-'}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
                   {store.salePrice}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
-                  {store.steamRatingPercent}
+                  {store.steamRatingPercent > 0
+                    ? store.steamRatingPercent
+                    : '-'}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
-                  {store.steamRatingCount}
+                  {store.steamRatingCount > 0 ? store.steamRatingCount : '-'}
                 </TableCell>
                 <TableCell style={{ width: 50 }} align="right">
                   {
@@ -235,8 +238,8 @@ export default function GamesTable() {
           <TableFooter style={{ position: 'sticky', bottom: 0 }}>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
+                rowsPerPageOptions={[{ label: 'All', value: -1 }, 5, 10, 25]}
+                colSpan={6}
                 count={filteredList?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

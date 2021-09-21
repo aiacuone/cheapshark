@@ -25,6 +25,7 @@ module.exports = {
       'originassets.akamaized.net',
       'us.gamesplanet.com',
       'cdn.allyouplay.com',
+      'images-1.gog-statics.com',
     ],
   },
 }

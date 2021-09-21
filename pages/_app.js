@@ -376,13 +376,13 @@ function MyApp({ Component, pageProps }) {
       },
       MuiToolbar: {
         root: {
-          background: 'red',
-          width: '100%',
+          backgroundColor: '#ededed',
+          // width: '100%',
         },
       },
       MuiTable: {
         root: {
-          background: 'purple',
+          // background: 'purple',
           stickyHeader: {},
         },
         stickyHeader: {
@@ -392,11 +392,29 @@ function MyApp({ Component, pageProps }) {
       MuiTableHead: {
         // stickyHeader: {
 
-        root: {
+        head: {
           background: 'brown',
         },
 
         // },
+      },
+      Normal_table_container__1mssP: {
+        root: { padding: '0px 50px' },
+      },
+      MuiTableCell: {
+        stickyHeader: {
+          backgroundColor: '#ededed',
+          padding: '20px',
+          // top: -55,
+        },
+        // root: {
+        //   background: 'orange',
+        // },
+      },
+      MuiPaper: {
+        root: {
+          padding: 0,
+        },
       },
     },
     props: {
