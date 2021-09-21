@@ -19,6 +19,7 @@ import Grid from '@material-ui/core/Grid'
 import { StateContext } from '../../utils/StateContext'
 import Image from 'next/image'
 import TableHead from '@material-ui/core/TableHead'
+import { find } from 'lodash'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -167,64 +168,68 @@ export default function GamesTable() {
                   page * rowsPerPage + rowsPerPage
                 )
               : filteredList
-            ).map((store) => (
-              <TableRow key={store.name}>
-                <TableCell
-                  style={{
-                    width: '200px',
-                    // position: 'sticky',
-                    left: '0',
-                    background: 'white',
-                  }}
-                  align="right">
-                  <Grid
+            ).map((game) => {
+              const gameStore = find(
+                storesApi.data,
+                (store) => store.storeID === game.storeID
+              )
+              return (
+                <TableRow key={game.name}>
+                  <TableCell
                     style={{
-                      whiteSpace: 'nowrap',
-                      flexWrap: 'nowrap',
+                      width: '200px',
+                      // position: 'sticky',
+                      left: '0',
+                      background: 'white',
                     }}
-                    container
-                    wrapping="nowrap"
-                    alignItems="center"
-                    spacing={3}>
-                    <Grid item>
+                    align="right">
+                    <Grid
+                      style={{
+                        whiteSpace: 'nowrap',
+                        flexWrap: 'nowrap',
+                      }}
+                      container
+                      wrapping="nowrap"
+                      alignItems="center"
+                      spacing={3}>
+                      <Grid item>
+                        <Image
+                          src={game.thumb}
+                          layout="fixed"
+                          height={50}
+                          width={50}
+                        />
+                      </Grid>
+                      <Grid style={{ flexShrink: 0 }} item>
+                        {game.title}
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="right">
+                    {game.releaseDate > 0 &&
+                      timestampConvert(game.releaseDate * 1000)}
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="right">
+                    {game.salePrice}
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="right">
+                    {game.steamRatingPercent}
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="right">
+                    {game.steamRatingCount}
+                  </TableCell>
+                  <TableCell style={{ width: 50 }} align="right">
+                    {
                       <Image
-                        src={store.thumb}
+                        src={`https://www.cheapshark.com/${gameStore.images.logo}`}
                         layout="fixed"
                         height={50}
-                        width={50}
-                      />
-                    </Grid>
-                    <Grid style={{ flexShrink: 0 }} item>
-                      {store.title}
-                    </Grid>
-                  </Grid>
-                </TableCell>
-                <TableCell style={{ width: 50 }} align="right">
-                  {store.releaseDate > 0 &&
-                    timestampConvert(store.releaseDate * 1000)}
-                </TableCell>
-                <TableCell style={{ width: 50 }} align="right">
-                  {store.salePrice}
-                </TableCell>
-                <TableCell style={{ width: 50 }} align="right">
-                  {store.steamRatingPercent}
-                </TableCell>
-                <TableCell style={{ width: 50 }} align="right">
-                  {store.steamRatingCount}
-                </TableCell>
-                <TableCell style={{ width: 50 }} align="right">
-                  {
-                    <Image
-                      src={`https://www.cheapshark.com/${
-                        storesApi?.data?.[store.storeID]?.images.logo
-                      }`}
-                      layout="fixed"
-                      height={50}
-                      width={50}></Image>
-                  }
-                </TableCell>
-              </TableRow>
-            ))}
+                        width={50}></Image>
+                    }
+                  </TableCell>
+                </TableRow>
+              )
+            })}
 
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>

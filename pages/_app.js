@@ -386,7 +386,7 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-
+  console.log(storesApi.data)
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState, vars }}>
