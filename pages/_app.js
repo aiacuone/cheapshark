@@ -84,10 +84,6 @@ function MyApp({ Component, pageProps }) {
   var page = 1
   const maxPageCount = 5
   const minimumGamesCount = 10
-  useEffect(() => {
-    console.log('state change')
-    // console.log(storesSelected)
-  })
 
   useEffect(() => {
     function handleResize() {
@@ -105,7 +101,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     //LOCAL FILTERING
-    // console.log('LOCAL FILTERING', inputs)
     if (!apiState.data) {
       return
     }
@@ -119,17 +114,12 @@ function MyApp({ Component, pageProps }) {
   }, [release, reviews, rating[1]])
 
   useEffect(() => {
-    console.log('useEffect API')
     setApiState({ ...apiState, loading: true })
     //API FILTERING
     ;(async function () {
-      console.log('API FILTERING')
-      console.log(storesSelected, 'storesSelected @ API FILTERING')
       try {
         const res = await fetch(address(1))
         const data = await res.json()
-        // console.log(data, 'data')
-        console.log('api filtered change state')
         setApiState({
           ...apiState,
           loading: false,
@@ -164,18 +154,14 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     // setPage(1)
-
     page = 1
-    console.log('search for games')
     setSearchForGames(true)
     // getGames()
   }, [inputs, storesSelected])
 
   const storesString = () => {
-    console.log(storesSelected, 'storesSelected @storesString')
     const arr = []
     Object.keys(storesSelected)?.forEach((store, index) => {
-      // console.log(store)
       if (!storesSelected[store]) return
       arr.push(index)
     })
@@ -183,8 +169,6 @@ function MyApp({ Component, pageProps }) {
   }
   // var page = 1
   const address = (page) => {
-    // console.log(inputs, 'inputs @ address')
-    console.log(storesSelected, 'storesSelected @address')
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
       price[0] +
@@ -201,8 +185,6 @@ function MyApp({ Component, pageProps }) {
 
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
-      // console.log('getMoreGames')
-      // console.log(inputs, 'inputs getMoreGames')
       page = 1
       // var filtered = [...filteredList]//INPUTS THE PREVIOUS FILTERED LIST, NEED FRESH LIST
       var filtered = []
@@ -210,12 +192,11 @@ function MyApp({ Component, pageProps }) {
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
         if (page > maxPageCount) {
-          // console.log('returned first', page, 'page')
           // setApiState({ ...apiState, loading: false })
           return
         }
         page = page + 1
-        // console.log('fetchMoreGames', page)
+
         try {
           const res = await fetch(address(page))
           const data = await res.json()
@@ -226,12 +207,7 @@ function MyApp({ Component, pageProps }) {
               steamRatingCount: reviews,
               steamRatingPercent: rating,
             } = item
-            // console.log(
-            //   { rating, reviews, price, title },
-            //   'DATA fetchMoreGames'
-            // )
           })
-          // console.log(data, 'data getMoreGames')
           filtered = [
             ...getFilteredList({
               // data: [...data, ...apiState.data, ...filtered],// INCLUDES THE PREVIOUS API STATE DATA, WE NEED FRESH DATA
@@ -246,10 +222,6 @@ function MyApp({ Component, pageProps }) {
               steamRatingCount: reviews,
               steamRatingPercent: rating,
             } = item
-            // console.log(
-            //   { rating, reviews, price, title },
-            //   'FILTERED fetchMoreGames'
-            // )
           })
           fetched = [...fetched, ...data]
           // setApiState({apiState,})
@@ -257,7 +229,6 @@ function MyApp({ Component, pageProps }) {
           console.log(err)
         }
         if (page > maxPageCount) {
-          // console.log('returned last')
           setApiState({
             ...apiState,
             filteredList: filtered,
@@ -268,12 +239,9 @@ function MyApp({ Component, pageProps }) {
           return
         }
         if (filtered.length < minimumGamesCount) {
-          // console.log('not enough games', filtered, page, searchForGames)
           // setApiState({ ...apiState, filteredList: filtered })
           fetchMoreGames()
         } else {
-          // page = 1
-          // console.log('RETURNED', page, filtered)
           return setApiState({
             ...apiState,
             loading: false,
@@ -291,12 +259,10 @@ function MyApp({ Component, pageProps }) {
     debounce(
       // GAMES API
       function () {
-        // console.log('getGames')
         setApiState({ ...apiState, loading: true })
         fetch(address(1))
           .then((res) => res.json())
           .then((data) => {
-            // console.log(data, 'get games data', address(1), 'address')
             setApiState({
               ...apiState,
               loading: false,
@@ -331,7 +297,6 @@ function MyApp({ Component, pageProps }) {
   // test()
 
   function getFilteredList({ data, passedInputs }) {
-    // console.log(data, passedInputs, 'getFilteredList')
     const { rating, reviews, release } = passedInputs
 
     return data.filter((item) => {
@@ -472,11 +437,6 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-  // console.log(
-  //   filteredList.forEach((item) => {
-  //     console.log(item.steamRatingCount)
-  //   })
-  // )
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState, vars }}>
