@@ -358,6 +358,36 @@ function MyApp({ Component, pageProps }) {
   }
 
   const theme = createTheme({
+    components: {
+      // MuiToolbar: {
+      //   root: {
+      //     background: 'red',
+      //     width: '100%',
+      //   },
+      // },
+      // MuiTable: {
+      //   styleOverrides: {
+      //     root: {
+      //       color: 'green',
+      //       padding: '300px',
+      //       background: 'orange',
+      //       stickyHeader: {
+      //         background: 'purple',
+      //       },
+      //     },
+      //     stickyHeader: {
+      //       background: 'purple',
+      //     },
+      //   },
+      // },
+      // MuiTableHead: {
+      //   styleOverrides: {
+      //     root: {
+      //       background: 'yellow',
+      //     },
+      //   },
+      // },
+    },
     typography: {
       fontFamily: 'Urbanist',
       fontSize: 16,
@@ -378,6 +408,30 @@ function MyApp({ Component, pageProps }) {
           height: '15px',
           // border: '1px black solid',
         },
+      },
+      MuiToolbar: {
+        root: {
+          background: 'red',
+          width: '100%',
+        },
+      },
+      MuiTable: {
+        root: {
+          background: 'purple',
+          stickyHeader: {},
+        },
+        stickyHeader: {
+          // background: 'green',
+        },
+      },
+      MuiTableHead: {
+        // stickyHeader: {
+
+        root: {
+          background: 'brown',
+        },
+
+        // },
       },
     },
     props: {
