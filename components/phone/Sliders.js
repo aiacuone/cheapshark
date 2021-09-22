@@ -5,11 +5,12 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { StateContext } from '../../utils/StateContext'
 
-export default function Sliders({ localInputs, setLocalInputs }) {
+export default function Sliders() {
   const { state, setState } = useContext(StateContext)
+  const [sliderValues, setSliderValues] = useState(state.inputs)
+
   const { inputs } = state
   const { setInputs } = setState
-  const { reviews, price, release, rating } = localInputs
   let { searchedAllPages } = state
 
   const style = {
@@ -31,28 +32,24 @@ export default function Sliders({ localInputs, setLocalInputs }) {
       label: 'K',
       min: 0,
       max: 100,
-      value: reviews,
     },
     {
       name: 'price',
       label: '£',
       min: 0,
       max: 50,
-      value: price,
     },
     {
       name: 'release',
       label: '',
       min: 1990,
       max: 2021,
-      value: release,
     },
     {
       name: 'rating',
       label: '%',
       min: 0,
       max: 100,
-      value: rating,
     },
   ]
 
@@ -61,14 +58,9 @@ export default function Sliders({ localInputs, setLocalInputs }) {
   }
 
   const sliders = sliderData.map((slider, index) => {
-    const { name, label, min, max, value } = slider
+    const { name, label, min, max } = slider
 
-    function handleChange(e, newValue) {
-      searchedAllPages = false
-      const newInputs = { ...localInputs }
-      newInputs[name] = newValue
-      setLocalInputs(newInputs)
-    }
+    const value = sliderValues[name]
 
     const showAfterNumber = label === '%' || label === 'K' ? true : false
 
@@ -116,7 +108,11 @@ export default function Sliders({ localInputs, setLocalInputs }) {
                   value={value}
                   min={min}
                   max={max}
-                  onChange={handleChange}
+                  onChange={(e, value) => {
+                    // searchedAllPages = false
+                    setSliderValues({...sliderValues, [name]: value})
+                  }}
+                  onChangeCommitted={(e, value) => setInputs({...inputs, [name]: value})}
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
                 />
