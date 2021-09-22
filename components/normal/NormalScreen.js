@@ -18,6 +18,8 @@ import { useResizeDetector } from 'react-resize-detector'
 import { StateContext } from '../../utils/StateContext'
 import seaweed1 from '../../public/images/seaweed1.svg'
 import seaweed2 from '../../public/images/seaweed2.svg'
+import ReactResizeDetector from 'react-resize-detector'
+import { debounce } from 'lodash'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
@@ -129,15 +131,13 @@ export default function NormalScreen() {
     },
   }
 
-  const onResize = useCallback(() => {
-    setLargeTableHeight(height)
-  })
-
-  useEffect(() => {
-    setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  })
-
-  const { height, ref } = useResizeDetector({ onResize })
+  const handleResize = useCallback(
+    debounce((height) => {
+      console.log('resize')
+      setLargeTableHeight(height)
+    }, 10),
+    []
+  )
 
   function handleStoreSelect(store) {
     const newStoresSelected = { ...localStoresSelected }
@@ -276,33 +276,37 @@ export default function NormalScreen() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        container
-        ref={ref}
-        className={styles.main_content_container}
-        justifyContent="center">
-        <Grid
-          style={style.table_item}
-          item
-          ref={tableItemContainer}
-          className={styles.table_item_container}
-          xs={12}>
-          {filteredList?.length > 0 && !apiState.loading && <Table />}
-        </Grid>
-        <Grid item style={style.drawer_item}>
-          <Drawer
-            anchor="right"
-            open={expanded}
-            onClose={() => {
-              setExpanded(false)
-              handleOK()
-            }}>
+      <ReactResizeDetector
+        handleHeight
+        onResize={(width, height) => handleResize(height)}>
+        {({ targetRef }) => (
+          <Grid
+            container
+            ref={targetRef}
+            className={styles.main_content_container}
+            justifyContent="center">
             <Grid
-              container
-              style={style.drawer_container}
-              justifyContent="center"
-              alignItems="center">
-              {/* <Grid item style={style.stores_fish_background}>
+              style={style.table_item}
+              item
+              ref={tableItemContainer}
+              className={styles.table_item_container}
+              xs={12}>
+              {filteredList?.length > 0 && !apiState.loading && <Table />}
+            </Grid>
+            <Grid item style={style.drawer_item}>
+              <Drawer
+                anchor="right"
+                open={expanded}
+                onClose={() => {
+                  setExpanded(false)
+                  handleOK()
+                }}>
+                <Grid
+                  container
+                  style={style.drawer_container}
+                  justifyContent="center"
+                  alignItems="center">
+                  {/* <Grid item style={style.stores_fish_background}>
                 <Image
                   src={schoolFish}
                   layout="fixed"
@@ -310,56 +314,60 @@ export default function NormalScreen() {
                   width={300}
                 />
               </Grid> */}
-              <Grid item className={styles.drawer}>
-                <Grid
-                  container
-                  style={style.drawer_container2}
-                  alignItems="center"
-                  justifyContent="center">
-                  <Grid item>
-                    <Grid container>
+                  <Grid item className={styles.drawer}>
+                    <Grid
+                      container
+                      style={style.drawer_container2}
+                      alignItems="center"
+                      justifyContent="center">
                       <Grid item>
-                        <Grid
-                          container
-                          justifyContent="center"
-                          style={style.stores_container}
-                          spacing={groupedStyles.spacingAroundStoresIcons}>
-                          {stores}
-                        </Grid>
-                      </Grid>
-                      <Grid item style={style.drawer_stores_buttons_item}>
-                        <Grid container style={style.stores_button_container}>
-                          <Grid
-                            item
-                            className={styles.store_button}
-                            style={style.select_button}
-                            onClick={handleDeselectAll}>
-                            Deselect All
+                        <Grid container>
+                          <Grid item>
+                            <Grid
+                              container
+                              justifyContent="center"
+                              style={style.stores_container}
+                              spacing={groupedStyles.spacingAroundStoresIcons}>
+                              {stores}
+                            </Grid>
                           </Grid>
-                          <Grid
-                            item
-                            className={styles.store_button}
-                            style={style.ok_button}
-                            onClick={handleOK}>
-                            OK
-                          </Grid>
-                          <Grid
-                            item
-                            className={styles.store_button}
-                            style={style.select_button}
-                            onClick={handleSelectAll}>
-                            Select All
+                          <Grid item style={style.drawer_stores_buttons_item}>
+                            <Grid
+                              container
+                              style={style.stores_button_container}>
+                              <Grid
+                                item
+                                className={styles.store_button}
+                                style={style.select_button}
+                                onClick={handleDeselectAll}>
+                                Deselect All
+                              </Grid>
+                              <Grid
+                                item
+                                className={styles.store_button}
+                                style={style.ok_button}
+                                onClick={handleOK}>
+                                OK
+                              </Grid>
+                              <Grid
+                                item
+                                className={styles.store_button}
+                                style={style.select_button}
+                                onClick={handleSelectAll}>
+                                Select All
+                              </Grid>
+                            </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Drawer>
             </Grid>
-          </Drawer>
-        </Grid>
-      </Grid>
+          </Grid>
+        )}
+      </ReactResizeDetector>
     </div>
   )
 }

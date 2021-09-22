@@ -242,7 +242,6 @@ function MyApp({ Component, pageProps }) {
           // setApiState({ ...apiState, filteredList: filtered })
           fetchMoreGames()
         } else {
-
           return setApiState({
             ...apiState,
             loading: false,
@@ -440,7 +439,7 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-
+  console.log(storesSelected)
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState, vars }}>

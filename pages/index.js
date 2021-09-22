@@ -13,6 +13,9 @@ export default function Home({ state, setState }) {
       <Link href="/main">
         <button>main</button>
       </Link>
+      <Link href="/test">
+        <button>test</button>
+      </Link>
     </div>
   )
 }
