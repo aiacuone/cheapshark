@@ -371,9 +371,9 @@ function MyApp({ Component, pageProps }) {
         thumb: {
           width: '13px',
           height: '13px',
-        },
-        '.&:hover': {
-          boxShadow: '0',
+          '&:hover': {
+            boxShadow: '0',
+          },
         },
       },
       MuiToolbar: {
