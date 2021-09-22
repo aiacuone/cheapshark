@@ -15,12 +15,13 @@ import Drawer from '@material-ui/core/Drawer'
 import Sliders from './Sliders'
 import { StateContext } from '../../utils/StateContext'
 import Table from '../normal/Table'
-import { useResizeDetector } from 'react-resize-detector'
 import logo from '../../public/images/logo.svg'
 import seaweed1 from '../../public/images/seaweed1.svg'
 import seaweed2 from '../../public/images/seaweed2.svg'
 import diver from '../../public/images/diver.svg'
 import Typography from '@material-ui/core/Typography'
+import ReactResizeDetector from 'react-resize-detector'
+import { debounce } from 'lodash'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
@@ -157,19 +158,13 @@ export default function PhoneScreen() {
     },
   }
 
-  const onResize = useCallback(() => {
-    setLargeTableHeight(height)
-  })
-
-  useEffect(() => {
-    setLargeTableHeight(tableItemContainer?.current?.clientHeight)
-  })
-
-  useEffect(() => {
-    setLargeExpanded(false)
-  }, [])
-
-  const { height, ref } = useResizeDetector({ onResize })
+  const handleResize = useCallback(
+    debounce((height) => {
+      console.log('resize')
+      setLargeTableHeight(height)
+    }, 100),
+    []
+  )
 
   function handleClick(value) {
     setDrawerContent(value)
@@ -328,60 +323,78 @@ export default function PhoneScreen() {
 
   return (
     <div style={style.firstContainer} className={styles.first_container}>
-      <Grid
-        ref={ref}
-        container
-        style={style.main_content}
-        justifyContent="center"
-        alignItems="center">
-        <Grid
-          ref={tableItemContainer}
-          item
-          style={style.table_item_container}
-          xs={12}>
-          {filteredList?.length > 0 && <Table />}
-        </Grid>
-        <Grid container style={style.background_container} direction="column">
+      <ReactResizeDetector
+        handleHeight
+        onResize={(width, height) => handleResize(height)}>
+        {({ targetRef }) => (
           <Grid
+            ref={targetRef}
             container
-            style={style.background_container2}
-            justifyContent="flex-end"
-            alignItems="center">
-            <Grid item>
-              <Image src={diver} layout="fixed" width={200} height={50} />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            style={style.background_container3}
+            style={style.main_content}
             justifyContent="center"
             alignItems="center">
-            <Image src={logo} height={100} width={200} layout="fixed" />
-          </Grid>
-          <Grid
-            container
-            wrap="nowrap"
-            // alignItems="flex-end"
-            style={style.background_container4}>
             <Grid
+              ref={tableItemContainer}
               item
-              container
-              alignItems="flex-end"
-              style={style.seaweed_item1}>
-              <Image src={seaweed1} layout="fixed" width={100} height={90} />
+              style={style.table_item_container}
+              xs={12}>
+              {filteredList?.length > 0 && <Table />}
             </Grid>
             <Grid
-              item
               container
-              justifyContent="flex-end"
-              alignItems="flex-end"
-              style={style.seaweed_item2}>
-              <Image src={seaweed2} layout="fixed" width={100} height={90} />
+              style={style.background_container}
+              direction="column">
+              <Grid
+                container
+                style={style.background_container2}
+                justifyContent="flex-end"
+                alignItems="center">
+                <Grid item>
+                  <Image src={diver} layout="fixed" width={200} height={50} />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                style={style.background_container3}
+                justifyContent="center"
+                alignItems="center">
+                <Image src={logo} height={100} width={200} layout="fixed" />
+              </Grid>
+              <Grid
+                container
+                wrap="nowrap"
+                // alignItems="flex-end"
+                style={style.background_container4}>
+                <Grid
+                  item
+                  container
+                  alignItems="flex-end"
+                  style={style.seaweed_item1}>
+                  <Image
+                    src={seaweed1}
+                    layout="fixed"
+                    width={100}
+                    height={90}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  container
+                  justifyContent="flex-end"
+                  alignItems="flex-end"
+                  style={style.seaweed_item2}>
+                  <Image
+                    src={seaweed2}
+                    layout="fixed"
+                    width={100}
+                    height={90}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-
+        )}
+      </ReactResizeDetector>
       <div className={styles.background}>
         {/* <Image
           src={isPhoneLandscape ? headerBackground : drawerBackground}

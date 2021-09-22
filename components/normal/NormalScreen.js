@@ -14,7 +14,6 @@ import Slider from './Slider'
 import headerBackground from '../../public/images/headerBackground.svg'
 import Drawer from '@material-ui/core/Drawer'
 import Table from './Table'
-import { useResizeDetector } from 'react-resize-detector'
 import { StateContext } from '../../utils/StateContext'
 import seaweed1 from '../../public/images/seaweed1.svg'
 import seaweed2 from '../../public/images/seaweed2.svg'
@@ -135,7 +134,7 @@ export default function NormalScreen() {
     debounce((height) => {
       console.log('resize')
       setLargeTableHeight(height)
-    }, 10),
+    }, 100),
     []
   )
 
