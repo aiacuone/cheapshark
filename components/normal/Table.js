@@ -97,7 +97,7 @@ TablePaginationActions.propTypes = {
 export default function GamesTable() {
   const { state } = useContext(StateContext)
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(-1)
 
   const { largeTableHeight, storesApi, isPhoneScreen, apiState } = state
   const { filteredList } = apiState
@@ -224,12 +224,14 @@ export default function GamesTable() {
                         src={`https://www.cheapshark.com/${gameStore.images.logo}`}
                         layout="fixed"
                         height={50}
+
                         width={50}></Image>
                     }
                   </TableCell>
                 </TableRow>
               )
             })}
+
 
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
@@ -240,8 +242,8 @@ export default function GamesTable() {
           <TableFooter style={{ position: 'sticky', bottom: 0 }}>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
+                rowsPerPageOptions={[{ label: 'All', value: -1 }, 5, 10, 25]}
+                colSpan={6}
                 count={filteredList?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

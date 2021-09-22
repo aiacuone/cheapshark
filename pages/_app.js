@@ -154,14 +154,12 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     // setPage(1)
-
     page = 1
     setSearchForGames(true)
     // getGames()
   }, [inputs, storesSelected])
 
   const storesString = () => {
-    console.log(storesSelected, 'storesSelected @storesString')
     const arr = []
     Object.keys(storesSelected)?.forEach((store, index) => {
       if (!storesSelected[store]) return
@@ -198,7 +196,7 @@ function MyApp({ Component, pageProps }) {
           return
         }
         page = page + 1
-        // console.log('fetchMoreGames', page)
+
         try {
           const res = await fetch(address(page))
           const data = await res.json()
@@ -244,7 +242,7 @@ function MyApp({ Component, pageProps }) {
           // setApiState({ ...apiState, filteredList: filtered })
           fetchMoreGames()
         } else {
-          // page = 1
+
           return setApiState({
             ...apiState,
             loading: false,
@@ -326,6 +324,36 @@ function MyApp({ Component, pageProps }) {
   }
 
   const theme = createTheme({
+    components: {
+      // MuiToolbar: {
+      //   root: {
+      //     background: 'red',
+      //     width: '100%',
+      //   },
+      // },
+      // MuiTable: {
+      //   styleOverrides: {
+      //     root: {
+      //       color: 'green',
+      //       padding: '300px',
+      //       background: 'orange',
+      //       stickyHeader: {
+      //         background: 'purple',
+      //       },
+      //     },
+      //     stickyHeader: {
+      //       background: 'purple',
+      //     },
+      //   },
+      // },
+      // MuiTableHead: {
+      //   styleOverrides: {
+      //     root: {
+      //       background: 'yellow',
+      //     },
+      //   },
+      // },
+    },
     typography: {
       fontFamily: 'Urbanist',
       fontSize: 16,
@@ -337,14 +365,40 @@ function MyApp({ Component, pageProps }) {
       },
     },
     shape: {
-      borderRadius: 3,
+      borderRadius: 2,
     },
     overrides: {
       MuiSlider: {
         thumb: {
-          width: '15px',
-          height: '15px',
-          // border: '1px black solid',
+          width: '13px',
+          height: '13px',
+        },
+        '.&:hover': {
+          boxShadow: '0',
+        },
+      },
+      MuiToolbar: {
+        //footer
+        root: {
+          backgroundColor: '#f2f2f2',
+          borderTop: '1px solid #c9c9c9',
+          padding: !isPhoneScreen && '10px',
+        },
+      },
+      Normal_table_container__1mssP: {
+        root: { padding: '0px 50px' },
+      },
+      MuiTableCell: {
+        //Header
+        stickyHeader: {
+          backgroundColor: '#f2f2f2',
+          padding: !isPhoneScreen && '20px',
+          borderBottom: '1px solid #c9c9c9',
+        },
+      },
+      MuiPaper: {
+        root: {
+          padding: '0',
         },
       },
     },
@@ -386,7 +440,7 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-  console.log(storesApi.data)
+
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState, vars }}>
