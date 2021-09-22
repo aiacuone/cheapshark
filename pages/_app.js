@@ -364,56 +364,40 @@ function MyApp({ Component, pageProps }) {
       },
     },
     shape: {
-      borderRadius: 3,
+      borderRadius: 2,
     },
     overrides: {
       MuiSlider: {
         thumb: {
-          width: '15px',
-          height: '15px',
-          // border: '1px black solid',
+          width: '13px',
+          height: '13px',
+        },
+        '.&:hover': {
+          boxShadow: '0',
         },
       },
       MuiToolbar: {
+        //footer
         root: {
-          backgroundColor: '#ededed',
-          // width: '100%',
+          backgroundColor: '#f2f2f2',
+          borderTop: '1px solid #c9c9c9',
+          padding: !isPhoneScreen && '10px',
         },
-      },
-      MuiTable: {
-        root: {
-          // background: 'purple',
-          stickyHeader: {},
-        },
-        stickyHeader: {
-          // background: 'green',
-        },
-      },
-      MuiTableHead: {
-        // stickyHeader: {
-
-        head: {
-          background: 'brown',
-        },
-
-        // },
       },
       Normal_table_container__1mssP: {
         root: { padding: '0px 50px' },
       },
       MuiTableCell: {
+        //Header
         stickyHeader: {
-          backgroundColor: '#ededed',
-          padding: '20px',
-          // top: -55,
+          backgroundColor: '#f2f2f2',
+          padding: !isPhoneScreen && '20px',
+          borderBottom: '1px solid #c9c9c9',
         },
-        // root: {
-        //   background: 'orange',
-        // },
       },
       MuiPaper: {
         root: {
-          padding: 0,
+          padding: '0',
         },
       },
     },
