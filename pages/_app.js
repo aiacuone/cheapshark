@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import { useState, useEffect, useCallback } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
-import { debounce } from 'lodash'
+import { debounce, find } from 'lodash'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 
 function MyApp({ Component, pageProps }) {
@@ -175,9 +175,16 @@ function MyApp({ Component, pageProps }) {
     console.log(storesSelected, 'storesSelected @storesString')
     const arr = []
     Object.keys(storesSelected)?.forEach((store, index) => {
-      // console.log(store)
-      if (!storesSelected[store]) return
-      arr.push(index)
+      if (!storesSelected[store]) return false
+      
+      const newStore = find(storesApi.data, (apiStore) => {
+        if (apiStore.storeName === store) {
+          return true
+        }
+      })
+
+      if (!newStore) return
+      arr.push(newStore.storeID)
     })
     return arr.join()
   }
