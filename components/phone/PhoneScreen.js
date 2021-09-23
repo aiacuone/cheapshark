@@ -35,7 +35,6 @@ export default function PhoneScreen() {
   } = setState
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
-  // const [localInputs, setLocalInputs] = useState({ ...inputs })
   const tableItemContainer = useRef()
 
   const groupedStyles = {
@@ -172,7 +171,6 @@ export default function PhoneScreen() {
   }
 
   function handleOK() {
-    // setInputs(localInputs)
     setExpanded(false)
   }
 
@@ -270,10 +268,7 @@ export default function PhoneScreen() {
             justifyContent="center"
             alignItems="center">
             <Grid item>
-              <Sliders
-              // localInputs={localInputs}
-              // setLocalInputs={setLocalInputs}
-              />
+              <Sliders />
             </Grid>
           </Grid>
           <Grid
@@ -295,14 +290,10 @@ export default function PhoneScreen() {
             container
             direction="column"
             style={style.slider_container}
-            // className={styles.drawer_container}
             justifyContent="center"
             alignItems="center">
             <Grid item>
-              <Sliders
-              // localInputs={localInputs}
-              // setLocalInputs={setLocalInputs}
-              />
+              <Sliders />
             </Grid>
           </Grid>
           <Grid
@@ -360,11 +351,7 @@ export default function PhoneScreen() {
                 alignItems="center">
                 <Image src={logo} height={100} width={200} layout="fixed" />
               </Grid>
-              <Grid
-                container
-                wrap="nowrap"
-                // alignItems="flex-end"
-                style={style.background_container4}>
+              <Grid container wrap="nowrap" style={style.background_container4}>
                 <Grid
                   item
                   container
@@ -395,12 +382,7 @@ export default function PhoneScreen() {
           </Grid>
         )}
       </ReactResizeDetector>
-      <div className={styles.background}>
-        {/* <Image
-          src={isPhoneLandscape ? headerBackground : drawerBackground}
-          layout="fill"
-        /> */}
-      </div>
+      <div className={styles.background}></div>
       <Grid
         container
         style={style.nav_bar}
@@ -436,9 +418,6 @@ export default function PhoneScreen() {
             className={styles.drawer}
             style={style.drawer}
             xs={12}>
-            {/* <div className={styles.drawer_background}>
-              <Image src={drawerBackground} layout="fill" />
-            </div> */}
             {drawerContent === 'stores' ? <Stores /> : <OrientatedSliders />}
           </Grid>
         </Grid>

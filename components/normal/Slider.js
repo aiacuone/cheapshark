@@ -70,8 +70,6 @@ export default function RangeSlider({ name, label, min, max }) {
               max={max}
               onChange={handleChange}
               onChangeCommitted={() => setInputs({ ...inputs, [name]: value })}
-              // aria-label={label}
-              //   valueLabelDisplay="auto"
               aria-labelledby="range-slider"
               getAriaValueText={valuetext}
             />

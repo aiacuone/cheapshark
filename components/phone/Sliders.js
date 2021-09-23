@@ -111,7 +111,6 @@ export default function Sliders() {
                   value={value}
                   min={min}
                   max={max}
-                  // onChange={handleChange}
                   onChange={(e, value) =>
                     setLocalInputs({ ...localInputs, [name]: value })
                   }

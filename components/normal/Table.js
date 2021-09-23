@@ -135,9 +135,7 @@ export default function GamesTable() {
 
       position: 'relative',
     },
-    table_grid_container: {
-      // position: 'relative',
-    },
+    table_grid_container: {},
   }
 
   return (
@@ -149,11 +147,7 @@ export default function GamesTable() {
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell
-              // style={{ zIndex: 10 }}
-              >
-                Name
-              </TableCell>
+              <TableCell>Name</TableCell>
               <TableCell align="right">Date</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Rating</TableCell>
@@ -178,7 +172,6 @@ export default function GamesTable() {
                   <TableCell
                     style={{
                       width: '200px',
-                      // position: 'sticky',
                       left: '0',
                       background: 'white',
                     }}
@@ -224,14 +217,12 @@ export default function GamesTable() {
                         src={`https://www.cheapshark.com/${gameStore.images.logo}`}
                         layout="fixed"
                         height={50}
-
                         width={50}></Image>
                     }
                   </TableCell>
                 </TableRow>
               )
             })}
-
 
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>

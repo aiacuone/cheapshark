@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }) {
     AllYouPlay: true,
     DLGamer: true,
   })
-  // const [page, setPage] = useState(1)
+
   const [initialApiCallComplete, setInitialApiCallComplete] = useState(false)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
@@ -123,11 +123,9 @@ function MyApp({ Component, pageProps }) {
         setApiState({
           ...apiState,
           loading: false,
-          // data: [...apiState.data, ...data],
           data: data,
           filteredList: getFilteredList({
             passedInputs: inputs,
-            // data: [...data, ...filteredList],
             data: data,
           }),
         })
@@ -153,10 +151,8 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
-    // setPage(1)
     page = 1
     setSearchForGames(true)
-    // getGames()
   }, [inputs, storesSelected])
 
   const storesString = () => {
@@ -173,7 +169,7 @@ function MyApp({ Component, pageProps }) {
     })
     return arr.join()
   }
-  // var page = 1
+
   const address = (page) => {
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -192,45 +188,25 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       page = 1
-      // var filtered = [...filteredList]//INPUTS THE PREVIOUS FILTERED LIST, NEED FRESH LIST
       var filtered = []
       var fetched = []
       setApiState({ ...apiState, loading: true })
       async function fetchMoreGames() {
         if (page > maxPageCount) {
-          // setApiState({ ...apiState, loading: false })
           return
         }
         page = page + 1
-
         try {
           const res = await fetch(address(page))
           const data = await res.json()
-          data.forEach((item) => {
-            const {
-              salePrice: price,
-              title,
-              steamRatingCount: reviews,
-              steamRatingPercent: rating,
-            } = item
-          })
           filtered = [
             ...getFilteredList({
-              // data: [...data, ...apiState.data, ...filtered],// INCLUDES THE PREVIOUS API STATE DATA, WE NEED FRESH DATA
               data: [...data, ...filtered],
               passedInputs,
             }),
           ]
-          filtered.forEach((item) => {
-            const {
-              salePrice: price,
-              title,
-              steamRatingCount: reviews,
-              steamRatingPercent: rating,
-            } = item
-          })
+          filtered.forEach((item) => {})
           fetched = [...fetched, ...data]
-          // setApiState({apiState,})
         } catch (err) {
           console.log(err)
         }
@@ -245,7 +221,6 @@ function MyApp({ Component, pageProps }) {
           return
         }
         if (filtered.length < minimumGamesCount) {
-          // setApiState({ ...apiState, filteredList: filtered })
           fetchMoreGames()
         } else {
           return setApiState({
@@ -300,7 +275,6 @@ function MyApp({ Component, pageProps }) {
     !apiState.loading &&
     searchForGames &&
     getMoreGames({ data: apiState?.data, passedInputs: inputs, filteredList })
-  // test()
 
   function getFilteredList({ data, passedInputs }) {
     const { rating, reviews, release } = passedInputs
@@ -329,36 +303,7 @@ function MyApp({ Component, pageProps }) {
   }
 
   const theme = createTheme({
-    components: {
-      // MuiToolbar: {
-      //   root: {
-      //     background: 'red',
-      //     width: '100%',
-      //   },
-      // },
-      // MuiTable: {
-      //   styleOverrides: {
-      //     root: {
-      //       color: 'green',
-      //       padding: '300px',
-      //       background: 'orange',
-      //       stickyHeader: {
-      //         background: 'purple',
-      //       },
-      //     },
-      //     stickyHeader: {
-      //       background: 'purple',
-      //     },
-      //   },
-      // },
-      // MuiTableHead: {
-      //   styleOverrides: {
-      //     root: {
-      //       background: 'yellow',
-      //     },
-      //   },
-      // },
-    },
+    components: {},
     typography: {
       fontFamily: 'Urbanist',
       fontSize: 16,
@@ -445,7 +390,7 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-  // console.log(storesSelected)
+
   return (
     <ThemeProvider theme={theme}>
       <StateContext.Provider value={{ state, setState, vars }}>

@@ -75,7 +75,6 @@ export default function NormalScreen() {
       display: 'grid',
       placeItems: 'center',
       cursor: 'pointer',
-      // margin: '0 3px',
       background: groupedStyles.backgroundOfButtons,
       zIndex: 2,
       borderRight: '1px solid grey',
@@ -305,14 +304,6 @@ export default function NormalScreen() {
                   style={style.drawer_container}
                   justifyContent="center"
                   alignItems="center">
-                  {/* <Grid item style={style.stores_fish_background}>
-                <Image
-                  src={schoolFish}
-                  layout="fixed"
-                  height={180}
-                  width={300}
-                />
-              </Grid> */}
                   <Grid item className={styles.drawer}>
                     <Grid
                       container
