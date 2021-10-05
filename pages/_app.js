@@ -240,8 +240,6 @@ function MyApp({ Component, pageProps }) {
       setStoresApi({ loading: false, data: null, error: true })
     }
 
-    const address = await getAddress(1)
-
     //GET STORES STRING
     function getStoresString2() {
       const arr = []
@@ -267,12 +265,12 @@ function MyApp({ Component, pageProps }) {
         storesString
       )
     }
-    const address2 = getAddress2()
+    const address = getAddress2()
 
     //GET GAMES
     setApiState({ ...apiState, loading: true })
     try {
-      const res = await fetch(address2)
+      const res = await fetch(address)
       const data = await res.json()
       setApiState({
         ...apiState,
