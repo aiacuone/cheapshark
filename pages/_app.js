@@ -92,7 +92,8 @@ function MyApp({ Component, pageProps }) {
 
     window.addEventListener('resize', handleResize)
 
-    getGames()
+    // getGames()
+    initialSetup()
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -262,6 +263,10 @@ function MyApp({ Component, pageProps }) {
     ),
     []
   )
+
+  async function initialSetup() {
+    console.log('intial setup')
+  }
 
   const notEnoughGames =
     filteredList?.length < minimumGamesCount && page < maxPageCount
