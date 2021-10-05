@@ -117,8 +117,9 @@ function MyApp({ Component, pageProps }) {
     setApiState({ ...apiState, loading: true })
     //API FILTERING
     ;(async function () {
+      const address = getAddress(1)
       try {
-        const res = await fetch(getAddress(1))
+        const res = await fetch(address)
         const data = await res.json()
         setApiState({
           ...apiState,
@@ -175,6 +176,7 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       page = 1
+      const address = getAddress(page)
       var filtered = []
       var fetched = []
       setApiState({ ...apiState, loading: true })
@@ -184,7 +186,7 @@ function MyApp({ Component, pageProps }) {
         }
         page = page + 1
         try {
-          const res = await fetch(getAddress(page))
+          const res = await fetch(address)
           const data = await res.json()
           filtered = [
             ...getFilteredList({
