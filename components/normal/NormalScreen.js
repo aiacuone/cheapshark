@@ -131,7 +131,7 @@ export default function NormalScreen() {
 
   const handleResize = useCallback(
     debounce((height) => {
-      console.log('resize')
+
       setLargeTableHeight(height)
     }, 100),
     []

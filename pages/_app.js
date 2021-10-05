@@ -232,7 +232,6 @@ function MyApp({ Component, pageProps }) {
     try {
       const res = await fetch('https://www.cheapshark.com/api/1.0/stores')
       const data = await res.json()
-      console.log(data, 'stores api data')
       setStoresApi({ ...storesApi, loading: false, data: data })
       storesData = data
     } catch (err) {
@@ -279,7 +278,7 @@ function MyApp({ Component, pageProps }) {
         filteredList: getFilteredList({ data, passedInputs: inputs }),
       })
     } catch (err) {
-      console.log(error)
+      console.log(err)
       setApiState({ ...apiState, loading: false, error: true })
     }
   }
