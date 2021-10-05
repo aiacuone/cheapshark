@@ -22,10 +22,11 @@ import diver from '../../public/images/diver.svg'
 import Typography from '@material-ui/core/Typography'
 import ReactResizeDetector from 'react-resize-detector'
 import { debounce } from 'lodash'
+import Slider from './Slider'
 
 export default function PhoneScreen() {
   const { state, setState } = useContext(StateContext)
-  const { isPhoneLandscape, storesApi, inputs, storesSelected, filteredList } =
+  const { isPhoneLandscape, storesApi, storesSelected, filteredList, inputs } =
     state
   const {
     setStoresSelected,
@@ -36,6 +37,10 @@ export default function PhoneScreen() {
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
   const tableItemContainer = useRef()
+  const [localStoresSelected, setLocalStoresSelected] = useState({
+    ...storesSelected,
+  })
+  const [localInputs, setLocalInputs] = useState({ ...inputs })
 
   const groupedStyles = {
     buttonColor: '#545454',
@@ -124,7 +129,6 @@ export default function PhoneScreen() {
     },
     ok_button_sliders_container: {
       gridArea: isPhoneLandscape ? '4/1/7/2' : '10/1/11/11',
-      // padding: '10px',
     },
     ok_button_sliders: {
       background: 'white',
@@ -138,7 +142,6 @@ export default function PhoneScreen() {
       width: '100%',
       height: '100%',
       position: 'absolute',
-      // background: 'yellow',
     },
     background_container2: {
       flex: 1,
@@ -159,7 +162,6 @@ export default function PhoneScreen() {
 
   const handleResize = useCallback(
     debounce((height) => {
-      console.log('resize')
       setLargeTableHeight(height)
     }, 100),
     []
@@ -171,33 +173,35 @@ export default function PhoneScreen() {
   }
 
   function handleOK() {
+    setStoresSelected(localStoresSelected)
     setExpanded(false)
+    setInputs({ ...localInputs })
   }
 
   function handleStoreClick(store) {
-    const newStoresSelected = { ...storesSelected }
+    const newStoresSelected = { ...localStoresSelected }
     newStoresSelected[store.storeName] = !newStoresSelected[store.storeName]
-    setStoresSelected(newStoresSelected)
+    setLocalStoresSelected(newStoresSelected)
   }
 
   const Stores = () => {
     function handleSelectAll() {
-      const newStoresSelected = { ...storesSelected }
+      const newStoresSelected = { ...localStoresSelected }
 
       Object.keys(newStoresSelected).forEach((store) => {
         newStoresSelected[store] = true
       })
 
-      setStoresSelected(newStoresSelected)
+      setLocalStoresSelected(newStoresSelected)
     }
 
     function handleDeselectAll() {
-      const newStoresSelected = { ...storesSelected }
+      const newStoresSelected = { ...localStoresSelected }
 
       Object.keys(newStoresSelected).forEach((store) => {
         newStoresSelected[store] = false
       })
-      setStoresSelected(newStoresSelected)
+      setLocalStoresSelected(newStoresSelected)
     }
 
     const stores = storesApi.data.map((store, index) => {
@@ -207,7 +211,7 @@ export default function PhoneScreen() {
           style={{
             margin: '5px 10px',
             cursor: 'pointer',
-            filter: storesSelected[store.storeName]
+            filter: localStoresSelected[store.storeName]
               ? 'opacity(100%)'
               : 'opacity(15%)',
           }}
@@ -268,7 +272,46 @@ export default function PhoneScreen() {
             justifyContent="center"
             alignItems="center">
             <Grid item>
-              <Sliders />
+              <Grid item xs={6}>
+                <Slider
+                  name="reviews"
+                  label="K"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="price"
+                  label="£"
+                  min={0}
+                  max={50}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="release"
+                  label=""
+                  min={1990}
+                  max={2021}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="rating"
+                  label="%"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
             </Grid>
           </Grid>
           <Grid
@@ -293,9 +336,49 @@ export default function PhoneScreen() {
             justifyContent="center"
             alignItems="center">
             <Grid item>
-              <Sliders />
+              <Grid item xs={6}>
+                <Slider
+                  name="reviews"
+                  label="K"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="price"
+                  label="£"
+                  min={0}
+                  max={50}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="release"
+                  label=""
+                  min={1990}
+                  max={2021}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="rating"
+                  label="%"
+                  min={0}
+                  max={100}
+                  localInputs={localInputs}
+                  setLocalInputs={setLocalInputs}
+                />
+              </Grid>
             </Grid>
           </Grid>
+
           <Grid
             container
             style={style.ok_button_sliders_container}
@@ -406,7 +489,10 @@ export default function PhoneScreen() {
         style={style.drawer_start}
         anchor={isPhoneLandscape ? 'left' : 'top'}
         open={expanded}
-        onClose={() => setExpanded(false)}>
+        onClose={() => {
+          handleOK()
+          setExpanded(false)
+        }}>
         <Grid
           container
           style={style.drawer_container}

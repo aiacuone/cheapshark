@@ -5,13 +5,20 @@ import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import { StateContext } from '../../utils/StateContext'
 
-export default function RangeSlider({ name, label, min, max }) {
+export default function RangeSlider({
+  name,
+  label,
+  min,
+  max,
+  localInputs,
+  setLocalInputs,
+}) {
   const { setState, vars, state } = useContext(StateContext)
   const { setInputs, setSearchedAllPages } = setState
   const { inputs } = state
   var { page } = vars
 
-  const [value, setValue] = useState(inputs[name])
+  const [value, setValue] = useState(localInputs[name])
 
   function handleChange(e, value) {
     page = 1
@@ -54,6 +61,7 @@ export default function RangeSlider({ name, label, min, max }) {
               <Typography align="center">
                 {showBeforeNumber && label}
                 {value[1]}
+
                 {showAfterNumber && label}
               </Typography>
             </Paper>
@@ -68,7 +76,9 @@ export default function RangeSlider({ name, label, min, max }) {
               min={min}
               max={max}
               onChange={handleChange}
-              onChangeCommitted={() => setInputs({ ...inputs, [name]: value })}
+              onChangeCommitted={() =>
+                setLocalInputs({ ...localInputs, [name]: value })
+              }
               aria-labelledby="range-slider"
               getAriaValueText={valuetext}
             />

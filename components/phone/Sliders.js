@@ -8,9 +8,8 @@ import { StateContext } from '../../utils/StateContext'
 export default function Sliders() {
   const { state, setState } = useContext(StateContext)
   const { inputs } = state
-  const { setInputs } = setState
+  const { setInputs, setTempInputs } = setState
 
-  let { searchedAllPages } = state
   const [localInputs, setLocalInputs] = useState({ ...inputs })
   const { reviews, price, release, rating } = localInputs
 
@@ -111,12 +110,19 @@ export default function Sliders() {
                   value={value}
                   min={min}
                   max={max}
-                  onChange={(e, value) =>
+                  onChange={(e, value) => {
                     setLocalInputs({ ...localInputs, [name]: value })
-                  }
-                  onChangeCommitted={(e, value) =>
-                    setInputs({ ...inputs, [name]: value })
-                  }
+                    // setParentInputs({ ...localInputs, [name]: value })
+                  }}
+                  // onChangeCommitted={(e, value) =>
+                  //   setInputs({ ...inputs, [name]: value })
+                  // }
+                  onChangeCommitted={(e, value) => {
+                    const newInputs = { ...inputs }
+                    setTempInputs(newInputs)
+                    // setTempInputs({ ...localInputs, [name]: value })
+                    // setLocalInputs({ ...localInputs, [name]: value })
+                  }}
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
                 />

@@ -28,6 +28,7 @@ module.exports = {
       'images-1.gog-statics.com',
       'images-2.gog-statics.com',
       'images-3.gog-statics.com',
+      'static.dlgamer.com',
     ],
   },
 }
