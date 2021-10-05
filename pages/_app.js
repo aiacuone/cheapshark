@@ -267,10 +267,9 @@ function MyApp({ Component, pageProps }) {
   )
 
   async function initialSetup() {
-    console.log('intial setup')
     let storesData
-    let gamesData
     setStoresApi({ ...storesApi, loading: true })
+    //GET STORES DATA
     try {
       const res = await fetch('https://www.cheapshark.com/api/1.0/stores')
       const data = await res.json()
@@ -281,11 +280,53 @@ function MyApp({ Component, pageProps }) {
       console.log(err)
       setStoresApi({ loading: false, data: null, error: true })
     }
-    console.log('stores complete', storesData)
+
     const address = await getAddress(1)
-    console.log('address initial', address)
-    const storesString = ''
+
+    //GET STORES STRING
+    function getStoresString2() {
+      const arr = []
+      storesData.forEach((store) => {
+        arr.push(store.storeID)
+      })
+      return arr.join()
+    }
+    const storesString = getStoresString2()
+
+    // GET ADDRESS
+    function getAddress2() {
+      return (
+        'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
+        price[0] +
+        '&upperPrice=' +
+        price[1] +
+        '&steamRating=' +
+        rating[0] +
+        '&pageNumber=' +
+        1 +
+        '&storeID=' +
+        storesString
+      )
+    }
+    const address2 = getAddress2()
+
+    //GET GAMES
+    setApiState({ ...apiState, loading: true })
+    try {
+      const res = await fetch(address2)
+      const data = await res.json()
+      setApiState({
+        ...apiState,
+        loading: false,
+        data: data,
+        filteredList: getFilteredList({ data, passedInputs: inputs }),
+      })
+    } catch (err) {
+      console.log(error)
+      setApiState({ ...apiState, loading: false, error: true })
+    }
   }
+
   const notEnoughGames =
     filteredList?.length < minimumGamesCount && page < maxPageCount
       ? true
