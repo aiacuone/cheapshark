@@ -86,14 +86,13 @@ function MyApp({ Component, pageProps }) {
   const minimumGamesCount = 10
 
   useEffect(() => {
+    initialSetup()
+
     function handleResize() {
       setWindowHeight(window.innerHeight)
     }
 
     window.addEventListener('resize', handleResize)
-
-    // getGames()
-    initialSetup()
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -135,21 +134,6 @@ function MyApp({ Component, pageProps }) {
       }
     })()
   }, [price, rating[0], storesSelected])
-
-  // useEffect(() => {
-  //   //STORES API
-  //   setStoresApi({ ...storesApi, loading: true })
-
-  //   fetch('https://www.cheapshark.com/api/1.0/stores')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setStoresApi({ loading: false, data: data })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setStoresApi({ loading: false, data: null, error: true })
-  //     })
-  // }, [])
 
   useEffect(() => {
     page = 1
@@ -237,33 +221,6 @@ function MyApp({ Component, pageProps }) {
       await fetchMoreGames()
     }, 500),
     [inputs]
-  )
-
-  const getGames = useCallback(
-    debounce(
-      // GAMES API
-      function () {
-        setApiState({ ...apiState, loading: true })
-        fetch(getAddress(1))
-          .then((res) => res.json())
-          .then((data) => {
-            setApiState({
-              ...apiState,
-              loading: false,
-              data: data,
-              filteredList: getFilteredList({ data, passedInputs: inputs }),
-            })
-          })
-          .catch((error) => {
-            console.log(error)
-            setApiState({ ...apiState, loading: false, error: true })
-          })
-
-        setInitialApiCallComplete(true)
-      },
-      [500]
-    ),
-    []
   )
 
   async function initialSetup() {
