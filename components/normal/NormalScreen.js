@@ -188,6 +188,7 @@ export default function NormalScreen() {
       </Grid>
     )
   })
+
   return (
     <div className={styles.grid_container}>
       <Grid container style={style.seaweed_container} alignItems="flex-end">
@@ -279,9 +280,7 @@ export default function NormalScreen() {
           </Grid>
         </Grid>
       </Grid>
-      {filteredList === 0 && !searchForGames && (
-        <p>Please Increase your search Range</p>
-      )}
+
       <ReactResizeDetector
         handleHeight
         onResize={(width, height) => handleResize(height)}>
@@ -290,7 +289,13 @@ export default function NormalScreen() {
             container
             ref={targetRef}
             className={styles.main_content_container}
+            alignItems="center"
             justifyContent="center">
+            {filteredList.length === 0 && !searchForGames && (
+              <p style={{ color: 'white' }}>
+                No Results. Please make your search less specific
+              </p>
+            )}
             <Grid
               style={style.table_item}
               item

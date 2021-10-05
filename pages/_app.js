@@ -4,6 +4,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
 import { debounce, find } from 'lodash'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
+import { uniq } from 'lodash'
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -82,7 +83,7 @@ function MyApp({ Component, pageProps }) {
 
   const isPhoneScreen = isPhoneLandscape || isPhonePortrait ? true : false
   var page = 1
-  const maxPageCount = 5
+  const maxPageCount = 3
   const minimumGamesCount = 10
 
   useEffect(() => {
@@ -206,9 +207,9 @@ function MyApp({ Component, pageProps }) {
         if (page > maxPageCount) {
           setApiState({
             ...apiState,
-            filteredList: filtered,
+            filteredList: uniq(filtered),
             loading: false,
-            data: [...apiState.data, ...fetched],
+            data: uniq([...apiState.data, ...fetched]),
           })
           setSearchForGames(false)
           return
@@ -221,8 +222,8 @@ function MyApp({ Component, pageProps }) {
           return setApiState({
             ...apiState,
             loading: false,
-            data: [...apiState.data, ...fetched],
-            filteredList: filtered,
+            data: uniq([...apiState.data, ...fetched]),
+            filteredList: uniq(filtered),
           })
         }
       }
@@ -419,6 +420,13 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
+
+  // console.log(
+  //   filteredList,
+  //   'filteredList',
+  //   uniq(filteredList),
+  //   'uniq filtered list'
+  // )
 
   return (
     <ThemeProvider theme={theme}>
