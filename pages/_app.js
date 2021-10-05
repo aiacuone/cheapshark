@@ -156,7 +156,7 @@ function MyApp({ Component, pageProps }) {
     setSearchForGames(true)
   }, [inputs, storesSelected])
 
-  const storesString = () => {
+  const getStoresString = () => {
     const arr = []
     Object.keys(storesSelected)?.forEach((store) => {
       if (!storesSelected[store]) return false
@@ -171,6 +171,8 @@ function MyApp({ Component, pageProps }) {
     return arr.join()
   }
 
+  const storesString=getStoresString()
+
   const getAddress = (page) => {
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -182,7 +184,7 @@ function MyApp({ Component, pageProps }) {
       '&pageNumber=' +
       page +
       '&storeID=' +
-      storesString()
+      storesString
     )
   }
 
@@ -282,6 +284,7 @@ function MyApp({ Component, pageProps }) {
     console.log('stores complete', storesData)
     const address = await getAddress(1)
     console.log('address initial', address)
+    const storesString=
   }
   const notEnoughGames =
     filteredList?.length < minimumGamesCount && page < maxPageCount
