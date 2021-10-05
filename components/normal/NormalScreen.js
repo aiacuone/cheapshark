@@ -22,7 +22,14 @@ import { debounce } from 'lodash'
 
 export default function NormalScreen() {
   const { state, setState } = useContext(StateContext)
-  const { expanded, storesApi, storesSelected, inputs, apiState } = state
+  const {
+    expanded,
+    storesApi,
+    storesSelected,
+    inputs,
+    apiState,
+    searchForGames,
+  } = state
   const { filteredList } = apiState
 
   const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
@@ -131,7 +138,6 @@ export default function NormalScreen() {
 
   const handleResize = useCallback(
     debounce((height) => {
-
       setLargeTableHeight(height)
     }, 100),
     []
@@ -182,7 +188,6 @@ export default function NormalScreen() {
       </Grid>
     )
   })
-
   return (
     <div className={styles.grid_container}>
       <Grid container style={style.seaweed_container} alignItems="flex-end">
@@ -274,6 +279,9 @@ export default function NormalScreen() {
           </Grid>
         </Grid>
       </Grid>
+      {filteredList === 0 && !searchForGames && (
+        <p>Please Increase your search Range</p>
+      )}
       <ReactResizeDetector
         handleHeight
         onResize={(width, height) => handleResize(height)}>

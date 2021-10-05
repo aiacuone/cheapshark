@@ -64,7 +64,7 @@ function MyApp({ Component, pageProps }) {
     DLGamer: true,
   })
 
-  const [initialApiCallComplete, setInitialApiCallComplete] = useState(false)
+  const [initialSetupComplete, setInitialSetupComplete] = useState(false)
   const [stores, setStores] = useState()
   const [sortBy, setSortBy] = useState()
   const [searchForGames, setSearchForGames] = useState(true)
@@ -176,15 +176,18 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       page = 1
-      const address = getAddress(page)
+
       var filtered = []
       var fetched = []
       setApiState({ ...apiState, loading: true })
+      //FETCH MORE GAMES
       async function fetchMoreGames() {
         if (page > maxPageCount) {
           return
         }
         page = page + 1
+        const address = getAddress(page)
+        //FETCHING GAMES
         try {
           const res = await fetch(address)
           const data = await res.json()
@@ -199,6 +202,7 @@ function MyApp({ Component, pageProps }) {
         } catch (err) {
           console.log(err)
         }
+        //STOPS FUNCTION IF PAGE COUNT IS HIGH
         if (page > maxPageCount) {
           setApiState({
             ...apiState,
@@ -209,9 +213,11 @@ function MyApp({ Component, pageProps }) {
           setSearchForGames(false)
           return
         }
+        //RELOADS FUNCTION TO FETCH MORE GAMES
         if (filtered.length < minimumGamesCount) {
           fetchMoreGames()
         } else {
+          //SETS LIST OF GAMES IF THERE IS ENOUGH
           return setApiState({
             ...apiState,
             loading: false,
@@ -281,6 +287,8 @@ function MyApp({ Component, pageProps }) {
       console.log(err)
       setApiState({ ...apiState, loading: false, error: true })
     }
+
+    setInitialSetupComplete(true)
   }
 
   const notEnoughGames =
@@ -289,7 +297,7 @@ function MyApp({ Component, pageProps }) {
       : false
 
   apiState.data &&
-    initialApiCallComplete &&
+    initialSetupComplete &&
     notEnoughGames &&
     !searchedAllPages &&
     !apiState.loading &&
@@ -393,6 +401,7 @@ function MyApp({ Component, pageProps }) {
     windowHeight,
     searchedAllPages,
     filteredList,
+    searchForGames,
   }
   const setState = {
     setInputs,
