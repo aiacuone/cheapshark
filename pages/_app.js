@@ -119,7 +119,7 @@ function MyApp({ Component, pageProps }) {
     //API FILTERING
     ;(async function () {
       try {
-        const res = await fetch(address(1))
+        const res = await fetch(getAddress(1))
         const data = await res.json()
         setApiState({
           ...apiState,
@@ -136,20 +136,20 @@ function MyApp({ Component, pageProps }) {
     })()
   }, [price, rating[0], storesSelected])
 
-  useEffect(() => {
-    //STORES API
-    setStoresApi({ ...storesApi, loading: true })
+  // useEffect(() => {
+  //   //STORES API
+  //   setStoresApi({ ...storesApi, loading: true })
 
-    fetch('https://www.cheapshark.com/api/1.0/stores')
-      .then((res) => res.json())
-      .then((data) => {
-        setStoresApi({ loading: false, data: data })
-      })
-      .catch((error) => {
-        console.log(error)
-        setStoresApi({ loading: false, data: null, error: true })
-      })
-  }, [])
+  //   fetch('https://www.cheapshark.com/api/1.0/stores')
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setStoresApi({ loading: false, data: data })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //       setStoresApi({ loading: false, data: null, error: true })
+  //     })
+  // }, [])
 
   useEffect(() => {
     page = 1
@@ -171,7 +171,7 @@ function MyApp({ Component, pageProps }) {
     return arr.join()
   }
 
-  const address = (page) => {
+  const getAddress = (page) => {
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
       price[0] +
@@ -198,7 +198,7 @@ function MyApp({ Component, pageProps }) {
         }
         page = page + 1
         try {
-          const res = await fetch(address(page))
+          const res = await fetch(getAddress(page))
           const data = await res.json()
           filtered = [
             ...getFilteredList({
@@ -242,7 +242,7 @@ function MyApp({ Component, pageProps }) {
       // GAMES API
       function () {
         setApiState({ ...apiState, loading: true })
-        fetch(address(1))
+        fetch(getAddress(1))
           .then((res) => res.json())
           .then((data) => {
             setApiState({
@@ -266,8 +266,23 @@ function MyApp({ Component, pageProps }) {
 
   async function initialSetup() {
     console.log('intial setup')
+    let storesData
+    let gamesData
+    setStoresApi({ ...storesApi, loading: true })
+    try {
+      const res = await fetch('https://www.cheapshark.com/api/1.0/stores')
+      const data = await res.json()
+      console.log(data, 'stores api data')
+      setStoresApi({ ...storesApi, loading: false, data: data })
+      storesData = data
+    } catch (err) {
+      console.log(err)
+      setStoresApi({ loading: false, data: null, error: true })
+    }
+    console.log('stores complete', storesData)
+    const address = await getAddress(1)
+    console.log('address initial', address)
   }
-
   const notEnoughGames =
     filteredList?.length < minimumGamesCount && page < maxPageCount
       ? true
