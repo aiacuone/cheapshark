@@ -171,7 +171,7 @@ function MyApp({ Component, pageProps }) {
     return arr.join()
   }
 
-  const storesString=getStoresString()
+  const storesString = getStoresString()
 
   const getAddress = (page) => {
     return (
@@ -284,7 +284,7 @@ function MyApp({ Component, pageProps }) {
     console.log('stores complete', storesData)
     const address = await getAddress(1)
     console.log('address initial', address)
-    const storesString=
+    const storesString = ''
   }
   const notEnoughGames =
     filteredList?.length < minimumGamesCount && page < maxPageCount
