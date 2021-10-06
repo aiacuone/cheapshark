@@ -177,7 +177,7 @@ function MyApp({ Component, pageProps }) {
   const getMoreGames = useCallback(
     debounce(async ({ passedInputs }) => {
       page = 1
-
+      var searchFinished = false
       var filtered = []
       var fetched = []
       setApiState({ ...apiState, loading: true })
@@ -198,7 +198,6 @@ function MyApp({ Component, pageProps }) {
               passedInputs,
             }),
           ]
-          filtered.forEach((item) => {})
           fetched = [...fetched, ...data]
         } catch (err) {
           console.log(err)
@@ -211,11 +210,12 @@ function MyApp({ Component, pageProps }) {
             loading: false,
             data: uniq([...apiState.data, ...fetched]),
           })
+          searchFinished = true
           setSearchForGames(false)
           return
         }
         //RELOADS FUNCTION TO FETCH MORE GAMES
-        if (filtered.length < minimumGamesCount) {
+        if (filtered.length < minimumGamesCount && !searchFinished) {
           fetchMoreGames()
         } else {
           //SETS LIST OF GAMES IF THERE IS ENOUGH
@@ -308,7 +308,7 @@ function MyApp({ Component, pageProps }) {
   function getFilteredList({ data, passedInputs }) {
     const { rating, reviews, release } = passedInputs
 
-    return data.filter((item) => {
+    const inputFiltered = data.filter((item) => {
       const { steamRatingCount, steamRatingPercent, releaseDate } = item
       const filter1 =
         reviews[0] == 0 ? item : steamRatingCount >= reviews[0] * 1000
@@ -329,6 +329,18 @@ function MyApp({ Component, pageProps }) {
 
       return filter1 && filter2 && filter3 && filter4 && filter5
     })
+
+    const duplicateFiltered = inputFiltered.filter((item, index, arr) => {
+      return (
+        arr.findIndex((item2) => {
+          return item2.storeID === item.storeID && item2.title === item.title
+        }) === index
+      )
+    })
+
+    const completelyFiltered = duplicateFiltered
+
+    return completelyFiltered
   }
 
   const theme = createTheme({
@@ -420,13 +432,6 @@ function MyApp({ Component, pageProps }) {
   const vars = {
     page,
   }
-
-  // console.log(
-  //   filteredList,
-  //   'filteredList',
-  //   uniq(filteredList),
-  //   'uniq filtered list'
-  // )
 
   return (
     <ThemeProvider theme={theme}>
