@@ -101,7 +101,10 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
-    //LOCAL FILTERING
+    handleLocalFilter()
+  }, [release, reviews, rating[1]])
+
+  function handleLocalFilter() {
     if (!apiState.data) {
       return
     }
@@ -112,30 +115,31 @@ function MyApp({ Component, pageProps }) {
         passedInputs: inputs,
       }),
     })
-  }, [release, reviews, rating[1]])
+  }
 
   useEffect(() => {
-    setApiState({ ...apiState, loading: true })
-    //API FILTERING
-    ;(async function () {
-      const address = getAddress(1)
-      try {
-        const res = await fetch(address)
-        const data = await res.json()
-        setApiState({
-          ...apiState,
-          loading: false,
-          data: data,
-          filteredList: getFilteredList({
-            passedInputs: inputs,
-            data: data,
-          }),
-        })
-      } catch (err) {
-        console.log(err)
-      }
-    })()
+    handleApiFilter()
   }, [price, rating[0], storesSelected])
+
+  async function handleApiFilter() {
+    setApiState({ ...apiState, loading: true })
+    const address = getAddress({ page: 1, storesSelected2: storesSelected })
+    try {
+      const res = await fetch(address)
+      const data = await res.json()
+      setApiState({
+        ...apiState,
+        loading: false,
+        data: data,
+        filteredList: getFilteredList({
+          passedInputs: inputs,
+          data: data,
+        }),
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
     page = 1
@@ -159,7 +163,23 @@ function MyApp({ Component, pageProps }) {
 
   const storesString = getStoresString()
 
-  const getAddress = (page) => {
+  const getAddress = ({ page, storesSelected2 }) => {
+    function getStoresString2() {
+      const arr = []
+      Object.keys(storesSelected2).forEach((store) => {
+        if (!storesSelected[store]) return false
+
+        const newStore = find(
+          storesApi.data,
+          (apiStore) => apiStore.storeName === store
+        )
+        if (!newStore) return
+        arr.push(newStore.storeID)
+      })
+      return arr.join()
+    }
+    const storesString2 = getStoresString2()
+
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
       price[0] +
@@ -170,7 +190,7 @@ function MyApp({ Component, pageProps }) {
       '&pageNumber=' +
       page +
       '&storeID=' +
-      storesString
+      storesString2
     )
   }
 
@@ -187,7 +207,9 @@ function MyApp({ Component, pageProps }) {
           return
         }
         page = page + 1
-        const address = getAddress(page)
+
+        const address = getAddress({ page, storesSelected2: storesSelected })
+        console.log(storesSelected, 'near get address getMoreGames')
         //FETCHING GAMES
         try {
           const res = await fetch(address)
@@ -235,7 +257,7 @@ function MyApp({ Component, pageProps }) {
   async function initialSetup() {
     let storesData
     setStoresApi({ ...storesApi, loading: true })
-    //GET STORES DATA
+    // GET STORES DATA
     try {
       const res = await fetch('https://www.cheapshark.com/api/1.0/stores')
       const data = await res.json()
@@ -246,7 +268,7 @@ function MyApp({ Component, pageProps }) {
       setStoresApi({ loading: false, data: null, error: true })
     }
 
-    //GET STORES STRING
+    // GET STORES STRING
     function getStoresString2() {
       const arr = []
       storesData.forEach((store) => {
@@ -273,7 +295,7 @@ function MyApp({ Component, pageProps }) {
     }
     const address = getAddress2()
 
-    //GET GAMES
+    // GET GAMES
     setApiState({ ...apiState, loading: true })
     try {
       const res = await fetch(address)
