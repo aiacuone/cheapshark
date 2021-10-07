@@ -4,7 +4,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { StateContext } from '../utils/StateContext'
 import { debounce, find } from 'lodash'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
-import { uniq } from 'lodash'
 
 function MyApp({ Component, pageProps }) {
   const [inputs, setInputs] = useState({
@@ -20,7 +19,7 @@ function MyApp({ Component, pageProps }) {
     error: false,
     filteredList: [],
   })
-  const { filteredList } = apiState
+  const { filteredList, data: unFilteredList } = apiState
   const [storesApi, setStoresApi] = useState({
     loading: false,
     data: null,
@@ -104,6 +103,7 @@ function MyApp({ Component, pageProps }) {
     handleLocalFilter()
   }, [release, reviews, rating[1]])
 
+  //LOCAL FILTER
   function handleLocalFilter() {
     if (!apiState.data) {
       return
@@ -121,6 +121,7 @@ function MyApp({ Component, pageProps }) {
     handleApiFilter()
   }, [price, rating[0], storesSelected])
 
+  //API FILTER
   async function handleApiFilter() {
     setApiState({ ...apiState, loading: true })
     const address = getAddress({ page: 1, storesSelected2: storesSelected })
@@ -146,25 +147,8 @@ function MyApp({ Component, pageProps }) {
     setSearchForGames(true)
   }, [inputs, storesSelected])
 
-  const getStoresString = () => {
-    const arr = []
-    Object.keys(storesSelected)?.forEach((store) => {
-      if (!storesSelected[store]) return false
-
-      const newStore = find(
-        storesApi.data,
-        (apiStore) => apiStore.storeName === store
-      )
-      if (!newStore) return
-      arr.push(newStore.storeID)
-    })
-    return arr.join()
-  }
-
-  const storesString = getStoresString()
-
   const getAddress = ({ page, storesSelected2 }) => {
-    function getStoresString2() {
+    function getStoresString() {
       const arr = []
       Object.keys(storesSelected2).forEach((store) => {
         if (!storesSelected[store]) return false
@@ -178,7 +162,7 @@ function MyApp({ Component, pageProps }) {
       })
       return arr.join()
     }
-    const storesString2 = getStoresString2()
+    const storesString = getStoresString()
 
     return (
       'https://www.cheapshark.com/api/1.0/deals?lowerPrice=' +
@@ -190,7 +174,7 @@ function MyApp({ Component, pageProps }) {
       '&pageNumber=' +
       page +
       '&storeID=' +
-      storesString2
+      storesString
     )
   }
 
@@ -209,7 +193,6 @@ function MyApp({ Component, pageProps }) {
         page = page + 1
 
         const address = getAddress({ page, storesSelected2: storesSelected })
-        console.log(storesSelected, 'near get address getMoreGames')
         //FETCHING GAMES
         try {
           const res = await fetch(address)
@@ -228,9 +211,9 @@ function MyApp({ Component, pageProps }) {
         if (page > maxPageCount) {
           setApiState({
             ...apiState,
-            filteredList: uniq(filtered),
+            filteredList: filtered,
             loading: false,
-            data: uniq([...apiState.data, ...fetched]),
+            data: [...fetched],
           })
           searchFinished = true
           setSearchForGames(false)
@@ -244,14 +227,14 @@ function MyApp({ Component, pageProps }) {
           return setApiState({
             ...apiState,
             loading: false,
-            data: uniq([...apiState.data, ...fetched]),
-            filteredList: uniq(filtered),
+            data: [...fetched],
+            filteredList: filtered,
           })
         }
       }
       await fetchMoreGames()
     }, 500),
-    [inputs]
+    [inputs, storesSelected]
   )
 
   async function initialSetup() {
@@ -329,7 +312,6 @@ function MyApp({ Component, pageProps }) {
 
   function getFilteredList({ data, passedInputs }) {
     const { rating, reviews, release } = passedInputs
-
     const inputFiltered = data.filter((item) => {
       const { steamRatingCount, steamRatingPercent, releaseDate } = item
       const filter1 =
