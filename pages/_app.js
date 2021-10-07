@@ -100,6 +100,18 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
+    function scrollUp() {
+      setTimeout(function () {
+        window.scrollTo(0, 1)
+      }, 0)
+    }
+    window.addEventListener('load', scrollUp)
+    return () => {
+      window.removeEventListener('load', scrollUp)
+    }
+  }, [])
+
+  useEffect(() => {
     handleLocalFilter()
   }, [release, reviews, rating[1]])
 
