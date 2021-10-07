@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { StateContext } from '../utils/StateContext'
 
-export default function Main() {
+export default function main() {
   const { state } = useContext(StateContext)
   const { apiState, storesApi, isPhoneScreen } = state
 

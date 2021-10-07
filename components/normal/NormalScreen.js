@@ -176,7 +176,6 @@ export default function NormalScreen() {
     const pictureURL = `https://www.cheapshark.com${store.images.logo}`
     return (
       <Grid
-        key={store + 'normal'}
         item
         onClick={() => handleStoreSelect(store)}
         style={{
@@ -186,13 +185,7 @@ export default function NormalScreen() {
           cursor: 'pointer',
         }}>
         <Grid container direcion="column">
-          <Image
-            layout="fixed"
-            src={pictureURL}
-            width={50}
-            height={50}
-            alt="image"
-          />
+          <Image layout="fixed" src={pictureURL} width={50} height={50} />
         </Grid>
       </Grid>
     )
@@ -203,22 +196,10 @@ export default function NormalScreen() {
       <Grid container style={style.seaweed_container} alignItems="flex-end">
         <Grid container style={style.seaweed_container2}>
           <Grid item style={style.seaweed1} alignItems="flex-end">
-            <Image
-              src={seaweed1}
-              layout="fixed"
-              width={400}
-              height={300}
-              alt="image"
-            />
+            <Image src={seaweed1} layout="fixed" width={400} height={300} />
           </Grid>
           <Grid item style={style.seaweed2}>
-            <Image
-              src={seaweed2}
-              layout="fixed"
-              width={400}
-              height={300}
-              alt="image"
-            />
+            <Image src={seaweed2} layout="fixed" width={400} height={300} />
           </Grid>
         </Grid>
       </Grid>
@@ -237,12 +218,7 @@ export default function NormalScreen() {
           </Button>
         </Grid>
         <Grid item className={styles.background_container}>
-          <Image
-            width={1920}
-            layout="fixed"
-            src={headerBackground}
-            alt="image"
-          />
+          <Image width={1920} layout="fixed" src={headerBackground} />
         </Grid>
         <Grid item className={styles.logo_container}>
           <Grid container justifyContent="center">
@@ -252,7 +228,6 @@ export default function NormalScreen() {
               width={250}
               height={150}
               src={logo}
-              alt="image"
             />
           </Grid>
         </Grid>

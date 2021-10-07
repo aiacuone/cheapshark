@@ -214,7 +214,6 @@ export default function PhoneScreen() {
     const stores = storesApi.data.map((store, index) => {
       return (
         <Grid
-          key={store}
           item
           style={{
             margin: '5px 10px',
@@ -234,7 +233,6 @@ export default function PhoneScreen() {
                 layout="fixed"
                 height={40}
                 width={40}
-                alt="image"
               />
             </Grid>
           </Grid>
@@ -443,13 +441,7 @@ export default function PhoneScreen() {
                 justifyContent="flex-end"
                 alignItems="center">
                 <Grid item>
-                  <Image
-                    src={diver}
-                    layout="fixed"
-                    width={200}
-                    height={50}
-                    alt="image"
-                  />
+                  <Image src={diver} layout="fixed" width={200} height={50} />
                 </Grid>
               </Grid>
               <Grid
@@ -470,7 +462,6 @@ export default function PhoneScreen() {
                     layout="fixed"
                     width={100}
                     height={90}
-                    alt="image"
                   />
                 </Grid>
                 <Grid
@@ -484,7 +475,6 @@ export default function PhoneScreen() {
                     layout="fixed"
                     width={100}
                     height={90}
-                    alt="image"
                   />
                 </Grid>
               </Grid>
