@@ -97,11 +97,11 @@ function MyApp({ Component, pageProps }) {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [initialSetup])
 
   useEffect(() => {
     handleLocalFilter()
-  }, [release, reviews, rating[1]])
+  }, [release, reviews, rating[1], handleLocalFilter])
 
   //LOCAL FILTER
   function handleLocalFilter() {
@@ -119,7 +119,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     handleApiFilter()
-  }, [price, rating[0], storesSelected])
+  }, [price, rating[0], storesSelected, handleApiFilter])
 
   //API FILTER
   async function handleApiFilter() {
@@ -145,7 +145,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     page = 1
     setSearchForGames(true)
-  }, [inputs, storesSelected])
+  }, [inputs, storesSelected, setSearchForGames])
 
   const getAddress = ({ page, storesSelected2 }) => {
     function getStoresString() {
