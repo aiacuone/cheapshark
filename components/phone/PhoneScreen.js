@@ -214,6 +214,7 @@ export default function PhoneScreen() {
     const stores = storesApi.data.map((store, index) => {
       return (
         <Grid
+          key={store + 'phone'}
           item
           style={{
             margin: '5px 10px',

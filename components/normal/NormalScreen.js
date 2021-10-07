@@ -176,6 +176,7 @@ export default function NormalScreen() {
     const pictureURL = `https://www.cheapshark.com${store.images.logo}`
     return (
       <Grid
+        key={store + 'normal'}
         item
         onClick={() => handleStoreSelect(store)}
         style={{
