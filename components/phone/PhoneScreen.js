@@ -24,15 +24,23 @@ import { debounce } from 'lodash'
 import Slider from './Slider'
 
 export default function PhoneScreen() {
-  const { state, setState } = useContext(StateContext)
-  const { isPhoneLandscape, storesApi, storesSelected, filteredList, inputs } =
-    state
+  const { state, setState, vars } = useContext(StateContext)
+  const {
+    isPhoneLandscape,
+    storesApi,
+    storesSelected,
+    filteredList,
+    inputs,
+    searchForGames,
+  } = state
   const {
     setStoresSelected,
     setInputs,
     setLargeTableHeight,
     setExpanded: setLargeExpanded,
   } = setState
+  const { wording } = vars
+  const { noResults: noResultsParagraph } = wording
   const [drawerContent, setDrawerContent] = useState()
   const [expanded, setExpanded] = useState(false)
   const tableItemContainer = useRef()
@@ -406,6 +414,16 @@ export default function PhoneScreen() {
             style={style.main_content}
             justifyContent="center"
             alignItems="center">
+            {filteredList.length === 0 && !searchForGames && (
+              <p
+                style={{
+                  color: 'white',
+                  position: 'absolute',
+                }}>
+                {noResultsParagraph}
+              </p>
+            )}
+
             <Grid
               ref={tableItemContainer}
               item
@@ -431,7 +449,7 @@ export default function PhoneScreen() {
                 style={style.background_container3}
                 justifyContent="center"
                 alignItems="center">
-                <Image src={logo} height={100} width={200} layout="fixed" />
+                {/* <Image src={logo} height={100} width={200} layout="fixed" /> */}
               </Grid>
               <Grid container wrap="nowrap" style={style.background_container4}>
                 <Grid

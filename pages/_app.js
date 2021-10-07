@@ -402,6 +402,10 @@ function MyApp({ Component, pageProps }) {
     },
   })
 
+  const wording = {
+    noResults: 'No Results. Please make your search less specific',
+  }
+
   const state = {
     inputs,
     expanded,
@@ -435,6 +439,7 @@ function MyApp({ Component, pageProps }) {
 
   const vars = {
     page,
+    wording,
   }
 
   return (

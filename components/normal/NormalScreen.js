@@ -21,7 +21,7 @@ import ReactResizeDetector from 'react-resize-detector'
 import { debounce } from 'lodash'
 
 export default function NormalScreen() {
-  const { state, setState } = useContext(StateContext)
+  const { state, setState, vars } = useContext(StateContext)
   const {
     expanded,
     storesApi,
@@ -31,6 +31,8 @@ export default function NormalScreen() {
     searchForGames,
   } = state
   const { filteredList } = apiState
+  const { wording } = vars
+  const { noResults: noResultsParagraph } = wording
 
   const { setExpanded, setLargeTableHeight, setStoresSelected } = setState
   const tableItemContainer = useRef()
@@ -292,9 +294,7 @@ export default function NormalScreen() {
             alignItems="center"
             justifyContent="center">
             {filteredList.length === 0 && !searchForGames && (
-              <p style={{ color: 'white' }}>
-                No Results. Please make your search less specific
-              </p>
+              <p style={{ color: 'white' }}>{noResultsParagraph}</p>
             )}
             <Grid
               style={style.table_item}
